@@ -1,0 +1,6 @@
+.classpath
+.project
+.settings
+.tern-project
+docroot/WEB-INF/classes
+docroot/WEB-INF/lib
