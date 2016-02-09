@@ -81,8 +81,125 @@ public class ItemServiceHttp {
 		}
 	}
 
+	public static net.indaba.lostandfound.model.Item getItem(
+		HttpPrincipal httpPrincipal, long itemId) {
+		try {
+			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
+					"getItem", _getItemParameterTypes1);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, itemId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (net.indaba.lostandfound.model.Item)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static net.indaba.lostandfound.model.Item addItem(
+		HttpPrincipal httpPrincipal, java.lang.String name) {
+		try {
+			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
+					"addItem", _addItemParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, name);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (net.indaba.lostandfound.model.Item)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static net.indaba.lostandfound.model.Item updateItem(
+		HttpPrincipal httpPrincipal, long itemId, java.lang.String name) {
+		try {
+			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
+					"updateItem", _updateItemParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, itemId,
+					name);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (net.indaba.lostandfound.model.Item)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static net.indaba.lostandfound.model.Item removeItem(
+		HttpPrincipal httpPrincipal, long itemId) {
+		try {
+			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
+					"removeItem", _removeItemParameterTypes4);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, itemId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (net.indaba.lostandfound.model.Item)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(ItemServiceHttp.class);
 	private static final Class<?>[] _testParameterTypes0 = new Class[] {
 			java.lang.String.class
+		};
+	private static final Class<?>[] _getItemParameterTypes1 = new Class[] {
+			long.class
+		};
+	private static final Class<?>[] _addItemParameterTypes2 = new Class[] {
+			java.lang.String.class
+		};
+	private static final Class<?>[] _updateItemParameterTypes3 = new Class[] {
+			long.class, java.lang.String.class
+		};
+	private static final Class<?>[] _removeItemParameterTypes4 = new Class[] {
+			long.class
 		};
 }

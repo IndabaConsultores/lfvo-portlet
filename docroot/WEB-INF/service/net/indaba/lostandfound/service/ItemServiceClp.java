@@ -27,13 +27,76 @@ public class ItemServiceClp implements ItemService {
 	public ItemServiceClp(InvokableService invokableService) {
 		_invokableService = invokableService;
 
-		_methodName0 = "getOSGiServiceIdentifier";
+		_methodName0 = "addItem";
 
-		_methodParameterTypes0 = new String[] {  };
+		_methodParameterTypes0 = new String[] { "java.lang.String" };
 
-		_methodName2 = "test";
+		_methodName1 = "getItem";
 
-		_methodParameterTypes2 = new String[] { "java.lang.String" };
+		_methodParameterTypes1 = new String[] { "long" };
+
+		_methodName2 = "getOSGiServiceIdentifier";
+
+		_methodParameterTypes2 = new String[] {  };
+
+		_methodName4 = "removeItem";
+
+		_methodParameterTypes4 = new String[] { "long" };
+
+		_methodName5 = "test";
+
+		_methodParameterTypes5 = new String[] { "java.lang.String" };
+
+		_methodName6 = "updateItem";
+
+		_methodParameterTypes6 = new String[] { "long", "java.lang.String" };
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item addItem(java.lang.String name) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName0,
+					_methodParameterTypes0,
+					new Object[] { ClpSerializer.translateInput(name) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item getItem(long itemId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName1,
+					_methodParameterTypes1, new Object[] { itemId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
 	}
 
 	@Override
@@ -41,8 +104,8 @@ public class ItemServiceClp implements ItemService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableService.invokeMethod(_methodName0,
-					_methodParameterTypes0, new Object[] {  });
+			returnObj = _invokableService.invokeMethod(_methodName2,
+					_methodParameterTypes2, new Object[] {  });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -67,12 +130,35 @@ public class ItemServiceClp implements ItemService {
 	}
 
 	@Override
+	public net.indaba.lostandfound.model.Item removeItem(long itemId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName4,
+					_methodParameterTypes4, new Object[] { itemId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
 	public java.lang.String test(java.lang.String in) {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableService.invokeMethod(_methodName2,
-					_methodParameterTypes2,
+			returnObj = _invokableService.invokeMethod(_methodName5,
+					_methodParameterTypes5,
 					new Object[] { ClpSerializer.translateInput(in) });
 		}
 		catch (Throwable t) {
@@ -90,9 +176,42 @@ public class ItemServiceClp implements ItemService {
 		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
+	public net.indaba.lostandfound.model.Item updateItem(long itemId,
+		java.lang.String name) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName6,
+					_methodParameterTypes6,
+					new Object[] { itemId, ClpSerializer.translateInput(name) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
+	}
+
 	private InvokableService _invokableService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
+	private String _methodName1;
+	private String[] _methodParameterTypes1;
 	private String _methodName2;
 	private String[] _methodParameterTypes2;
+	private String _methodName4;
+	private String[] _methodParameterTypes4;
+	private String _methodName5;
+	private String[] _methodParameterTypes5;
+	private String _methodName6;
+	private String[] _methodParameterTypes6;
 }

@@ -34,6 +34,22 @@ public class ItemServiceClpInvoker {
 		_methodName29 = "test";
 
 		_methodParameterTypes29 = new String[] { "java.lang.String" };
+
+		_methodName30 = "getItem";
+
+		_methodParameterTypes30 = new String[] { "long" };
+
+		_methodName31 = "addItem";
+
+		_methodParameterTypes31 = new String[] { "java.lang.String" };
+
+		_methodName32 = "updateItem";
+
+		_methodParameterTypes32 = new String[] { "long", "java.lang.String" };
+
+		_methodName33 = "removeItem";
+
+		_methodParameterTypes33 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -48,6 +64,27 @@ public class ItemServiceClpInvoker {
 			return ItemServiceUtil.test((java.lang.String)arguments[0]);
 		}
 
+		if (_methodName30.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes30, parameterTypes)) {
+			return ItemServiceUtil.getItem(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName31.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes31, parameterTypes)) {
+			return ItemServiceUtil.addItem((java.lang.String)arguments[0]);
+		}
+
+		if (_methodName32.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes32, parameterTypes)) {
+			return ItemServiceUtil.updateItem(((Long)arguments[0]).longValue(),
+				(java.lang.String)arguments[1]);
+		}
+
+		if (_methodName33.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes33, parameterTypes)) {
+			return ItemServiceUtil.removeItem(((Long)arguments[0]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -55,4 +92,12 @@ public class ItemServiceClpInvoker {
 	private String[] _methodParameterTypes24;
 	private String _methodName29;
 	private String[] _methodParameterTypes29;
+	private String _methodName30;
+	private String[] _methodParameterTypes30;
+	private String _methodName31;
+	private String[] _methodParameterTypes31;
+	private String _methodName32;
+	private String[] _methodParameterTypes32;
+	private String _methodName33;
+	private String[] _methodParameterTypes33;
 }
