@@ -72,5 +72,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 	}
 
 	Log _log = LogFactoryUtil.getLog(this.getClass());
+	
+	public static final String PATH_EDIT_ITEM="/html/manager/edit_item.jsp";
 
 }

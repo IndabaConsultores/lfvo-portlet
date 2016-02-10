@@ -14,6 +14,16 @@ if (row != null) {
 	icon="<%=StringPool.BLANK%>" markupView="lexicon"
 	message="<%=StringPool.BLANK%>" showWhenSingleIcon="<%=true%>">
 	
+	<portlet:renderURL var="editItemURL">
+		<portlet:param name="mvcPath" value="<%=ItemManagerPortlet.PATH_EDIT_ITEM %>" />
+		<portlet:param name="itemId" value="<%=String.valueOf(item.getItemId()) %>" />
+		<portlet:param name="redirect" value="<%= currentURL %>" />
+	</portlet:renderURL>
+	<liferay-ui:icon
+			message="edit"
+			url="<%= editItemURL %>"
+		/>
+	
 	<portlet:actionURL name='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "moveItemToTrash" : "deleteItem" %>' var="deleteURL">
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="groupId" value="<%= String.valueOf(item.getGroupId()) %>" />
