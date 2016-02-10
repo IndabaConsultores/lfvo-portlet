@@ -1,4 +1,3 @@
-<%@page import="com.liferay.portlet.PortletURLUtil"%>
 <%@page import="javax.portlet.PortletURL"%>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 
@@ -11,6 +10,11 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
+<%@page import="com.liferay.portal.kernel.util.StringPool"%>
+<%@page import="net.indaba.lostandfound.model.Item"%>
+<%@page import="com.liferay.portal.kernel.util.ParamUtil"%>
+<%@page import="com.liferay.portlet.PortletURLUtil"%>
+<%@page import="com.liferay.portal.kernel.util.WebKeys"%>
 
 
 <liferay-theme:defineObjects />
@@ -19,5 +23,7 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 <%
 PortletURL currentURLObj = PortletURLUtil.getCurrent(liferayPortletRequest, liferayPortletResponse);
 String currentURL = currentURLObj.toString();
+
+String redirect = ParamUtil.get(request, "redirect", "");
 
 %>
