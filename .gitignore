@@ -3,4 +3,5 @@
 .settings
 .tern-project
 docroot/WEB-INF/classes
+docroot/WEB-INF/service
 docroot/WEB-INF/lib

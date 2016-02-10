@@ -1,6 +1,5 @@
 <%@page import="net.indaba.lostandfound.service.ItemLocalServiceUtil"%>
 <%@page import="net.indaba.lostandfound.model.Item"%>
-<%@page import="com.liferay.portal.kernel.util.ParamUtil"%>
 <%@ include file="/html/init.jsp" %>
 
 <%
@@ -10,7 +9,7 @@ if(item==null)
 %>
 <portlet:actionURL name="editItem" var="editItemURL">
 	<portlet:param name="itemId" value="<%=String.valueOf(item.getItemId())%>"/>
-	<portlet:param name="redirect" value="<%=currentURL%>"/>
+	<portlet:param name="redirect" value="<%=redirect%>"/>
 </portlet:actionURL>
 
 <aui:form method="post" name="fm" action="<%=editItemURL%>">
