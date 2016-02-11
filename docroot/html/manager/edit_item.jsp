@@ -12,7 +12,7 @@ else{
 	item = ItemLocalServiceUtil.getItem(itemId);
 }	
 %>
-<portlet:actionURL name="editItem" var="editItemURL">
+<portlet:actionURL name="addOrUpdateItem" var="editItemURL">
 	<portlet:param name="itemId" value="<%=String.valueOf(item.getItemId())%>"/>
 	<portlet:param name="redirect" value="<%=redirect%>"/>
 </portlet:actionURL>

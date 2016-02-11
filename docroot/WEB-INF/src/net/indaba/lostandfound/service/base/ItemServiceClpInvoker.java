@@ -27,32 +27,32 @@ import java.util.Arrays;
 @ProviderType
 public class ItemServiceClpInvoker {
 	public ItemServiceClpInvoker() {
-		_methodName24 = "getOSGiServiceIdentifier";
+		_methodName34 = "getOSGiServiceIdentifier";
 
-		_methodParameterTypes24 = new String[] {  };
+		_methodParameterTypes34 = new String[] {  };
 
-		_methodName29 = "test";
+		_methodName39 = "test";
 
-		_methodParameterTypes29 = new String[] { "java.lang.String" };
+		_methodParameterTypes39 = new String[] { "java.lang.String" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
-		if (_methodName24.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes24, parameterTypes)) {
+		if (_methodName34.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes34, parameterTypes)) {
 			return ItemServiceUtil.getOSGiServiceIdentifier();
 		}
 
-		if (_methodName29.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes29, parameterTypes)) {
+		if (_methodName39.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes39, parameterTypes)) {
 			return ItemServiceUtil.test((java.lang.String)arguments[0]);
 		}
 
 		throw new UnsupportedOperationException();
 	}
 
-	private String _methodName24;
-	private String[] _methodParameterTypes24;
-	private String _methodName29;
-	private String[] _methodParameterTypes29;
+	private String _methodName34;
+	private String[] _methodParameterTypes34;
+	private String _methodName39;
+	private String[] _methodParameterTypes39;
 }

@@ -35,9 +35,8 @@
 		</order>
 		<!-- Finder methods -->
 		<!-- References -->
-		<!-- <reference package-path="com.liferay.portlet.asset" entity="AssetEntry" 
-			/> <reference package-path="com.liferay.portlet.asset" entity="AssetTag" 
-			/> -->
+		<reference package-path="com.liferay.portlet.asset" entity="AssetEntry" /> 
+		<reference package-path="com.liferay.portlet.asset" entity="AssetLink" />
 	</entity>
 
 </service-builder>
