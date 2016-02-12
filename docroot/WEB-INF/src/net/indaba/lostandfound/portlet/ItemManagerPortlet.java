@@ -16,7 +16,10 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 
+import net.indaba.lostandfound.exception.NoSuchItemException;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 
@@ -32,23 +35,25 @@ public class ItemManagerPortlet extends MVCPortlet {
 		super.doView(renderRequest, renderResponse);
 	}
 
-	public void editItem(ActionRequest actionRequest, ActionResponse actionResponse)
+	public void addOrUpdateItem(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
+		
 		_log.debug("editItem " + ParamUtil.get(actionRequest, "itemId", 0));
 		long itemId = ParamUtil.get(actionRequest, "itemId", 0);
 		String name = ParamUtil.get(actionRequest, "name", "");
 		
 		Item item = null;
 		if(itemId==0){
-			item = ItemLocalServiceUtil.createItem(CounterLocalServiceUtil.increment());
-		}
-		else{
+			item = ItemLocalServiceUtil.createItem(0);
+		} else {
 			item = ItemLocalServiceUtil.getItem(itemId);
 		}
 		
 		item.setName(name);
+		item.setGroupId(serviceContext.getScopeGroupId());
 		
-		ItemLocalServiceUtil.updateItem(item);
+		ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
 		
 		sendRedirect(actionRequest, actionResponse);
 		
@@ -72,5 +77,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 	}
 
 	Log _log = LogFactoryUtil.getLog(this.getClass());
+	
+	public static final String PATH_EDIT_ITEM="/html/manager/edit_item.jsp";
 
 }

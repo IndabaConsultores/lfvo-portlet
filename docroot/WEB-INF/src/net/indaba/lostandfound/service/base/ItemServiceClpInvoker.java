@@ -27,77 +27,32 @@ import java.util.Arrays;
 @ProviderType
 public class ItemServiceClpInvoker {
 	public ItemServiceClpInvoker() {
-		_methodName24 = "getOSGiServiceIdentifier";
+		_methodName34 = "getOSGiServiceIdentifier";
 
-		_methodParameterTypes24 = new String[] {  };
+		_methodParameterTypes34 = new String[] {  };
 
-		_methodName29 = "test";
+		_methodName39 = "test";
 
-		_methodParameterTypes29 = new String[] { "java.lang.String" };
-
-		_methodName30 = "getItem";
-
-		_methodParameterTypes30 = new String[] { "long" };
-
-		_methodName31 = "addItem";
-
-		_methodParameterTypes31 = new String[] { "java.lang.String" };
-
-		_methodName32 = "updateItem";
-
-		_methodParameterTypes32 = new String[] { "long", "java.lang.String" };
-
-		_methodName33 = "removeItem";
-
-		_methodParameterTypes33 = new String[] { "long" };
+		_methodParameterTypes39 = new String[] { "java.lang.String" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
-		if (_methodName24.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes24, parameterTypes)) {
+		if (_methodName34.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes34, parameterTypes)) {
 			return ItemServiceUtil.getOSGiServiceIdentifier();
 		}
 
-		if (_methodName29.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes29, parameterTypes)) {
+		if (_methodName39.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes39, parameterTypes)) {
 			return ItemServiceUtil.test((java.lang.String)arguments[0]);
-		}
-
-		if (_methodName30.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes30, parameterTypes)) {
-			return ItemServiceUtil.getItem(((Long)arguments[0]).longValue());
-		}
-
-		if (_methodName31.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes31, parameterTypes)) {
-			return ItemServiceUtil.addItem((java.lang.String)arguments[0]);
-		}
-
-		if (_methodName32.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes32, parameterTypes)) {
-			return ItemServiceUtil.updateItem(((Long)arguments[0]).longValue(),
-				(java.lang.String)arguments[1]);
-		}
-
-		if (_methodName33.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes33, parameterTypes)) {
-			return ItemServiceUtil.removeItem(((Long)arguments[0]).longValue());
 		}
 
 		throw new UnsupportedOperationException();
 	}
 
-	private String _methodName24;
-	private String[] _methodParameterTypes24;
-	private String _methodName29;
-	private String[] _methodParameterTypes29;
-	private String _methodName30;
-	private String[] _methodParameterTypes30;
-	private String _methodName31;
-	private String[] _methodParameterTypes31;
-	private String _methodName32;
-	private String[] _methodParameterTypes32;
-	private String _methodName33;
-	private String[] _methodParameterTypes33;
+	private String _methodName34;
+	private String[] _methodParameterTypes34;
+	private String _methodName39;
+	private String[] _methodParameterTypes39;
 }

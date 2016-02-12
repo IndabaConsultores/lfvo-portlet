@@ -1,4 +1,3 @@
-<%@page import="java.util.List"%>
 <%@ include file="/html/init.jsp" %>
 <%
 List<Item> items = (List<Item>)renderRequest.getAttribute("items");
@@ -6,7 +5,7 @@ List<Item> items = (List<Item>)renderRequest.getAttribute("items");
 
 <aui:button-row>
 	<portlet:renderURL var="addItemURL">
-		<portlet:param name="mvcPath" value="/html/manager/edit_item.jsp" />
+		<portlet:param name="mvcPath" value="<%=ItemManagerPortlet.PATH_EDIT_ITEM %>" />
 		<portlet:param name="redirect" value="<%= currentURL %>" />
 	</portlet:renderURL>
 	<aui:button href="<%= addItemURL.toString() %>" value="add"></aui:button>

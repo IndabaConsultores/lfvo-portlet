@@ -59,6 +59,11 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	public net.indaba.lostandfound.model.Item addItem(
 		net.indaba.lostandfound.model.Item item);
 
+	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws PortalException;
+
 	/**
 	* Creates a new item with the primary key. Does not add the item to the database.
 	*

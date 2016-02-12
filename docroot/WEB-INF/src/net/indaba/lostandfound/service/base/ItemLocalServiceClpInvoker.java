@@ -148,9 +148,16 @@ public class ItemLocalServiceClpInvoker {
 				"net.indaba.lostandfound.model.Item"
 			};
 
-		_methodName43 = "getOSGiServiceIdentifier";
+		_methodName51 = "getOSGiServiceIdentifier";
 
-		_methodParameterTypes43 = new String[] {  };
+		_methodParameterTypes51 = new String[] {  };
+
+		_methodName56 = "addOrUpdateItem";
+
+		_methodParameterTypes56 = new String[] {
+				"net.indaba.lostandfound.model.Item",
+				"com.liferay.portal.service.ServiceContext"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -289,9 +296,15 @@ public class ItemLocalServiceClpInvoker {
 			return ItemLocalServiceUtil.updateItem((net.indaba.lostandfound.model.Item)arguments[0]);
 		}
 
-		if (_methodName43.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes43, parameterTypes)) {
+		if (_methodName51.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes51, parameterTypes)) {
 			return ItemLocalServiceUtil.getOSGiServiceIdentifier();
+		}
+
+		if (_methodName56.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes56, parameterTypes)) {
+			return ItemLocalServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
+				(com.liferay.portal.service.ServiceContext)arguments[1]);
 		}
 
 		throw new UnsupportedOperationException();
@@ -345,6 +358,8 @@ public class ItemLocalServiceClpInvoker {
 	private String[] _methodParameterTypes23;
 	private String _methodName24;
 	private String[] _methodParameterTypes24;
-	private String _methodName43;
-	private String[] _methodParameterTypes43;
+	private String _methodName51;
+	private String[] _methodParameterTypes51;
+	private String _methodName56;
+	private String[] _methodParameterTypes56;
 }

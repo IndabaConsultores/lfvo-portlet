@@ -44,6 +44,14 @@ public class ItemLocalServiceWrapper implements ItemLocalService,
 		return _itemLocalService.addItem(item);
 	}
 
+	@Override
+	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _itemLocalService.addOrUpdateItem(item, serviceContext);
+	}
+
 	/**
 	* Creates a new item with the primary key. Does not add the item to the database.
 	*

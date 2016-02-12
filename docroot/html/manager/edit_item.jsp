@@ -3,21 +3,27 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
-Item item = (Item)request.getAttribute("item");
-if(item==null)
+long itemId = ParamUtil.getLong(renderRequest, "itemId", 0);
+Item item = null;
+if(itemId==0){
 	item = ItemLocalServiceUtil.createItem(0);
+}
+else{
+	item = ItemLocalServiceUtil.getItem(itemId);
+}	
 %>
-<portlet:actionURL name="editItem" var="editItemURL">
+<portlet:actionURL name="addOrUpdateItem" var="editItemURL">
 	<portlet:param name="itemId" value="<%=String.valueOf(item.getItemId())%>"/>
 	<portlet:param name="redirect" value="<%=redirect%>"/>
 </portlet:actionURL>
 
 <aui:form method="post" name="fm" action="<%=editItemURL%>">
-
-	<aui:input name="name"></aui:input>
+	<aui:input name="itemId" value="<%=item.getItemId()%>" type="hidden"></aui:input>
+	<aui:input name="name" value="<%=item.getName()%>"></aui:input>
 
 	<aui:button-row>
 		<aui:button type="submit" value="add"></aui:button>
+		<aui:button type="button" value="cancel" href="<%=redirect %>"></aui:button>
 	</aui:button-row>
 
 </aui:form>
