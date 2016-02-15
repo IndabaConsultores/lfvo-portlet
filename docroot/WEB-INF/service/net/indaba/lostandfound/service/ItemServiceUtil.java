@@ -46,6 +46,11 @@ public class ItemServiceUtil {
 		return getService().addItem(name);
 	}
 
+	public static net.indaba.lostandfound.model.Item addItemRemote(
+		java.lang.String name) {
+		return getService().addItemRemote(name);
+	}
+
 	public static net.indaba.lostandfound.model.Item getItem(long itemId) {
 		return getService().getItem(itemId);
 	}
@@ -69,6 +74,11 @@ public class ItemServiceUtil {
 		return getService().removeItem(itemId);
 	}
 
+	public static net.indaba.lostandfound.model.Item removeItemRemote(
+		long itemId) {
+		return getService().removeItemRemote(itemId);
+	}
+
 	public static java.lang.String test(java.lang.String in) {
 		return getService().test(in);
 	}
@@ -76,6 +86,11 @@ public class ItemServiceUtil {
 	public static net.indaba.lostandfound.model.Item updateItem(long itemId,
 		java.lang.String name) {
 		return getService().updateItem(itemId, name);
+	}
+
+	public static net.indaba.lostandfound.model.Item updateItemRemote(
+		long itemId, java.lang.String name) {
+		return getService().updateItemRemote(itemId, name);
 	}
 
 	public static void clearService() {

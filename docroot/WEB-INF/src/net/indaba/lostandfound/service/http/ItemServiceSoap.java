@@ -136,5 +136,48 @@ public class ItemServiceSoap {
 		}
 	}
 
+	public static net.indaba.lostandfound.model.ItemSoap addItemRemote(
+		java.lang.String name) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.addItemRemote(name);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.ItemSoap updateItemRemote(
+		long itemId, java.lang.String name) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.updateItemRemote(itemId,
+					name);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.ItemSoap removeItemRemote(
+		long itemId) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.removeItemRemote(itemId);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(ItemServiceSoap.class);
 }

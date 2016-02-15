@@ -22,6 +22,8 @@ import com.liferay.portal.service.ServiceContextFactory;
 import net.indaba.lostandfound.exception.NoSuchItemException;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
+import net.indaba.lostandfound.service.ItemService;
+import net.indaba.lostandfound.service.ItemServiceUtil;
 
 public class ItemManagerPortlet extends MVCPortlet {
 

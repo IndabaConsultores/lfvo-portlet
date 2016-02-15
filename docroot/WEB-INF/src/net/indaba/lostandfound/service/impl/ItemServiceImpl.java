@@ -20,17 +20,25 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import com.liferay.portal.exception.NoSuchModelException;
+import com.liferay.portal.service.ServiceContext;
 
 import aQute.bnd.annotation.ProviderType;
 import net.indaba.lostandfound.exception.NoSuchItemException;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.base.ItemServiceBaseImpl;
+import net.thegreshams.firebase4j.error.FirebaseException;
+import net.thegreshams.firebase4j.error.JacksonUtilityException;
+import net.thegreshams.firebase4j.model.FirebaseResponse;
+import net.thegreshams.firebase4j.service.Firebase;
 
 /**
  * The implementation of the item remote service.
@@ -55,6 +63,7 @@ public class ItemServiceImpl extends ItemServiceBaseImpl {
 
 	private final String FB_URI = "https://brilliant-torch-8285.firebaseio.com";
 
+	Firebase firebase;
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
@@ -66,7 +75,7 @@ public class ItemServiceImpl extends ItemServiceBaseImpl {
 	public String test(String in) {
 		return in;
 	}
-
+	
 	public Item getItem(long itemId) {
 		Item item = itemPersistence.fetchByPrimaryKey(itemId);
 		return item;
@@ -76,17 +85,53 @@ public class ItemServiceImpl extends ItemServiceBaseImpl {
 		long itemId = counterLocalService.increment();
 		Item item = itemPersistence.create(itemId);
 		item.setName(name);
-
-		itemPersistence.update(item);
-
+				
+		try {
+			firebase = new Firebase(FB_URI + "/items/office");
+			Map<String, Object> itemMap = itemToMap(item);
+			FirebaseResponse response = firebase.post(itemMap);
+			System.out.println(response.getRawBody());
+			if (response.getSuccess()) {
+				itemPersistence.update(item);
+			}
+			else {
+				itemPersistence.remove(item);
+			}
+		} catch (FirebaseException | UnsupportedEncodingException | JacksonUtilityException e) {
+			//itemPersistence.remove(item);
+			e.printStackTrace();
+		}
+		
 		return item;
 	}
 
 	public Item updateItem(long itemId, String name) {
 		Item item;
 		item = itemPersistence.fetchByPrimaryKey(itemId);
-		item.setName(name);
-		itemPersistence.update(item);
+		item.setName(name);		
+		try {
+			firebase = new Firebase(FB_URI + "/items/office");
+			firebase.addQuery("orderBy", "\"id\"");
+			firebase.addQuery("equalTo", String.valueOf(itemId));
+			FirebaseResponse response = firebase.get();
+			if (response.getSuccess()) {
+				System.out.println(response.getRawBody());
+
+				Map<String, Object> responseMap = response.getBody();
+				Object[] keys = responseMap.keySet().toArray();
+				Map<String, Object> itemMap = itemToMap(item);
+
+				response = firebase.patch("/" + keys[0].toString(), itemMap);
+				if (response.getSuccess()) {
+					itemPersistence.update(item);
+					System.out.println(response.getRawBody());
+				}
+			}
+		} catch (FirebaseException | UnsupportedEncodingException | JacksonUtilityException e) {
+			//itemPersistence.remove(item);
+			e.printStackTrace();
+		}
+
 		return item;
 
 	}
@@ -94,13 +139,71 @@ public class ItemServiceImpl extends ItemServiceBaseImpl {
 	public Item removeItem(long itemId) {
 		Item item;
 		try {
+			firebase = new Firebase(FB_URI + "/items/office");
+			firebase.addQuery("orderBy", "id");
+			firebase.addQuery("equalTo", String.valueOf(itemId));
+			FirebaseResponse response = firebase.get();
+			if (response.getSuccess()) {
+				Map<String, Object> responseMap = response.getBody();
+				String[] keys = (String[]) responseMap.keySet().toArray();
+				
+				response = firebase.delete("/" + keys[0]);
+				if (response.getSuccess()) {
+					item = itemPersistence.remove(itemId);
+					System.out.println(response.getRawBody());
+					return item;
+				}
+			}
+		} catch (NoSuchItemException | UnsupportedEncodingException | FirebaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Item addItemRemote(String name) {
+		long itemId = counterLocalService.increment();
+		Item item = itemPersistence.create(itemId);
+		item.setName(name);
+		
+		itemPersistence.update(item);
+
+		return item;
+	}
+
+	public Item updateItemRemote(long itemId, String name) {
+		Item item;
+		item = itemPersistence.fetchByPrimaryKey(itemId);
+		item.setName(name);
+		
+		//firebaseRequest(item, "PUT");
+		
+		itemPersistence.update(item);
+		return item;
+
+	}
+	
+	public Item removeItemRemote(long itemId) {
+		Item item;
+		try {
 			item = itemPersistence.remove(itemId);
+			
+			//firebaseRequest(item, "DELETE");
+			
 			return item;
 		} catch (NoSuchItemException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	private Map<String, Object> itemToMap(Item item) {
+		HashMap<String, Object> itemMap = new HashMap<String, Object>();
+		itemMap.put("id", item.getItemId());
+		itemMap.put("name", item.getName());
+		itemMap.put("description", item.getDescription());
+		return itemMap;
 	}
 
 	private void firebaseRequest(Item item, String method) {
@@ -139,5 +242,6 @@ public class ItemServiceImpl extends ItemServiceBaseImpl {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 }

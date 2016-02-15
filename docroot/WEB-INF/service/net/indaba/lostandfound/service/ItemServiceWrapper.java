@@ -38,6 +38,12 @@ public class ItemServiceWrapper implements ItemService,
 	}
 
 	@Override
+	public net.indaba.lostandfound.model.Item addItemRemote(
+		java.lang.String name) {
+		return _itemService.addItemRemote(name);
+	}
+
+	@Override
 	public net.indaba.lostandfound.model.Item getItem(long itemId) {
 		return _itemService.getItem(itemId);
 	}
@@ -65,6 +71,11 @@ public class ItemServiceWrapper implements ItemService,
 	}
 
 	@Override
+	public net.indaba.lostandfound.model.Item removeItemRemote(long itemId) {
+		return _itemService.removeItemRemote(itemId);
+	}
+
+	@Override
 	public java.lang.String test(java.lang.String in) {
 		return _itemService.test(in);
 	}
@@ -73,6 +84,12 @@ public class ItemServiceWrapper implements ItemService,
 	public net.indaba.lostandfound.model.Item updateItem(long itemId,
 		java.lang.String name) {
 		return _itemService.updateItem(itemId, name);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item updateItemRemote(long itemId,
+		java.lang.String name) {
+		return _itemService.updateItemRemote(itemId, name);
 	}
 
 	@Override

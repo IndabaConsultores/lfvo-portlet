@@ -50,6 +50,9 @@ public interface ItemService extends BaseService, InvokableService {
 	 */
 	public net.indaba.lostandfound.model.Item addItem(java.lang.String name);
 
+	public net.indaba.lostandfound.model.Item addItemRemote(
+		java.lang.String name);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public net.indaba.lostandfound.model.Item getItem(long itemId);
 
@@ -67,8 +70,13 @@ public interface ItemService extends BaseService, InvokableService {
 
 	public net.indaba.lostandfound.model.Item removeItem(long itemId);
 
+	public net.indaba.lostandfound.model.Item removeItemRemote(long itemId);
+
 	public java.lang.String test(java.lang.String in);
 
 	public net.indaba.lostandfound.model.Item updateItem(long itemId,
+		java.lang.String name);
+
+	public net.indaba.lostandfound.model.Item updateItemRemote(long itemId,
 		java.lang.String name);
 }

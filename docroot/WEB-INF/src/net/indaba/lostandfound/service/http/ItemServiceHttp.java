@@ -186,6 +186,85 @@ public class ItemServiceHttp {
 		}
 	}
 
+	public static net.indaba.lostandfound.model.Item addItemRemote(
+		HttpPrincipal httpPrincipal, java.lang.String name) {
+		try {
+			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
+					"addItemRemote", _addItemRemoteParameterTypes5);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, name);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (net.indaba.lostandfound.model.Item)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static net.indaba.lostandfound.model.Item updateItemRemote(
+		HttpPrincipal httpPrincipal, long itemId, java.lang.String name) {
+		try {
+			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
+					"updateItemRemote", _updateItemRemoteParameterTypes6);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, itemId,
+					name);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (net.indaba.lostandfound.model.Item)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static net.indaba.lostandfound.model.Item removeItemRemote(
+		HttpPrincipal httpPrincipal, long itemId) {
+		try {
+			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
+					"removeItemRemote", _removeItemRemoteParameterTypes7);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, itemId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (net.indaba.lostandfound.model.Item)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(ItemServiceHttp.class);
 	private static final Class<?>[] _testParameterTypes0 = new Class[] {
 			java.lang.String.class
@@ -200,6 +279,15 @@ public class ItemServiceHttp {
 			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _removeItemParameterTypes4 = new Class[] {
+			long.class
+		};
+	private static final Class<?>[] _addItemRemoteParameterTypes5 = new Class[] {
+			java.lang.String.class
+		};
+	private static final Class<?>[] _updateItemRemoteParameterTypes6 = new Class[] {
+			long.class, java.lang.String.class
+		};
+	private static final Class<?>[] _removeItemRemoteParameterTypes7 = new Class[] {
 			long.class
 		};
 }
