@@ -3,14 +3,6 @@
 List<Item> items = (List<Item>)renderRequest.getAttribute("items");
 %>
 
-<aui:button-row>
-	<portlet:renderURL var="addItemURL">
-		<portlet:param name="mvcPath" value="<%=ItemManagerPortlet.PATH_EDIT_ITEM %>" />
-		<portlet:param name="redirect" value="<%= currentURL %>" />
-	</portlet:renderURL>
-	<aui:button href="<%= addItemURL.toString() %>" value="add"></aui:button>
-</aui:button-row>
-
 <liferay-ui:search-container
 	emptyResultsMessage="no-item-was-found" >
 	<liferay-ui:search-container-results results="<%=items%>"/>
@@ -25,3 +17,11 @@ List<Item> items = (List<Item>)renderRequest.getAttribute("items");
 	</liferay-ui:search-container-row>
 	<liferay-ui:search-iterator  markupView="lexicon" />
 </liferay-ui:search-container>
+
+<aui:button-row>
+	<portlet:renderURL var="addItemURL">
+		<portlet:param name="mvcPath" value="<%=ItemManagerPortlet.PATH_EDIT_ITEM %>" />
+		<portlet:param name="redirect" value="<%= currentURL %>" />
+	</portlet:renderURL>
+	<aui:button href="<%= addItemURL.toString() %>" value="add"></aui:button>
+</aui:button-row>

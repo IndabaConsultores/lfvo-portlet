@@ -245,7 +245,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 
 	@Override
 	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item) {
+		net.indaba.lostandfound.model.Item item)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
@@ -255,6 +256,10 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;

@@ -68,10 +68,12 @@ public class ItemLocalServiceWrapper implements ItemLocalService,
 	*
 	* @param item the item
 	* @return the item that was removed
+	* @throws PortalException
 	*/
 	@Override
 	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item) {
+		net.indaba.lostandfound.model.Item item)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return _itemLocalService.deleteItem(item);
 	}
 

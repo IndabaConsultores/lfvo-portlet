@@ -18,6 +18,8 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
@@ -54,23 +56,43 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	 * local service.
 	 */
 
-	@Override
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) throws PortalException {
 		_log.debug("addOrUpdateItem");
-		if(item.isNew())
+		if (item.isNew())
 			item.setItemId(CounterLocalServiceUtil.increment());
 		item = super.updateItem(item);
-		
+
 		updateAsset(serviceContext.getUserId(), item, serviceContext.getAssetCategoryIds(),
 				serviceContext.getAssetTagNames(), serviceContext.getAssetLinkEntryIds());
 
+		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
+		indexer.reindex(item);
+
 		return item;
+	}
+
+	@Override
+	public Item deleteItem(long itemId) throws PortalException {
+		return deleteItem(itemPersistence.fetchByPrimaryKey(itemId));
+	}
+
+	@Override
+	public Item deleteItem(Item item) throws PortalException {
+
+		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(Item.class.getName(), item.getItemId());
+		assetLinkLocalService.deleteLinks(assetEntry.getEntryId());
+
+		assetEntryLocalService.deleteEntry(assetEntry);
+
+		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
+		indexer.delete(item);
+
+		return super.deleteItem(item);
 	}
 
 	private void updateAsset(long userId, Item item, long[] assetCategoryIds, String[] assetTagNames,
 			long[] assetLinkEntryIds) throws PortalException {
 
-		
 		try {
 			AssetEntry assetEntry = assetEntryLocalService.updateEntry(userId, item.getGroupId(), Item.class.getName(),
 					item.getItemId(), assetCategoryIds, assetTagNames);
@@ -79,9 +101,9 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		} catch (Exception e) {
 			_log.error("Error updating Items asset", e);
 		}
-		
+
 	}
-	
+
 	private final Log _log = LogFactoryUtil.getLog(this.getClass());
 
 }

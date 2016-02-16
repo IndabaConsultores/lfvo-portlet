@@ -123,10 +123,11 @@ public abstract class ItemLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param item the item
 	 * @return the item that was removed
+	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public Item deleteItem(Item item) {
+	public Item deleteItem(Item item) throws PortalException {
 		return itemPersistence.remove(item);
 	}
 

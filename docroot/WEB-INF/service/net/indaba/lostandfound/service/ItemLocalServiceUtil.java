@@ -75,9 +75,11 @@ public class ItemLocalServiceUtil {
 	*
 	* @param item the item
 	* @return the item that was removed
+	* @throws PortalException
 	*/
 	public static net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item) {
+		net.indaba.lostandfound.model.Item item)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().deleteItem(item);
 	}
 

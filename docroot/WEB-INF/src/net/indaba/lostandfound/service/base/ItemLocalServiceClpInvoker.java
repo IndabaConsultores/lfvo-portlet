@@ -158,6 +158,16 @@ public class ItemLocalServiceClpInvoker {
 				"net.indaba.lostandfound.model.Item",
 				"com.liferay.portal.service.ServiceContext"
 			};
+
+		_methodName57 = "deleteItem";
+
+		_methodParameterTypes57 = new String[] { "long" };
+
+		_methodName58 = "deleteItem";
+
+		_methodParameterTypes58 = new String[] {
+				"net.indaba.lostandfound.model.Item"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -307,6 +317,16 @@ public class ItemLocalServiceClpInvoker {
 				(com.liferay.portal.service.ServiceContext)arguments[1]);
 		}
 
+		if (_methodName57.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes57, parameterTypes)) {
+			return ItemLocalServiceUtil.deleteItem(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName58.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes58, parameterTypes)) {
+			return ItemLocalServiceUtil.deleteItem((net.indaba.lostandfound.model.Item)arguments[0]);
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -362,4 +382,8 @@ public class ItemLocalServiceClpInvoker {
 	private String[] _methodParameterTypes51;
 	private String _methodName56;
 	private String[] _methodParameterTypes56;
+	private String _methodName57;
+	private String[] _methodParameterTypes57;
+	private String _methodName58;
+	private String[] _methodParameterTypes58;
 }

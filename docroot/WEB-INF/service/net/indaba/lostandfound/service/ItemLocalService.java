@@ -77,10 +77,11 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	*
 	* @param item the item
 	* @return the item that was removed
+	* @throws PortalException
 	*/
 	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.DELETE)
 	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item);
+		net.indaba.lostandfound.model.Item item) throws PortalException;
 
 	/**
 	* Deletes the item with the primary key from the database. Also notifies the appropriate model listeners.
