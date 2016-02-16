@@ -55,7 +55,8 @@ public class ItemManagerPortlet extends MVCPortlet {
 		item.setName(name);
 		item.setGroupId(serviceContext.getScopeGroupId());
 		
-		ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
+		//ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
+		ItemServiceUtil.addOrUpdateItem(item, serviceContext);
 		
 		sendRedirect(actionRequest, actionResponse);
 		
@@ -65,8 +66,8 @@ public class ItemManagerPortlet extends MVCPortlet {
 			throws IOException, PortletException, PortalException {
 		long itemId = ParamUtil.get(actionRequest, "itemId", 0);
 		_log.debug("deleteItem " + itemId);
-		ItemLocalServiceUtil.deleteItem(itemId);
-		
+		//ItemLocalServiceUtil.deleteItem(itemId);
+		ItemServiceUtil.removeItem(itemId);
 		sendRedirect(actionRequest, actionResponse);
 	}
 	

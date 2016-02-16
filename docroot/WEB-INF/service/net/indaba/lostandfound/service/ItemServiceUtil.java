@@ -51,6 +51,12 @@ public class ItemServiceUtil {
 		return getService().addItemRemote(name);
 	}
 
+	public static net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext) {
+		return getService().addOrUpdateItem(item, serviceContext);
+	}
+
 	public static net.indaba.lostandfound.model.Item getItem(long itemId) {
 		return getService().getItem(itemId);
 	}

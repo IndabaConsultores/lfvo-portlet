@@ -51,17 +51,24 @@ public class ItemServiceClpInvoker {
 
 		_methodParameterTypes43 = new String[] { "long" };
 
-		_methodName44 = "addItemRemote";
+		_methodName44 = "addOrUpdateItem";
 
-		_methodParameterTypes44 = new String[] { "java.lang.String" };
+		_methodParameterTypes44 = new String[] {
+				"net.indaba.lostandfound.model.Item",
+				"com.liferay.portal.service.ServiceContext"
+			};
 
-		_methodName45 = "updateItemRemote";
+		_methodName45 = "addItemRemote";
 
-		_methodParameterTypes45 = new String[] { "long", "java.lang.String" };
+		_methodParameterTypes45 = new String[] { "java.lang.String" };
 
-		_methodName46 = "removeItemRemote";
+		_methodName46 = "updateItemRemote";
 
-		_methodParameterTypes46 = new String[] { "long" };
+		_methodParameterTypes46 = new String[] { "long", "java.lang.String" };
+
+		_methodName47 = "removeItemRemote";
+
+		_methodParameterTypes47 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -99,17 +106,23 @@ public class ItemServiceClpInvoker {
 
 		if (_methodName44.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes44, parameterTypes)) {
-			return ItemServiceUtil.addItemRemote((java.lang.String)arguments[0]);
+			return ItemServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
+				(com.liferay.portal.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName45.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes45, parameterTypes)) {
-			return ItemServiceUtil.updateItemRemote(((Long)arguments[0]).longValue(),
-				(java.lang.String)arguments[1]);
+			return ItemServiceUtil.addItemRemote((java.lang.String)arguments[0]);
 		}
 
 		if (_methodName46.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes46, parameterTypes)) {
+			return ItemServiceUtil.updateItemRemote(((Long)arguments[0]).longValue(),
+				(java.lang.String)arguments[1]);
+		}
+
+		if (_methodName47.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes47, parameterTypes)) {
 			return ItemServiceUtil.removeItemRemote(((Long)arguments[0]).longValue());
 		}
 
@@ -134,4 +147,6 @@ public class ItemServiceClpInvoker {
 	private String[] _methodParameterTypes45;
 	private String _methodName46;
 	private String[] _methodParameterTypes46;
+	private String _methodName47;
+	private String[] _methodParameterTypes47;
 }

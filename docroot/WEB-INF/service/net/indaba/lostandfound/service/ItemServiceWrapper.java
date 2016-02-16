@@ -44,6 +44,13 @@ public class ItemServiceWrapper implements ItemService,
 	}
 
 	@Override
+	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext) {
+		return _itemService.addOrUpdateItem(item, serviceContext);
+	}
+
+	@Override
 	public net.indaba.lostandfound.model.Item getItem(long itemId) {
 		return _itemService.getItem(itemId);
 	}

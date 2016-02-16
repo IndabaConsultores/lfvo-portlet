@@ -140,17 +140,17 @@ public class ItemServiceImpl extends ItemServiceBaseImpl {
 		Item item;
 		try {
 			firebase = new Firebase(FB_URI + "/items/office");
-			firebase.addQuery("orderBy", "id");
+			firebase.addQuery("orderBy", "\"id\"");
 			firebase.addQuery("equalTo", String.valueOf(itemId));
 			FirebaseResponse response = firebase.get();
-			if (response.getSuccess()) {
+
+			if (response.getCode() == 200) {
 				Map<String, Object> responseMap = response.getBody();
-				String[] keys = (String[]) responseMap.keySet().toArray();
+				Object[] keys = responseMap.keySet().toArray();
 				
-				response = firebase.delete("/" + keys[0]);
-				if (response.getSuccess()) {
+				response = firebase.delete("/" + keys[0].toString());
+				if (response.getCode() == 200) {
 					item = itemPersistence.remove(itemId);
-					System.out.println(response.getRawBody());
 					return item;
 				}
 			}
@@ -159,6 +159,46 @@ public class ItemServiceImpl extends ItemServiceBaseImpl {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) {
+		try {
+			firebase = new Firebase(FB_URI + "/items/office");
+			firebase.addQuery("orderBy", "\"id\"");
+			firebase.addQuery("equalTo", String.valueOf(item.getItemId()));
+			FirebaseResponse response = firebase.get();
+			if (response.getSuccess()) {
+				
+				Map<String, Object> responseMap = response.getBody();
+				Object[] keys = responseMap.keySet().toArray();
+				Map<String, Object> itemMap = itemToMap(item);
+
+				if (keys.length == 0) {
+					// Adding an Item
+					item.setItemId(counterLocalService.increment());
+					itemMap = itemToMap(item);
+					response = firebase.post(itemMap);
+					if (response.getSuccess()) {
+						itemPersistence.update(item);
+					}
+					else {
+						itemPersistence.remove(item);
+					}
+				} else {
+					// Updating an Item
+					response = firebase.patch("/" + keys[0].toString(), itemMap);
+					if (response.getSuccess()) {
+						itemPersistence.update(item);
+					}
+				}
+			}
+		} catch (FirebaseException | UnsupportedEncodingException | JacksonUtilityException e) {
+			//itemPersistence.remove(item);
+			e.printStackTrace();
+		}
+
+		return item;
+
 	}
 
 	public Item addItemRemote(String name) {

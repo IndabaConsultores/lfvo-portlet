@@ -136,6 +136,23 @@ public class ItemServiceSoap {
 		}
 	}
 
+	public static net.indaba.lostandfound.model.ItemSoap addOrUpdateItem(
+		net.indaba.lostandfound.model.ItemSoap item,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.addOrUpdateItem(net.indaba.lostandfound.model.impl.ItemModelImpl.toModel(
+						item), serviceContext);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static net.indaba.lostandfound.model.ItemSoap addItemRemote(
 		java.lang.String name) throws RemoteException {
 		try {

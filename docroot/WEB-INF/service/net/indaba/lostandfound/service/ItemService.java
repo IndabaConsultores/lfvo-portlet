@@ -53,6 +53,10 @@ public interface ItemService extends BaseService, InvokableService {
 	public net.indaba.lostandfound.model.Item addItemRemote(
 		java.lang.String name);
 
+	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public net.indaba.lostandfound.model.Item getItem(long itemId);
 
