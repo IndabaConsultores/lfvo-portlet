@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.transaction.Isolation;
+import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.service.BaseService;
 import com.liferay.portal.service.InvokableService;
@@ -47,6 +48,17 @@ public interface ItemService extends BaseService, InvokableService {
 	 *
 	 * Never modify or reference this interface directly. Always use {@link ItemServiceUtil} to access the item remote service. Add custom service methods to {@link net.indaba.lostandfound.service.impl.ItemServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public net.indaba.lostandfound.model.Item addItem(java.lang.String name);
+
+	public net.indaba.lostandfound.model.Item addItemRemote(
+		java.lang.String name);
+
+	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public net.indaba.lostandfound.model.Item getItem(long itemId);
 
 	/**
 	* Returns the OSGi service identifier.
@@ -60,5 +72,15 @@ public interface ItemService extends BaseService, InvokableService {
 		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
 		throws java.lang.Throwable;
 
+	public net.indaba.lostandfound.model.Item removeItem(long itemId);
+
+	public net.indaba.lostandfound.model.Item removeItemRemote(long itemId);
+
 	public java.lang.String test(java.lang.String in);
+
+	public net.indaba.lostandfound.model.Item updateItem(long itemId,
+		java.lang.String name);
+
+	public net.indaba.lostandfound.model.Item updateItemRemote(long itemId,
+		java.lang.String name);
 }

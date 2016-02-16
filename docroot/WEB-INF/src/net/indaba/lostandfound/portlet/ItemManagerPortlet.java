@@ -22,6 +22,8 @@ import com.liferay.portal.service.ServiceContextFactory;
 import net.indaba.lostandfound.exception.NoSuchItemException;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
+import net.indaba.lostandfound.service.ItemService;
+import net.indaba.lostandfound.service.ItemServiceUtil;
 
 public class ItemManagerPortlet extends MVCPortlet {
 
@@ -53,7 +55,8 @@ public class ItemManagerPortlet extends MVCPortlet {
 		item.setName(name);
 		item.setGroupId(serviceContext.getScopeGroupId());
 		
-		ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
+		//ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
+		ItemServiceUtil.addOrUpdateItem(item, serviceContext);
 		
 		sendRedirect(actionRequest, actionResponse);
 		
@@ -63,8 +66,8 @@ public class ItemManagerPortlet extends MVCPortlet {
 			throws IOException, PortletException, PortalException {
 		long itemId = ParamUtil.get(actionRequest, "itemId", 0);
 		_log.debug("deleteItem " + itemId);
-		ItemLocalServiceUtil.deleteItem(itemId);
-		
+		//ItemLocalServiceUtil.deleteItem(itemId);
+		ItemServiceUtil.removeItem(itemId);
 		sendRedirect(actionRequest, actionResponse);
 	}
 	

@@ -79,5 +79,122 @@ public class ItemServiceSoap {
 		}
 	}
 
+	public static net.indaba.lostandfound.model.ItemSoap getItem(long itemId)
+		throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.getItem(itemId);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.ItemSoap addItem(
+		java.lang.String name) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.addItem(name);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.ItemSoap updateItem(
+		long itemId, java.lang.String name) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.updateItem(itemId,
+					name);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.ItemSoap removeItem(long itemId)
+		throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.removeItem(itemId);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.ItemSoap addOrUpdateItem(
+		net.indaba.lostandfound.model.ItemSoap item,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.addOrUpdateItem(net.indaba.lostandfound.model.impl.ItemModelImpl.toModel(
+						item), serviceContext);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.ItemSoap addItemRemote(
+		java.lang.String name) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.addItemRemote(name);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.ItemSoap updateItemRemote(
+		long itemId, java.lang.String name) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.updateItemRemote(itemId,
+					name);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.ItemSoap removeItemRemote(
+		long itemId) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.removeItemRemote(itemId);
+
+			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(ItemServiceSoap.class);
 }
