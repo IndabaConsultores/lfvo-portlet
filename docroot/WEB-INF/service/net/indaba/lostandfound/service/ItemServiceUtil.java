@@ -41,6 +41,25 @@ public class ItemServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link net.indaba.lostandfound.service.impl.ItemServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static net.indaba.lostandfound.model.Item addItem(
+		java.lang.String name) {
+		return getService().addItem(name);
+	}
+
+	public static net.indaba.lostandfound.model.Item addItemRemote(
+		java.lang.String name) {
+		return getService().addItemRemote(name);
+	}
+
+	public static net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext) {
+		return getService().addOrUpdateItem(item, serviceContext);
+	}
+
+	public static net.indaba.lostandfound.model.Item getItem(long itemId) {
+		return getService().getItem(itemId);
+	}
 
 	/**
 	* Returns the OSGi service identifier.
@@ -57,8 +76,27 @@ public class ItemServiceUtil {
 		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
+	public static net.indaba.lostandfound.model.Item removeItem(long itemId) {
+		return getService().removeItem(itemId);
+	}
+
+	public static net.indaba.lostandfound.model.Item removeItemRemote(
+		long itemId) {
+		return getService().removeItemRemote(itemId);
+	}
+
 	public static java.lang.String test(java.lang.String in) {
 		return getService().test(in);
+	}
+
+	public static net.indaba.lostandfound.model.Item updateItem(long itemId,
+		java.lang.String name) {
+		return getService().updateItem(itemId, name);
+	}
+
+	public static net.indaba.lostandfound.model.Item updateItemRemote(
+		long itemId, java.lang.String name) {
+		return getService().updateItemRemote(itemId, name);
 	}
 
 	public static void clearService() {

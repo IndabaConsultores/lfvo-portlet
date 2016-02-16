@@ -32,6 +32,29 @@ public class ItemServiceWrapper implements ItemService,
 		_itemService = itemService;
 	}
 
+	@Override
+	public net.indaba.lostandfound.model.Item addItem(java.lang.String name) {
+		return _itemService.addItem(name);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item addItemRemote(
+		java.lang.String name) {
+		return _itemService.addItemRemote(name);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext) {
+		return _itemService.addOrUpdateItem(item, serviceContext);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item getItem(long itemId) {
+		return _itemService.getItem(itemId);
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*
@@ -50,8 +73,30 @@ public class ItemServiceWrapper implements ItemService,
 	}
 
 	@Override
+	public net.indaba.lostandfound.model.Item removeItem(long itemId) {
+		return _itemService.removeItem(itemId);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item removeItemRemote(long itemId) {
+		return _itemService.removeItemRemote(itemId);
+	}
+
+	@Override
 	public java.lang.String test(java.lang.String in) {
 		return _itemService.test(in);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item updateItem(long itemId,
+		java.lang.String name) {
+		return _itemService.updateItem(itemId, name);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item updateItemRemote(long itemId,
+		java.lang.String name) {
+		return _itemService.updateItemRemote(itemId, name);
 	}
 
 	@Override
