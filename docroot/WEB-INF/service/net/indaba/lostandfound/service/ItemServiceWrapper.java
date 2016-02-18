@@ -33,26 +33,47 @@ public class ItemServiceWrapper implements ItemService,
 	}
 
 	@Override
-	public net.indaba.lostandfound.model.Item addItem(java.lang.String name) {
-		return _itemService.addItem(name);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item addItemRemote(
-		java.lang.String name) {
-		return _itemService.addItemRemote(name);
+	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _itemService.addOrUpdateItem(item, serviceContext);
 	}
 
 	@Override
 	public net.indaba.lostandfound.model.Item addOrUpdateItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext) {
-		return _itemService.addOrUpdateItem(item, serviceContext);
+		com.liferay.portal.service.ServiceContext serviceContext,
+		boolean updateFirebase)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _itemService.addOrUpdateItem(item, serviceContext, updateFirebase);
 	}
 
 	@Override
-	public net.indaba.lostandfound.model.Item getItem(long itemId) {
-		return _itemService.getItem(itemId);
+	public net.indaba.lostandfound.model.Item deleteItem(
+		net.indaba.lostandfound.model.Item item)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _itemService.deleteItem(item);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item deleteItem(
+		net.indaba.lostandfound.model.Item item, boolean updateFirebase)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _itemService.deleteItem(item, updateFirebase);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item deleteItem(long itemId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _itemService.deleteItem(itemId);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item deleteItem(long itemId,
+		boolean updateFirebase)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _itemService.deleteItem(itemId, updateFirebase);
 	}
 
 	/**
@@ -70,33 +91,6 @@ public class ItemServiceWrapper implements ItemService,
 		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
 		throws java.lang.Throwable {
 		return _itemService.invokeMethod(name, parameterTypes, arguments);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item removeItem(long itemId) {
-		return _itemService.removeItem(itemId);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item removeItemRemote(long itemId) {
-		return _itemService.removeItemRemote(itemId);
-	}
-
-	@Override
-	public java.lang.String test(java.lang.String in) {
-		return _itemService.test(in);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item updateItem(long itemId,
-		java.lang.String name) {
-		return _itemService.updateItem(itemId, name);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item updateItemRemote(long itemId,
-		java.lang.String name) {
-		return _itemService.updateItemRemote(itemId, name);
 	}
 
 	@Override

@@ -159,13 +159,30 @@ public class ItemLocalServiceClpInvoker {
 				"com.liferay.portal.service.ServiceContext"
 			};
 
-		_methodName57 = "deleteItem";
+		_methodName57 = "addOrUpdateItem";
 
-		_methodParameterTypes57 = new String[] { "long" };
+		_methodParameterTypes57 = new String[] {
+				"net.indaba.lostandfound.model.Item",
+				"com.liferay.portal.service.ServiceContext", "boolean"
+			};
 
 		_methodName58 = "deleteItem";
 
-		_methodParameterTypes58 = new String[] {
+		_methodParameterTypes58 = new String[] { "long", "boolean" };
+
+		_methodName59 = "deleteItem";
+
+		_methodParameterTypes59 = new String[] { "long" };
+
+		_methodName60 = "deleteItem";
+
+		_methodParameterTypes60 = new String[] {
+				"net.indaba.lostandfound.model.Item", "boolean"
+			};
+
+		_methodName61 = "deleteItem";
+
+		_methodParameterTypes61 = new String[] {
 				"net.indaba.lostandfound.model.Item"
 			};
 	}
@@ -319,11 +336,30 @@ public class ItemLocalServiceClpInvoker {
 
 		if (_methodName57.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes57, parameterTypes)) {
-			return ItemLocalServiceUtil.deleteItem(((Long)arguments[0]).longValue());
+			return ItemLocalServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
+				(com.liferay.portal.service.ServiceContext)arguments[1],
+				((Boolean)arguments[2]).booleanValue());
 		}
 
 		if (_methodName58.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes58, parameterTypes)) {
+			return ItemLocalServiceUtil.deleteItem(((Long)arguments[0]).longValue(),
+				((Boolean)arguments[1]).booleanValue());
+		}
+
+		if (_methodName59.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes59, parameterTypes)) {
+			return ItemLocalServiceUtil.deleteItem(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName60.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes60, parameterTypes)) {
+			return ItemLocalServiceUtil.deleteItem((net.indaba.lostandfound.model.Item)arguments[0],
+				((Boolean)arguments[1]).booleanValue());
+		}
+
+		if (_methodName61.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes61, parameterTypes)) {
 			return ItemLocalServiceUtil.deleteItem((net.indaba.lostandfound.model.Item)arguments[0]);
 		}
 
@@ -386,4 +422,10 @@ public class ItemLocalServiceClpInvoker {
 	private String[] _methodParameterTypes57;
 	private String _methodName58;
 	private String[] _methodParameterTypes58;
+	private String _methodName59;
+	private String[] _methodParameterTypes59;
+	private String _methodName60;
+	private String[] _methodParameterTypes60;
+	private String _methodName61;
+	private String[] _methodParameterTypes61;
 }

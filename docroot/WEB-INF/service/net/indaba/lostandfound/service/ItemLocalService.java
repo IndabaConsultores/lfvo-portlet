@@ -64,6 +64,11 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws PortalException;
 
+	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext,
+		boolean updateFirebase) throws PortalException;
+
 	/**
 	* Creates a new item with the primary key. Does not add the item to the database.
 	*
@@ -83,6 +88,10 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	public net.indaba.lostandfound.model.Item deleteItem(
 		net.indaba.lostandfound.model.Item item) throws PortalException;
 
+	public net.indaba.lostandfound.model.Item deleteItem(
+		net.indaba.lostandfound.model.Item item, boolean updateFirebase)
+		throws PortalException;
+
 	/**
 	* Deletes the item with the primary key from the database. Also notifies the appropriate model listeners.
 	*
@@ -93,6 +102,9 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.DELETE)
 	public net.indaba.lostandfound.model.Item deleteItem(long itemId)
 		throws PortalException;
+
+	public net.indaba.lostandfound.model.Item deleteItem(long itemId,
+		boolean updateFirebase) throws PortalException;
 
 	/**
 	* @throws PortalException

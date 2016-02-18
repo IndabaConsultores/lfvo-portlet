@@ -40,122 +40,139 @@ public class ItemLocalServiceClp implements ItemLocalService {
 				"com.liferay.portal.service.ServiceContext"
 			};
 
-		_methodName2 = "createItem";
+		_methodName2 = "addOrUpdateItem";
 
-		_methodParameterTypes2 = new String[] { "long" };
-
-		_methodName3 = "deleteItem";
-
-		_methodParameterTypes3 = new String[] {
-				"net.indaba.lostandfound.model.Item"
+		_methodParameterTypes2 = new String[] {
+				"net.indaba.lostandfound.model.Item",
+				"com.liferay.portal.service.ServiceContext", "boolean"
 			};
+
+		_methodName3 = "createItem";
+
+		_methodParameterTypes3 = new String[] { "long" };
 
 		_methodName4 = "deleteItem";
 
-		_methodParameterTypes4 = new String[] { "long" };
+		_methodParameterTypes4 = new String[] {
+				"net.indaba.lostandfound.model.Item"
+			};
 
-		_methodName5 = "deletePersistedModel";
+		_methodName5 = "deleteItem";
 
 		_methodParameterTypes5 = new String[] {
-				"com.liferay.portal.model.PersistedModel"
+				"net.indaba.lostandfound.model.Item", "boolean"
 			};
 
-		_methodName6 = "dynamicQuery";
+		_methodName6 = "deleteItem";
 
-		_methodParameterTypes6 = new String[] {  };
+		_methodParameterTypes6 = new String[] { "long" };
 
-		_methodName7 = "dynamicQuery";
+		_methodName7 = "deleteItem";
 
-		_methodParameterTypes7 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
-			};
+		_methodParameterTypes7 = new String[] { "long", "boolean" };
 
-		_methodName8 = "dynamicQuery";
+		_methodName8 = "deletePersistedModel";
 
 		_methodParameterTypes8 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int"
+				"com.liferay.portal.model.PersistedModel"
 			};
 
 		_methodName9 = "dynamicQuery";
 
-		_methodParameterTypes9 = new String[] {
-				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int",
-				"com.liferay.portal.kernel.util.OrderByComparator"
-			};
+		_methodParameterTypes9 = new String[] {  };
 
-		_methodName10 = "dynamicQueryCount";
+		_methodName10 = "dynamicQuery";
 
 		_methodParameterTypes10 = new String[] {
 				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
 			};
 
-		_methodName11 = "dynamicQueryCount";
+		_methodName11 = "dynamicQuery";
 
 		_methodParameterTypes11 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int"
+			};
+
+		_methodName12 = "dynamicQuery";
+
+		_methodParameterTypes12 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery", "int", "int",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			};
+
+		_methodName13 = "dynamicQueryCount";
+
+		_methodParameterTypes13 = new String[] {
+				"com.liferay.portal.kernel.dao.orm.DynamicQuery"
+			};
+
+		_methodName14 = "dynamicQueryCount";
+
+		_methodParameterTypes14 = new String[] {
 				"com.liferay.portal.kernel.dao.orm.DynamicQuery",
 				"com.liferay.portal.kernel.dao.orm.Projection"
 			};
 
-		_methodName12 = "fetchItem";
+		_methodName15 = "fetchItem";
 
-		_methodParameterTypes12 = new String[] { "long" };
+		_methodParameterTypes15 = new String[] { "long" };
 
-		_methodName13 = "fetchItemByUuidAndGroupId";
+		_methodName16 = "fetchItemByUuidAndGroupId";
 
-		_methodParameterTypes13 = new String[] { "java.lang.String", "long" };
+		_methodParameterTypes16 = new String[] { "java.lang.String", "long" };
 
-		_methodName14 = "getActionableDynamicQuery";
+		_methodName17 = "getActionableDynamicQuery";
 
-		_methodParameterTypes14 = new String[] {  };
+		_methodParameterTypes17 = new String[] {  };
 
-		_methodName15 = "getExportActionableDynamicQuery";
+		_methodName18 = "getExportActionableDynamicQuery";
 
-		_methodParameterTypes15 = new String[] {
+		_methodParameterTypes18 = new String[] {
 				"com.liferay.portlet.exportimport.lar.PortletDataContext"
 			};
 
-		_methodName16 = "getIndexableActionableDynamicQuery";
+		_methodName19 = "getIndexableActionableDynamicQuery";
 
-		_methodParameterTypes16 = new String[] {  };
+		_methodParameterTypes19 = new String[] {  };
 
-		_methodName17 = "getItem";
+		_methodName20 = "getItem";
 
-		_methodParameterTypes17 = new String[] { "long" };
+		_methodParameterTypes20 = new String[] { "long" };
 
-		_methodName18 = "getItemByUuidAndGroupId";
+		_methodName21 = "getItemByUuidAndGroupId";
 
-		_methodParameterTypes18 = new String[] { "java.lang.String", "long" };
+		_methodParameterTypes21 = new String[] { "java.lang.String", "long" };
 
-		_methodName19 = "getItems";
+		_methodName22 = "getItems";
 
-		_methodParameterTypes19 = new String[] { "int", "int" };
+		_methodParameterTypes22 = new String[] { "int", "int" };
 
-		_methodName20 = "getItemsByUuidAndCompanyId";
+		_methodName23 = "getItemsByUuidAndCompanyId";
 
-		_methodParameterTypes20 = new String[] { "java.lang.String", "long" };
+		_methodParameterTypes23 = new String[] { "java.lang.String", "long" };
 
-		_methodName21 = "getItemsByUuidAndCompanyId";
+		_methodName24 = "getItemsByUuidAndCompanyId";
 
-		_methodParameterTypes21 = new String[] {
+		_methodParameterTypes24 = new String[] {
 				"java.lang.String", "long", "int", "int",
 				"com.liferay.portal.kernel.util.OrderByComparator"
 			};
 
-		_methodName22 = "getItemsCount";
+		_methodName25 = "getItemsCount";
 
-		_methodParameterTypes22 = new String[] {  };
+		_methodParameterTypes25 = new String[] {  };
 
-		_methodName23 = "getOSGiServiceIdentifier";
+		_methodName26 = "getOSGiServiceIdentifier";
 
-		_methodParameterTypes23 = new String[] {  };
+		_methodParameterTypes26 = new String[] {  };
 
-		_methodName24 = "getPersistedModel";
+		_methodName27 = "getPersistedModel";
 
-		_methodParameterTypes24 = new String[] { "java.io.Serializable" };
+		_methodParameterTypes27 = new String[] { "java.io.Serializable" };
 
-		_methodName26 = "updateItem";
+		_methodName29 = "updateItem";
 
-		_methodParameterTypes26 = new String[] {
+		_methodParameterTypes29 = new String[] {
 				"net.indaba.lostandfound.model.Item"
 			};
 	}
@@ -221,12 +238,50 @@ public class ItemLocalServiceClp implements ItemLocalService {
 	}
 
 	@Override
-	public net.indaba.lostandfound.model.Item createItem(long itemId) {
+	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext,
+		boolean updateFirebase)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableLocalService.invokeMethod(_methodName2,
-					_methodParameterTypes2, new Object[] { itemId });
+					_methodParameterTypes2,
+					new Object[] {
+						ClpSerializer.translateInput(item),
+						
+					ClpSerializer.translateInput(serviceContext),
+						
+					updateFirebase
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item createItem(long itemId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName3,
+					_methodParameterTypes3, new Object[] { itemId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -250,9 +305,43 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName3,
-					_methodParameterTypes3,
+			returnObj = _invokableLocalService.invokeMethod(_methodName4,
+					_methodParameterTypes4,
 					new Object[] { ClpSerializer.translateInput(item) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item deleteItem(
+		net.indaba.lostandfound.model.Item item, boolean updateFirebase)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName5,
+					_methodParameterTypes5,
+					new Object[] {
+						ClpSerializer.translateInput(item),
+						
+					updateFirebase
+					});
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -279,8 +368,38 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName4,
-					_methodParameterTypes4, new Object[] { itemId });
+			returnObj = _invokableLocalService.invokeMethod(_methodName6,
+					_methodParameterTypes6, new Object[] { itemId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item deleteItem(long itemId,
+		boolean updateFirebase)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName7,
+					_methodParameterTypes7,
+					new Object[] { itemId, updateFirebase });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -308,8 +427,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName5,
-					_methodParameterTypes5,
+			returnObj = _invokableLocalService.invokeMethod(_methodName8,
+					_methodParameterTypes8,
 					new Object[] { ClpSerializer.translateInput(persistedModel) });
 		}
 		catch (Throwable t) {
@@ -336,8 +455,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName6,
-					_methodParameterTypes6, new Object[] {  });
+			returnObj = _invokableLocalService.invokeMethod(_methodName9,
+					_methodParameterTypes9, new Object[] {  });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -360,8 +479,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName7,
-					_methodParameterTypes7,
+			returnObj = _invokableLocalService.invokeMethod(_methodName10,
+					_methodParameterTypes10,
 					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
 		}
 		catch (Throwable t) {
@@ -386,8 +505,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName8,
-					_methodParameterTypes8,
+			returnObj = _invokableLocalService.invokeMethod(_methodName11,
+					_methodParameterTypes11,
 					new Object[] {
 						ClpSerializer.translateInput(dynamicQuery),
 						
@@ -419,8 +538,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName9,
-					_methodParameterTypes9,
+			returnObj = _invokableLocalService.invokeMethod(_methodName12,
+					_methodParameterTypes12,
 					new Object[] {
 						ClpSerializer.translateInput(dynamicQuery),
 						
@@ -452,8 +571,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName10,
-					_methodParameterTypes10,
+			returnObj = _invokableLocalService.invokeMethod(_methodName13,
+					_methodParameterTypes13,
 					new Object[] { ClpSerializer.translateInput(dynamicQuery) });
 		}
 		catch (Throwable t) {
@@ -478,8 +597,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName11,
-					_methodParameterTypes11,
+			returnObj = _invokableLocalService.invokeMethod(_methodName14,
+					_methodParameterTypes14,
 					new Object[] {
 						ClpSerializer.translateInput(dynamicQuery),
 						
@@ -506,8 +625,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName12,
-					_methodParameterTypes12, new Object[] { itemId });
+			returnObj = _invokableLocalService.invokeMethod(_methodName15,
+					_methodParameterTypes15, new Object[] { itemId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -530,8 +649,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName13,
-					_methodParameterTypes13,
+			returnObj = _invokableLocalService.invokeMethod(_methodName16,
+					_methodParameterTypes16,
 					new Object[] { ClpSerializer.translateInput(uuid), groupId });
 		}
 		catch (Throwable t) {
@@ -554,8 +673,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName14,
-					_methodParameterTypes14, new Object[] {  });
+			returnObj = _invokableLocalService.invokeMethod(_methodName17,
+					_methodParameterTypes17, new Object[] {  });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -578,8 +697,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName15,
-					_methodParameterTypes15,
+			returnObj = _invokableLocalService.invokeMethod(_methodName18,
+					_methodParameterTypes18,
 					new Object[] {
 						ClpSerializer.translateInput(portletDataContext)
 					});
@@ -604,8 +723,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName16,
-					_methodParameterTypes16, new Object[] {  });
+			returnObj = _invokableLocalService.invokeMethod(_methodName19,
+					_methodParameterTypes19, new Object[] {  });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -628,8 +747,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName17,
-					_methodParameterTypes17, new Object[] { itemId });
+			returnObj = _invokableLocalService.invokeMethod(_methodName20,
+					_methodParameterTypes20, new Object[] { itemId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -657,8 +776,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName18,
-					_methodParameterTypes18,
+			returnObj = _invokableLocalService.invokeMethod(_methodName21,
+					_methodParameterTypes21,
 					new Object[] { ClpSerializer.translateInput(uuid), groupId });
 		}
 		catch (Throwable t) {
@@ -686,8 +805,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName19,
-					_methodParameterTypes19, new Object[] { start, end });
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22, new Object[] { start, end });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -710,8 +829,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName20,
-					_methodParameterTypes20,
+			returnObj = _invokableLocalService.invokeMethod(_methodName23,
+					_methodParameterTypes23,
 					new Object[] { ClpSerializer.translateInput(uuid), companyId });
 		}
 		catch (Throwable t) {
@@ -736,8 +855,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName21,
-					_methodParameterTypes21,
+			returnObj = _invokableLocalService.invokeMethod(_methodName24,
+					_methodParameterTypes24,
 					new Object[] {
 						ClpSerializer.translateInput(uuid),
 						
@@ -770,8 +889,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName22,
-					_methodParameterTypes22, new Object[] {  });
+			returnObj = _invokableLocalService.invokeMethod(_methodName25,
+					_methodParameterTypes25, new Object[] {  });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -793,8 +912,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName23,
-					_methodParameterTypes23, new Object[] {  });
+			returnObj = _invokableLocalService.invokeMethod(_methodName26,
+					_methodParameterTypes26, new Object[] {  });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -818,8 +937,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName24,
-					_methodParameterTypes24,
+			returnObj = _invokableLocalService.invokeMethod(_methodName27,
+					_methodParameterTypes27,
 					new Object[] { ClpSerializer.translateInput(primaryKeyObj) });
 		}
 		catch (Throwable t) {
@@ -854,8 +973,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName26,
-					_methodParameterTypes26,
+			returnObj = _invokableLocalService.invokeMethod(_methodName29,
+					_methodParameterTypes29,
 					new Object[] { ClpSerializer.translateInput(item) });
 		}
 		catch (Throwable t) {
@@ -924,6 +1043,12 @@ public class ItemLocalServiceClp implements ItemLocalService {
 	private String[] _methodParameterTypes23;
 	private String _methodName24;
 	private String[] _methodParameterTypes24;
+	private String _methodName25;
+	private String[] _methodParameterTypes25;
 	private String _methodName26;
 	private String[] _methodParameterTypes26;
+	private String _methodName27;
+	private String[] _methodParameterTypes27;
+	private String _methodName29;
+	private String[] _methodParameterTypes29;
 }

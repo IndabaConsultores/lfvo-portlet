@@ -25,8 +25,11 @@ import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 
 import aQute.bnd.annotation.ProviderType;
+import net.indaba.lostandfound.firebase.FirebaseSyncUtil;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.base.ItemLocalServiceBaseImpl;
+import net.thegreshams.firebase4j.error.FirebaseException;
+import net.thegreshams.firebase4j.error.JacksonUtilityException;
 
 /**
  * The implementation of the item local service.
@@ -71,12 +74,44 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		return item;
 	}
 
-	@Override
+	public Item addOrUpdateItem(Item item, ServiceContext serviceContext, boolean updateFirebase)
+			throws PortalException {
+
+		if (updateFirebase) {
+			try {
+				_log.debug("Updating iten in Firebase");
+				FirebaseSyncUtil.addOrUpdateItem(item);
+			} catch (Exception | FirebaseException | JacksonUtilityException e) {
+				_log.error("Error updating item " + item.getItemId(), e);
+			}
+		}
+		return addOrUpdateItem(item, serviceContext);
+	}
+
+	public Item deleteItem(long itemId, boolean updateFirebase) throws PortalException {
+		return deleteItem(itemPersistence.fetchByPrimaryKey(itemId), updateFirebase);
+	}
+
 	public Item deleteItem(long itemId) throws PortalException {
 		return deleteItem(itemPersistence.fetchByPrimaryKey(itemId));
 	}
 
-	@Override
+	public Item deleteItem(Item item, boolean updateFirebase) throws PortalException {
+
+		if (updateFirebase) {
+			try {
+				_log.debug("Deleting iten in Firebase");
+				FirebaseSyncUtil.removeItem(item);
+			} catch (FirebaseException | JacksonUtilityException | Exception e) {
+				_log.error("Error deleting item " + item.getItemId(), e);
+				e.printStackTrace();
+			}
+
+		}
+
+		return deleteItem(item);
+	}
+
 	public Item deleteItem(Item item) throws PortalException {
 
 		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(Item.class.getName(), item.getItemId());

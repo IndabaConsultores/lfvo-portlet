@@ -27,86 +27,67 @@ public class ItemServiceClp implements ItemService {
 	public ItemServiceClp(InvokableService invokableService) {
 		_invokableService = invokableService;
 
-		_methodName0 = "addItem";
+		_methodName0 = "addOrUpdateItem";
 
-		_methodParameterTypes0 = new String[] { "java.lang.String" };
-
-		_methodName1 = "addItemRemote";
-
-		_methodParameterTypes1 = new String[] { "java.lang.String" };
-
-		_methodName2 = "addOrUpdateItem";
-
-		_methodParameterTypes2 = new String[] {
+		_methodParameterTypes0 = new String[] {
 				"net.indaba.lostandfound.model.Item",
 				"com.liferay.portal.service.ServiceContext"
 			};
 
-		_methodName3 = "getItem";
+		_methodName1 = "addOrUpdateItem";
 
-		_methodParameterTypes3 = new String[] { "long" };
+		_methodParameterTypes1 = new String[] {
+				"net.indaba.lostandfound.model.Item",
+				"com.liferay.portal.service.ServiceContext", "boolean"
+			};
 
-		_methodName4 = "getOSGiServiceIdentifier";
+		_methodName2 = "deleteItem";
 
-		_methodParameterTypes4 = new String[] {  };
+		_methodParameterTypes2 = new String[] {
+				"net.indaba.lostandfound.model.Item"
+			};
 
-		_methodName6 = "removeItem";
+		_methodName3 = "deleteItem";
 
-		_methodParameterTypes6 = new String[] { "long" };
+		_methodParameterTypes3 = new String[] {
+				"net.indaba.lostandfound.model.Item", "boolean"
+			};
 
-		_methodName7 = "removeItemRemote";
+		_methodName4 = "deleteItem";
 
-		_methodParameterTypes7 = new String[] { "long" };
+		_methodParameterTypes4 = new String[] { "long" };
 
-		_methodName8 = "test";
+		_methodName5 = "deleteItem";
 
-		_methodParameterTypes8 = new String[] { "java.lang.String" };
+		_methodParameterTypes5 = new String[] { "long", "boolean" };
 
-		_methodName9 = "updateItem";
+		_methodName6 = "getOSGiServiceIdentifier";
 
-		_methodParameterTypes9 = new String[] { "long", "java.lang.String" };
-
-		_methodName10 = "updateItemRemote";
-
-		_methodParameterTypes10 = new String[] { "long", "java.lang.String" };
+		_methodParameterTypes6 = new String[] {  };
 	}
 
 	@Override
-	public net.indaba.lostandfound.model.Item addItem(java.lang.String name) {
+	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableService.invokeMethod(_methodName0,
 					_methodParameterTypes0,
-					new Object[] { ClpSerializer.translateInput(name) });
+					new Object[] {
+						ClpSerializer.translateInput(item),
+						
+					ClpSerializer.translateInput(serviceContext)
+					});
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
 
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
 			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item addItemRemote(
-		java.lang.String name) {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableService.invokeMethod(_methodName1,
-					_methodParameterTypes1,
-					new Object[] { ClpSerializer.translateInput(name) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -123,20 +104,28 @@ public class ItemServiceClp implements ItemService {
 	@Override
 	public net.indaba.lostandfound.model.Item addOrUpdateItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext) {
+		com.liferay.portal.service.ServiceContext serviceContext,
+		boolean updateFirebase)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableService.invokeMethod(_methodName2,
-					_methodParameterTypes2,
+			returnObj = _invokableService.invokeMethod(_methodName1,
+					_methodParameterTypes1,
 					new Object[] {
 						ClpSerializer.translateInput(item),
 						
-					ClpSerializer.translateInput(serviceContext)
+					ClpSerializer.translateInput(serviceContext),
+						
+					updateFirebase
 					});
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -151,15 +140,114 @@ public class ItemServiceClp implements ItemService {
 	}
 
 	@Override
-	public net.indaba.lostandfound.model.Item getItem(long itemId) {
+	public net.indaba.lostandfound.model.Item deleteItem(
+		net.indaba.lostandfound.model.Item item)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName2,
+					_methodParameterTypes2,
+					new Object[] { ClpSerializer.translateInput(item) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item deleteItem(
+		net.indaba.lostandfound.model.Item item, boolean updateFirebase)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableService.invokeMethod(_methodName3,
-					_methodParameterTypes3, new Object[] { itemId });
+					_methodParameterTypes3,
+					new Object[] {
+						ClpSerializer.translateInput(item),
+						
+					updateFirebase
+					});
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item deleteItem(long itemId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName4,
+					_methodParameterTypes4, new Object[] { itemId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public net.indaba.lostandfound.model.Item deleteItem(long itemId,
+		boolean updateFirebase)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName5,
+					_methodParameterTypes5,
+					new Object[] { itemId, updateFirebase });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -178,8 +266,8 @@ public class ItemServiceClp implements ItemService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableService.invokeMethod(_methodName4,
-					_methodParameterTypes4, new Object[] {  });
+			returnObj = _invokableService.invokeMethod(_methodName6,
+					_methodParameterTypes6, new Object[] {  });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -203,126 +291,6 @@ public class ItemServiceClp implements ItemService {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public net.indaba.lostandfound.model.Item removeItem(long itemId) {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableService.invokeMethod(_methodName6,
-					_methodParameterTypes6, new Object[] { itemId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item removeItemRemote(long itemId) {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableService.invokeMethod(_methodName7,
-					_methodParameterTypes7, new Object[] { itemId });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public java.lang.String test(java.lang.String in) {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableService.invokeMethod(_methodName8,
-					_methodParameterTypes8,
-					new Object[] { ClpSerializer.translateInput(in) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item updateItem(long itemId,
-		java.lang.String name) {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableService.invokeMethod(_methodName9,
-					_methodParameterTypes9,
-					new Object[] { itemId, ClpSerializer.translateInput(name) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item updateItemRemote(long itemId,
-		java.lang.String name) {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableService.invokeMethod(_methodName10,
-					_methodParameterTypes10,
-					new Object[] { itemId, ClpSerializer.translateInput(name) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
-	}
-
 	private InvokableService _invokableService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
@@ -334,14 +302,8 @@ public class ItemServiceClp implements ItemService {
 	private String[] _methodParameterTypes3;
 	private String _methodName4;
 	private String[] _methodParameterTypes4;
+	private String _methodName5;
+	private String[] _methodParameterTypes5;
 	private String _methodName6;
 	private String[] _methodParameterTypes6;
-	private String _methodName7;
-	private String[] _methodParameterTypes7;
-	private String _methodName8;
-	private String[] _methodParameterTypes8;
-	private String _methodName9;
-	private String[] _methodParameterTypes9;
-	private String _methodName10;
-	private String[] _methodParameterTypes10;
 }
