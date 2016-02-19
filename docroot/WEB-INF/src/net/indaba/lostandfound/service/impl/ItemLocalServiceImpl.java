@@ -61,10 +61,11 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) throws PortalException {
 		_log.debug("addOrUpdateItem");
-		if (item.isNew())
+		if (item.getItemId() == 0) // item.isNew() return false for Firebase created items
 			item.setItemId(CounterLocalServiceUtil.increment());
 		item = super.updateItem(item);
 
+		/* UserId needs to be set on REST API calls */
 		updateAsset(serviceContext.getUserId(), item, serviceContext.getAssetCategoryIds(),
 				serviceContext.getAssetTagNames(), serviceContext.getAssetLinkEntryIds());
 
@@ -76,10 +77,13 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext, boolean updateFirebase)
 			throws PortalException {
-
+		/* Necessary for Firebase replication; the item needs an itemId */
+		if (item.isNew())
+			item.setItemId(CounterLocalServiceUtil.increment());
+		
 		if (updateFirebase) {
 			try {
-				_log.debug("Updating iten in Firebase");
+				_log.debug("Updating item in Firebase");
 				FirebaseSyncUtil.addOrUpdateItem(item);
 			} catch (Exception | FirebaseException | JacksonUtilityException e) {
 				_log.error("Error updating item " + item.getItemId(), e);
@@ -100,9 +104,9 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 		if (updateFirebase) {
 			try {
-				_log.debug("Deleting iten in Firebase");
-				FirebaseSyncUtil.removeItem(item);
-			} catch (FirebaseException | JacksonUtilityException | Exception e) {
+				_log.debug("Deleting item in Firebase");
+				FirebaseSyncUtil.deleteItem(item);
+			} catch (FirebaseException | Exception e) {
 				_log.error("Error deleting item " + item.getItemId(), e);
 				e.printStackTrace();
 			}
