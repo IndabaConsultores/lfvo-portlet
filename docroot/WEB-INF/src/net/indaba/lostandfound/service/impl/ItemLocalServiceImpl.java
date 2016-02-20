@@ -60,9 +60,25 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	 */
 
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) throws PortalException {
+		return addOrUpdateItem(item, serviceContext, false);
+	}
+
+	public Item addOrUpdateItem(Item item, ServiceContext serviceContext, boolean updateFirebase)
+			throws PortalException {
 		_log.debug("addOrUpdateItem");
-		if (item.getItemId() == 0) // item.isNew() return false for Firebase created items
+
+		/* When calling from Firebase, somehow item.isNew() returns false*/
+		if (item.isNew() || item.getItemId() == 0)
 			item.setItemId(CounterLocalServiceUtil.increment());
+
+		if (updateFirebase) {
+			try {
+				_log.debug("Updating item in Firebase");
+				FirebaseSyncUtil.addOrUpdateItem(item);
+			} catch (Exception | FirebaseException | JacksonUtilityException e) {
+				_log.error("Error updating item " + item.getItemId(), e);
+			}
+		}
 		item = super.updateItem(item);
 
 		/* UserId needs to be set on REST API calls */
@@ -73,23 +89,6 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		indexer.reindex(item);
 
 		return item;
-	}
-
-	public Item addOrUpdateItem(Item item, ServiceContext serviceContext, boolean updateFirebase)
-			throws PortalException {
-		/* Necessary for Firebase replication; the item needs an itemId */
-		if (item.isNew())
-			item.setItemId(CounterLocalServiceUtil.increment());
-		
-		if (updateFirebase) {
-			try {
-				_log.debug("Updating item in Firebase");
-				FirebaseSyncUtil.addOrUpdateItem(item);
-			} catch (Exception | FirebaseException | JacksonUtilityException e) {
-				_log.error("Error updating item " + item.getItemId(), e);
-			}
-		}
-		return addOrUpdateItem(item, serviceContext);
 	}
 
 	public Item deleteItem(long itemId, boolean updateFirebase) throws PortalException {

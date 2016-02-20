@@ -113,6 +113,14 @@ public class FirebaseSyncUtil {
 		itemMap.put("id", item.getItemId());
 		itemMap.put("name", item.getName());
 		itemMap.put("description", item.getDescription());
+		itemMap.put("createdAt", item.getCreateDate());
+		itemMap.put("groupId", item.getGroupId());
+		itemMap.put("companyId", item.getCompanyId());
+		Map<String, Object> location = new HashMap<String, Object>();
+		location.put("latitude", item.getLat());
+		location.put("longitude", item.getLng());
+		itemMap.put("location", location);
+		itemMap.put("liferay", true);
 		return itemMap;
 	}
 
