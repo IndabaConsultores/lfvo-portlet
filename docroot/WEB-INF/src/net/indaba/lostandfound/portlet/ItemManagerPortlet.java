@@ -6,11 +6,9 @@ import java.util.List;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
-import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -19,10 +17,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 
-import net.indaba.lostandfound.exception.NoSuchItemException;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
-import net.indaba.lostandfound.service.ItemService;
 import net.indaba.lostandfound.service.ItemServiceUtil;
 
 public class ItemManagerPortlet extends MVCPortlet {
@@ -56,7 +52,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		item.setGroupId(serviceContext.getScopeGroupId());
 		
 		//ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
-		ItemServiceUtil.addOrUpdateItem(item, serviceContext);
+		ItemServiceUtil.addOrUpdateItem(item, serviceContext, true);
 		
 		sendRedirect(actionRequest, actionResponse);
 		

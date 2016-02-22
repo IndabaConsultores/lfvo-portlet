@@ -77,7 +77,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext, boolean updateFirebase)
 			throws PortalException {
 
-		if (updateFirebase) {
+		if (updateFirebase && FirebaseSyncUtil.isSyncEnabled()) {
 			try {
 				_log.debug("Updating iten in Firebase");
 				FirebaseSyncUtil.addOrUpdateItem(item);
@@ -98,7 +98,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 	public Item deleteItem(Item item, boolean updateFirebase) throws PortalException {
 
-		if (updateFirebase) {
+		if (updateFirebase && FirebaseSyncUtil.isSyncEnabled()) {
 			try {
 				_log.debug("Deleting iten in Firebase");
 				FirebaseSyncUtil.removeItem(item);

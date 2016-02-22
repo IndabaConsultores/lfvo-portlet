@@ -3,6 +3,8 @@ package net.indaba.lostandfound.firebase;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.liferay.util.portlet.PortletProps;
+
 import net.indaba.lostandfound.model.Item;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
@@ -12,6 +14,11 @@ import net.thegreshams.firebase4j.service.Firebase;
 public class FirebaseSyncUtil {
 
 	static private final String FB_URI = "https://brilliant-torch-8285.firebaseio.com";
+	
+	public static boolean isSyncEnabled(){
+		String firebaseSyncEnabled = PortletProps.get("firebase.sync.enabled");
+		return Boolean.parseBoolean(firebaseSyncEnabled);
+	}
 	
 	public static void addOrUpdateItem(Item item) throws Exception, FirebaseException, JacksonUtilityException{
 		Firebase firebase = new Firebase(FB_URI + "/items/office");
