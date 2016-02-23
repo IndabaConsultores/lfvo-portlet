@@ -67,9 +67,13 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			throws PortalException {
 		_log.debug("addOrUpdateItem");
 
-		/* When calling from Firebase, somehow item.isNew() returns false*/
-		if (item.isNew() || item.getItemId() == 0)
+		if (item.isNew()) {
 			item.setItemId(CounterLocalServiceUtil.increment());
+			item = super.addItem(item);
+		}
+		else{
+			item = super.updateItem(item);
+		}
 
 		if (updateFirebase) {
 			try {
@@ -79,7 +83,6 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 				_log.error("Error updating item " + item.getItemId(), e);
 			}
 		}
-		item = super.updateItem(item);
 
 		/* UserId needs to be set on REST API calls */
 		updateAsset(serviceContext.getUserId(), item, serviceContext.getAssetCategoryIds(),
@@ -112,11 +115,6 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 		}
 
-		return deleteItem(item);
-	}
-
-	public Item deleteItem(Item item) throws PortalException {
-
 		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(Item.class.getName(), item.getItemId());
 		assetLinkLocalService.deleteLinks(assetEntry.getEntryId());
 
@@ -124,8 +122,12 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
 		indexer.delete(item);
+		
+		return deleteItem(item);
+	}
 
-		return super.deleteItem(item);
+	public Item deleteItem(Item item) throws PortalException {
+		return deleteItem(item, false);
 	}
 
 	private void updateAsset(long userId, Item item, long[] assetCategoryIds, String[] assetTagNames,
