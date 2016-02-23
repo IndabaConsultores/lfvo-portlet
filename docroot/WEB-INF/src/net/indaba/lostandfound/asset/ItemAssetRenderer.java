@@ -7,12 +7,13 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portlet.asset.model.BaseAssetRenderer;
+import com.liferay.portlet.asset.model.BaseJSPAssetRenderer;
 
 import net.indaba.lostandfound.model.Item;
 
-public class ItemAssetRenderer extends BaseAssetRenderer {
+public class ItemAssetRenderer extends BaseJSPAssetRenderer<Item> {
 
 	private Item _item;
 	
@@ -33,7 +34,7 @@ public class ItemAssetRenderer extends BaseAssetRenderer {
     }
 	
 	@Override
-	public Object getAssetObject() {
+	public Item getAssetObject() {
 		return _item;
 	}
 
@@ -76,11 +77,28 @@ public class ItemAssetRenderer extends BaseAssetRenderer {
 	public String getTitle(Locale arg0) {
 		return _item.getName();
 	}
+	
+	@Override
+	public String getIconCssClass() throws PortalException {
+		// TODO Auto-generated method stub
+		return super.getIconCssClass();
+	}
 
 	@Override
-	public boolean include(HttpServletRequest arg0, HttpServletResponse arg1, String arg2) throws Exception {
+	public boolean include(
+			HttpServletRequest request, HttpServletResponse response,
+			String template)
+		throws Exception {
+
+		request.setAttribute("item", _item);
+
+		return super.include(request, response, template);
+	}
+
+	@Override
+	public String getJspPath(HttpServletRequest arg0, String arg1) {
 		// TODO Auto-generated method stub
-		return false;
+		return "/html/asset/item.jsp";
 	}
 
 }
