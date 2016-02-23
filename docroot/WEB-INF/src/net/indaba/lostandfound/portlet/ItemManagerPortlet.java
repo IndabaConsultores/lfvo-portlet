@@ -63,7 +63,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		long itemId = ParamUtil.get(actionRequest, "itemId", 0);
 		_log.debug("deleteItem " + itemId);
 		//ItemLocalServiceUtil.deleteItem(itemId);
-		ItemServiceUtil.deleteItem(itemId);
+		ItemServiceUtil.deleteItem(itemId, true);
 		sendRedirect(actionRequest, actionResponse);
 	}
 	
