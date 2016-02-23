@@ -66,9 +66,6 @@ import net.thegreshams.firebase4j.service.Firebase;
 @ProviderType
 public class ItemServiceImpl extends ItemServiceBaseImpl {
 
-	private final String FB_URI = "https://brilliant-torch-8285.firebaseio.com";
-
-	
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) throws PortalException {
 		return ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
 	}

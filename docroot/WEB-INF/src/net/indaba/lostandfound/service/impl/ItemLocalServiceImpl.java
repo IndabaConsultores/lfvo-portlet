@@ -60,11 +60,31 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	 */
 
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) throws PortalException {
-		_log.debug("addOrUpdateItem");
-		if (item.isNew())
-			item.setItemId(CounterLocalServiceUtil.increment());
-		item = super.updateItem(item);
+		return addOrUpdateItem(item, serviceContext, false);
+	}
 
+	public Item addOrUpdateItem(Item item, ServiceContext serviceContext, boolean updateFirebase)
+			throws PortalException {
+		_log.debug("addOrUpdateItem");
+
+		if (item.isNew()) {
+			item.setItemId(CounterLocalServiceUtil.increment());
+			item = super.addItem(item);
+		}
+		else{
+			item = super.updateItem(item);
+		}
+
+		if (updateFirebase && FirebaseSyncUtil.isSyncEnabled()) {
+			try {
+				_log.debug("Updating item in Firebase");
+				FirebaseSyncUtil.addOrUpdateItem(item);
+			} catch (Exception | FirebaseException | JacksonUtilityException e) {
+				_log.error("Error updating item " + item.getItemId(), e);
+			}
+		}
+
+		/* UserId needs to be set on REST API calls */
 		updateAsset(serviceContext.getUserId(), item, serviceContext.getAssetCategoryIds(),
 				serviceContext.getAssetTagNames(), serviceContext.getAssetLinkEntryIds());
 
@@ -72,20 +92,6 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		indexer.reindex(item);
 
 		return item;
-	}
-
-	public Item addOrUpdateItem(Item item, ServiceContext serviceContext, boolean updateFirebase)
-			throws PortalException {
-
-		if (updateFirebase && FirebaseSyncUtil.isSyncEnabled()) {
-			try {
-				_log.debug("Updating iten in Firebase");
-				FirebaseSyncUtil.addOrUpdateItem(item);
-			} catch (Exception | FirebaseException | JacksonUtilityException e) {
-				_log.error("Error updating item " + item.getItemId(), e);
-			}
-		}
-		return addOrUpdateItem(item, serviceContext);
 	}
 
 	public Item deleteItem(long itemId, boolean updateFirebase) throws PortalException {
@@ -100,19 +106,14 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 		if (updateFirebase && FirebaseSyncUtil.isSyncEnabled()) {
 			try {
-				_log.debug("Deleting iten in Firebase");
-				FirebaseSyncUtil.removeItem(item);
-			} catch (FirebaseException | JacksonUtilityException | Exception e) {
+				_log.debug("Deleting item in Firebase");
+				FirebaseSyncUtil.deleteItem(item);
+			} catch (FirebaseException | Exception e) {
 				_log.error("Error deleting item " + item.getItemId(), e);
 				e.printStackTrace();
 			}
 
 		}
-
-		return deleteItem(item);
-	}
-
-	public Item deleteItem(Item item) throws PortalException {
 
 		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(Item.class.getName(), item.getItemId());
 		assetLinkLocalService.deleteLinks(assetEntry.getEntryId());
@@ -121,8 +122,12 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
 		indexer.delete(item);
+		
+		return deleteItem(item);
+	}
 
-		return super.deleteItem(item);
+	public Item deleteItem(Item item) throws PortalException {
+		return deleteItem(item, false);
 	}
 
 	private void updateAsset(long userId, Item item, long[] assetCategoryIds, String[] assetTagNames,
