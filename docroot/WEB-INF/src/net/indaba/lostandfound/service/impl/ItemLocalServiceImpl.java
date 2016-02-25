@@ -123,7 +123,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
 		indexer.delete(item);
 		
-		return deleteItem(item);
+		return super.deleteItem(item);
 	}
 
 	public Item deleteItem(Item item) throws PortalException {
