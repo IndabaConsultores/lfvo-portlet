@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.liferay.util.portlet.PortletProps;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -17,6 +18,11 @@ public class FirebaseSyncUtil {
 
 	static private final String FB_URI = "https://brilliant-torch-8285.firebaseio.com";
 
+	public static boolean isSyncEnabled(){
+		String firebaseSyncEnabled = PortletProps.get("firebase.sync.enabled");
+		return Boolean.parseBoolean(firebaseSyncEnabled);
+	}
+	
 	public static void addOrUpdateItem(Item item)
 			throws FirebaseException, JacksonUtilityException, UnsupportedEncodingException {
 		String itemTypePath = getItemPath(item);
