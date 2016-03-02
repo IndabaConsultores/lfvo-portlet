@@ -186,6 +186,20 @@ public interface ItemModel extends BaseModel<Item>, ShardedModel, StagedModel {
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
+	 * Returns the publish date of this item.
+	 *
+	 * @return the publish date of this item
+	 */
+	public Date getPublishDate();
+
+	/**
+	 * Sets the publish date of this item.
+	 *
+	 * @param publishDate the publish date of this item
+	 */
+	public void setPublishDate(Date publishDate);
+
+	/**
 	 * Returns the object ID of this item.
 	 *
 	 * @return the object ID of this item
@@ -272,70 +286,6 @@ public interface ItemModel extends BaseModel<Item>, ShardedModel, StagedModel {
 	 * @param lng the lng of this item
 	 */
 	public void setLng(long lng);
-
-	/**
-	 * Returns the field2 of this item.
-	 *
-	 * @return the field2 of this item
-	 */
-	public boolean getField2();
-
-	/**
-	 * Returns <code>true</code> if this item is field2.
-	 *
-	 * @return <code>true</code> if this item is field2; <code>false</code> otherwise
-	 */
-	public boolean isField2();
-
-	/**
-	 * Sets whether this item is field2.
-	 *
-	 * @param field2 the field2 of this item
-	 */
-	public void setField2(boolean field2);
-
-	/**
-	 * Returns the field3 of this item.
-	 *
-	 * @return the field3 of this item
-	 */
-	public int getField3();
-
-	/**
-	 * Sets the field3 of this item.
-	 *
-	 * @param field3 the field3 of this item
-	 */
-	public void setField3(int field3);
-
-	/**
-	 * Returns the field4 of this item.
-	 *
-	 * @return the field4 of this item
-	 */
-	public Date getField4();
-
-	/**
-	 * Sets the field4 of this item.
-	 *
-	 * @param field4 the field4 of this item
-	 */
-	public void setField4(Date field4);
-
-	/**
-	 * Returns the field5 of this item.
-	 *
-	 * @return the field5 of this item
-	 */
-	@AutoEscape
-	public String getField5();
-
-	/**
-	 * Sets the field5 of this item.
-	 *
-	 * @param field5 the field5 of this item
-	 */
-	public void setField5(String field5);
 
 	@Override
 	public boolean isNew();

@@ -1,6 +1,7 @@
 package net.indaba.lostandfound.portlet;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -50,6 +51,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		
 		item.setName(name);
 		item.setGroupId(serviceContext.getScopeGroupId());
+		item.setPublishDate(new Date());
 		
 		//ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
 		ItemServiceUtil.addOrUpdateItem(item, serviceContext, true);

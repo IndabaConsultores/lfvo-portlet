@@ -91,16 +91,13 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 		attributes.put("userId", getUserId());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("publishDate", getPublishDate());
 		attributes.put("objectId", getObjectId());
 		attributes.put("name", getName());
 		attributes.put("type", getType());
 		attributes.put("description", getDescription());
 		attributes.put("lat", getLat());
 		attributes.put("lng", getLng());
-		attributes.put("field2", getField2());
-		attributes.put("field3", getField3());
-		attributes.put("field4", getField4());
-		attributes.put("field5", getField5());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -152,6 +149,12 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 			setModifiedDate(modifiedDate);
 		}
 
+		Date publishDate = (Date)attributes.get("publishDate");
+
+		if (publishDate != null) {
+			setPublishDate(publishDate);
+		}
+
 		String objectId = (String)attributes.get("objectId");
 
 		if (objectId != null) {
@@ -186,30 +189,6 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 
 		if (lng != null) {
 			setLng(lng);
-		}
-
-		Boolean field2 = (Boolean)attributes.get("field2");
-
-		if (field2 != null) {
-			setField2(field2);
-		}
-
-		Integer field3 = (Integer)attributes.get("field3");
-
-		if (field3 != null) {
-			setField3(field3);
-		}
-
-		Date field4 = (Date)attributes.get("field4");
-
-		if (field4 != null) {
-			setField4(field4);
-		}
-
-		String field5 = (String)attributes.get("field5");
-
-		if (field5 != null) {
-			setField5(field5);
 		}
 
 		_entityCacheEnabled = GetterUtil.getBoolean("entityCacheEnabled");
@@ -394,6 +373,29 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 	}
 
 	@Override
+	public Date getPublishDate() {
+		return _publishDate;
+	}
+
+	@Override
+	public void setPublishDate(Date publishDate) {
+		_publishDate = publishDate;
+
+		if (_itemRemoteModel != null) {
+			try {
+				Class<?> clazz = _itemRemoteModel.getClass();
+
+				Method method = clazz.getMethod("setPublishDate", Date.class);
+
+				method.invoke(_itemRemoteModel, publishDate);
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(e);
+			}
+		}
+	}
+
+	@Override
 	public String getObjectId() {
 		return _objectId;
 	}
@@ -532,103 +534,6 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 	}
 
 	@Override
-	public boolean getField2() {
-		return _field2;
-	}
-
-	@Override
-	public boolean isField2() {
-		return _field2;
-	}
-
-	@Override
-	public void setField2(boolean field2) {
-		_field2 = field2;
-
-		if (_itemRemoteModel != null) {
-			try {
-				Class<?> clazz = _itemRemoteModel.getClass();
-
-				Method method = clazz.getMethod("setField2", boolean.class);
-
-				method.invoke(_itemRemoteModel, field2);
-			}
-			catch (Exception e) {
-				throw new UnsupportedOperationException(e);
-			}
-		}
-	}
-
-	@Override
-	public int getField3() {
-		return _field3;
-	}
-
-	@Override
-	public void setField3(int field3) {
-		_field3 = field3;
-
-		if (_itemRemoteModel != null) {
-			try {
-				Class<?> clazz = _itemRemoteModel.getClass();
-
-				Method method = clazz.getMethod("setField3", int.class);
-
-				method.invoke(_itemRemoteModel, field3);
-			}
-			catch (Exception e) {
-				throw new UnsupportedOperationException(e);
-			}
-		}
-	}
-
-	@Override
-	public Date getField4() {
-		return _field4;
-	}
-
-	@Override
-	public void setField4(Date field4) {
-		_field4 = field4;
-
-		if (_itemRemoteModel != null) {
-			try {
-				Class<?> clazz = _itemRemoteModel.getClass();
-
-				Method method = clazz.getMethod("setField4", Date.class);
-
-				method.invoke(_itemRemoteModel, field4);
-			}
-			catch (Exception e) {
-				throw new UnsupportedOperationException(e);
-			}
-		}
-	}
-
-	@Override
-	public String getField5() {
-		return _field5;
-	}
-
-	@Override
-	public void setField5(String field5) {
-		_field5 = field5;
-
-		if (_itemRemoteModel != null) {
-			try {
-				Class<?> clazz = _itemRemoteModel.getClass();
-
-				Method method = clazz.getMethod("setField5", String.class);
-
-				method.invoke(_itemRemoteModel, field5);
-			}
-			catch (Exception e) {
-				throw new UnsupportedOperationException(e);
-			}
-		}
-	}
-
-	@Override
 	public StagedModelType getStagedModelType() {
 		return new StagedModelType(PortalUtil.getClassNameId(
 				Item.class.getName()));
@@ -710,16 +615,13 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 		clone.setUserId(getUserId());
 		clone.setCreateDate(getCreateDate());
 		clone.setModifiedDate(getModifiedDate());
+		clone.setPublishDate(getPublishDate());
 		clone.setObjectId(getObjectId());
 		clone.setName(getName());
 		clone.setType(getType());
 		clone.setDescription(getDescription());
 		clone.setLat(getLat());
 		clone.setLng(getLng());
-		clone.setField2(getField2());
-		clone.setField3(getField3());
-		clone.setField4(getField4());
-		clone.setField5(getField5());
 
 		return clone;
 	}
@@ -780,7 +682,7 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(35);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -796,6 +698,8 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 		sb.append(getCreateDate());
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
+		sb.append(", publishDate=");
+		sb.append(getPublishDate());
 		sb.append(", objectId=");
 		sb.append(getObjectId());
 		sb.append(", name=");
@@ -808,14 +712,6 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 		sb.append(getLat());
 		sb.append(", lng=");
 		sb.append(getLng());
-		sb.append(", field2=");
-		sb.append(getField2());
-		sb.append(", field3=");
-		sb.append(getField3());
-		sb.append(", field4=");
-		sb.append(getField4());
-		sb.append(", field5=");
-		sb.append(getField5());
 		sb.append("}");
 
 		return sb.toString();
@@ -823,7 +719,7 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(55);
+		StringBundler sb = new StringBundler(46);
 
 		sb.append("<model><model-name>");
 		sb.append("net.indaba.lostandfound.model.Item");
@@ -858,6 +754,10 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>publishDate</column-name><column-value><![CDATA[");
+		sb.append(getPublishDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>objectId</column-name><column-value><![CDATA[");
 		sb.append(getObjectId());
 		sb.append("]]></column-value></column>");
@@ -881,22 +781,6 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 			"<column><column-name>lng</column-name><column-value><![CDATA[");
 		sb.append(getLng());
 		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>field2</column-name><column-value><![CDATA[");
-		sb.append(getField2());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>field3</column-name><column-value><![CDATA[");
-		sb.append(getField3());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>field4</column-name><column-value><![CDATA[");
-		sb.append(getField4());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>field5</column-name><column-value><![CDATA[");
-		sb.append(getField5());
-		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -910,16 +794,13 @@ public class ItemClp extends BaseModelImpl<Item> implements Item {
 	private long _userId;
 	private Date _createDate;
 	private Date _modifiedDate;
+	private Date _publishDate;
 	private String _objectId;
 	private String _name;
 	private String _type;
 	private String _description;
 	private long _lat;
 	private long _lng;
-	private boolean _field2;
-	private int _field3;
-	private Date _field4;
-	private String _field5;
 	private BaseModel<?> _itemRemoteModel;
 	private Class<?> _clpSerializerClass = net.indaba.lostandfound.service.ClpSerializer.class;
 	private boolean _entityCacheEnabled;

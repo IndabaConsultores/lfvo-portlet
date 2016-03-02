@@ -5,14 +5,22 @@ import java.util.Locale;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 
 import net.indaba.lostandfound.model.Item;
+import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 
 public class ItemIndexer extends BaseIndexer<Item> {
 	
@@ -31,6 +39,23 @@ public class ItemIndexer extends BaseIndexer<Item> {
 
 		return true;
 	}
+	
+	@Override
+	public Hits search(SearchContext searchContext) throws SearchException {
+		Hits hits = super.search(searchContext);
+
+		String[] queryTerms = hits.getQueryTerms();
+
+		String keywords = searchContext.getKeywords();
+
+		queryTerms = ArrayUtil.append(
+			queryTerms, keywords);
+
+		hits.setQueryTerms(queryTerms);
+
+		return hits;
+	}
+
 	
 
 	@Override
@@ -59,21 +84,27 @@ public class ItemIndexer extends BaseIndexer<Item> {
 	}
 
 	@Override
-	protected void doReindex(String[] arg0) throws Exception {
-		// TODO Auto-generated method stub
-		
+	protected void doReindex(String[] ids) throws Exception {
+		_log.error("This method is not implemented doReindex @ ItemIndexer " + ids);
 	}
 
 	@Override
-	protected void doReindex(Item arg0) throws Exception {
-		// TODO Auto-generated method stub
-		
+	protected void doReindex(Item item) throws Exception {
+		Document doc = getDocument(item);
+		IndexWriterHelperUtil.updateDocument(
+				getSearchEngineId(), item.getCompanyId(),
+				doc, isCommitImmediately());
 	}
 
 	@Override
-	protected void doReindex(String arg0, long arg1) throws Exception {
-		// TODO Auto-generated method stub
+	protected void doReindex(String className, long classPK) throws Exception {
+		Item item = ItemLocalServiceUtil.getItem(classPK);
+		IndexWriterHelperUtil.updateDocument(
+				getSearchEngineId(), item.getCompanyId(), getDocument(item),
+				isCommitImmediately());
 		
 	}
+	
 
+	private final Log _log = LogFactoryUtil.getLog(this.getClass());
 }

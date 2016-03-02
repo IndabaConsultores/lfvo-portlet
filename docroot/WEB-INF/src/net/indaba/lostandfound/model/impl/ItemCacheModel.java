@@ -65,7 +65,7 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(35);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -81,6 +81,8 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
+		sb.append(", publishDate=");
+		sb.append(publishDate);
 		sb.append(", objectId=");
 		sb.append(objectId);
 		sb.append(", name=");
@@ -93,14 +95,6 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 		sb.append(lat);
 		sb.append(", lng=");
 		sb.append(lng);
-		sb.append(", field2=");
-		sb.append(field2);
-		sb.append(", field3=");
-		sb.append(field3);
-		sb.append(", field4=");
-		sb.append(field4);
-		sb.append(", field5=");
-		sb.append(field5);
 		sb.append("}");
 
 		return sb.toString();
@@ -136,6 +130,13 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 			itemImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
+		if (publishDate == Long.MIN_VALUE) {
+			itemImpl.setPublishDate(null);
+		}
+		else {
+			itemImpl.setPublishDate(new Date(publishDate));
+		}
+
 		if (objectId == null) {
 			itemImpl.setObjectId(StringPool.BLANK);
 		}
@@ -166,22 +167,6 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 
 		itemImpl.setLat(lat);
 		itemImpl.setLng(lng);
-		itemImpl.setField2(field2);
-		itemImpl.setField3(field3);
-
-		if (field4 == Long.MIN_VALUE) {
-			itemImpl.setField4(null);
-		}
-		else {
-			itemImpl.setField4(new Date(field4));
-		}
-
-		if (field5 == null) {
-			itemImpl.setField5(StringPool.BLANK);
-		}
-		else {
-			itemImpl.setField5(field5);
-		}
 
 		itemImpl.resetOriginalValues();
 
@@ -197,16 +182,13 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 		userId = objectInput.readLong();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
+		publishDate = objectInput.readLong();
 		objectId = objectInput.readUTF();
 		name = objectInput.readUTF();
 		type = objectInput.readUTF();
 		description = objectInput.readUTF();
 		lat = objectInput.readLong();
 		lng = objectInput.readLong();
-		field2 = objectInput.readBoolean();
-		field3 = objectInput.readInt();
-		field4 = objectInput.readLong();
-		field5 = objectInput.readUTF();
 	}
 
 	@Override
@@ -225,6 +207,7 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 		objectOutput.writeLong(userId);
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
+		objectOutput.writeLong(publishDate);
 
 		if (objectId == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
@@ -256,16 +239,6 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 
 		objectOutput.writeLong(lat);
 		objectOutput.writeLong(lng);
-		objectOutput.writeBoolean(field2);
-		objectOutput.writeInt(field3);
-		objectOutput.writeLong(field4);
-
-		if (field5 == null) {
-			objectOutput.writeUTF(StringPool.BLANK);
-		}
-		else {
-			objectOutput.writeUTF(field5);
-		}
 	}
 
 	public String uuid;
@@ -275,14 +248,11 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 	public long userId;
 	public long createDate;
 	public long modifiedDate;
+	public long publishDate;
 	public String objectId;
 	public String name;
 	public String type;
 	public String description;
 	public long lat;
 	public long lng;
-	public boolean field2;
-	public int field3;
-	public long field4;
-	public String field5;
 }
