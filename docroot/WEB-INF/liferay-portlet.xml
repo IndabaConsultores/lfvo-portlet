@@ -5,6 +5,8 @@
 	<portlet>
 		<portlet-name>lfvo</portlet-name>
 		<icon>/icon.png</icon>
+		<indexer-class>net.indaba.lostandfound.asset.indexer.ItemIndexer</indexer-class>
+		<open-search-class>net.indaba.lostandfound.asset.ItemOpenSearchImpl</open-search-class>
 		<control-panel-entry-category>
 			site_administration.content
 		</control-panel-entry-category>

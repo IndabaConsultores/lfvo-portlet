@@ -1827,16 +1827,13 @@ public class ItemPersistenceImpl extends BasePersistenceImpl<Item>
 		itemImpl.setUserId(item.getUserId());
 		itemImpl.setCreateDate(item.getCreateDate());
 		itemImpl.setModifiedDate(item.getModifiedDate());
+		itemImpl.setPublishDate(item.getPublishDate());
 		itemImpl.setObjectId(item.getObjectId());
 		itemImpl.setName(item.getName());
 		itemImpl.setType(item.getType());
 		itemImpl.setDescription(item.getDescription());
 		itemImpl.setLat(item.getLat());
 		itemImpl.setLng(item.getLng());
-		itemImpl.setField2(item.isField2());
-		itemImpl.setField3(item.getField3());
-		itemImpl.setField4(item.getField4());
-		itemImpl.setField5(item.getField5());
 
 		return itemImpl;
 	}

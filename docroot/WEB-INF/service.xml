@@ -16,6 +16,7 @@
 		<column name="userId" type="long"></column>
 		<column name="createDate" type="Date"></column>
 		<column name="modifiedDate" type="Date"></column>
+		<column name="publishDate" type="Date"></column>
 
 		<!-- Other fields -->
 		<column name="objectId" type="String"></column>
@@ -24,10 +25,6 @@
 		<column name="description" type="String"></column>
 		<column name="lat" type="long"></column>
 		<column name="lng" type="long"></column>
-		<column name="field2" type="boolean"></column>
-		<column name="field3" type="int"></column>
-		<column name="field4" type="Date"></column>
-		<column name="field5" type="String"></column>
 
 		<!-- Order -->
 		<order by="asc">

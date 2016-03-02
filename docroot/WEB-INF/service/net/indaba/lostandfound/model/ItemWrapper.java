@@ -61,16 +61,13 @@ public class ItemWrapper implements Item, ModelWrapper<Item> {
 		attributes.put("userId", getUserId());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("publishDate", getPublishDate());
 		attributes.put("objectId", getObjectId());
 		attributes.put("name", getName());
 		attributes.put("type", getType());
 		attributes.put("description", getDescription());
 		attributes.put("lat", getLat());
 		attributes.put("lng", getLng());
-		attributes.put("field2", getField2());
-		attributes.put("field3", getField3());
-		attributes.put("field4", getField4());
-		attributes.put("field5", getField5());
 
 		return attributes;
 	}
@@ -119,6 +116,12 @@ public class ItemWrapper implements Item, ModelWrapper<Item> {
 			setModifiedDate(modifiedDate);
 		}
 
+		Date publishDate = (Date)attributes.get("publishDate");
+
+		if (publishDate != null) {
+			setPublishDate(publishDate);
+		}
+
 		String objectId = (String)attributes.get("objectId");
 
 		if (objectId != null) {
@@ -153,30 +156,6 @@ public class ItemWrapper implements Item, ModelWrapper<Item> {
 
 		if (lng != null) {
 			setLng(lng);
-		}
-
-		Boolean field2 = (Boolean)attributes.get("field2");
-
-		if (field2 != null) {
-			setField2(field2);
-		}
-
-		Integer field3 = (Integer)attributes.get("field3");
-
-		if (field3 != null) {
-			setField3(field3);
-		}
-
-		Date field4 = (Date)attributes.get("field4");
-
-		if (field4 != null) {
-			setField4(field4);
-		}
-
-		String field5 = (String)attributes.get("field5");
-
-		if (field5 != null) {
-			setField5(field5);
 		}
 	}
 
@@ -223,46 +202,6 @@ public class ItemWrapper implements Item, ModelWrapper<Item> {
 	@Override
 	public com.liferay.portlet.expando.model.ExpandoBridge getExpandoBridge() {
 		return _item.getExpandoBridge();
-	}
-
-	/**
-	* Returns the field2 of this item.
-	*
-	* @return the field2 of this item
-	*/
-	@Override
-	public boolean getField2() {
-		return _item.getField2();
-	}
-
-	/**
-	* Returns the field3 of this item.
-	*
-	* @return the field3 of this item
-	*/
-	@Override
-	public int getField3() {
-		return _item.getField3();
-	}
-
-	/**
-	* Returns the field4 of this item.
-	*
-	* @return the field4 of this item
-	*/
-	@Override
-	public Date getField4() {
-		return _item.getField4();
-	}
-
-	/**
-	* Returns the field5 of this item.
-	*
-	* @return the field5 of this item
-	*/
-	@Override
-	public java.lang.String getField5() {
-		return _item.getField5();
 	}
 
 	/**
@@ -351,6 +290,16 @@ public class ItemWrapper implements Item, ModelWrapper<Item> {
 	}
 
 	/**
+	* Returns the publish date of this item.
+	*
+	* @return the publish date of this item
+	*/
+	@Override
+	public Date getPublishDate() {
+		return _item.getPublishDate();
+	}
+
+	/**
 	* Returns the type of this item.
 	*
 	* @return the type of this item
@@ -403,16 +352,6 @@ public class ItemWrapper implements Item, ModelWrapper<Item> {
 	@Override
 	public boolean isEscapedModel() {
 		return _item.isEscapedModel();
-	}
-
-	/**
-	* Returns <code>true</code> if this item is field2.
-	*
-	* @return <code>true</code> if this item is field2; <code>false</code> otherwise
-	*/
-	@Override
-	public boolean isField2() {
-		return _item.isField2();
 	}
 
 	@Override
@@ -476,46 +415,6 @@ public class ItemWrapper implements Item, ModelWrapper<Item> {
 	public void setExpandoBridgeAttributes(
 		com.liferay.portal.service.ServiceContext serviceContext) {
 		_item.setExpandoBridgeAttributes(serviceContext);
-	}
-
-	/**
-	* Sets whether this item is field2.
-	*
-	* @param field2 the field2 of this item
-	*/
-	@Override
-	public void setField2(boolean field2) {
-		_item.setField2(field2);
-	}
-
-	/**
-	* Sets the field3 of this item.
-	*
-	* @param field3 the field3 of this item
-	*/
-	@Override
-	public void setField3(int field3) {
-		_item.setField3(field3);
-	}
-
-	/**
-	* Sets the field4 of this item.
-	*
-	* @param field4 the field4 of this item
-	*/
-	@Override
-	public void setField4(Date field4) {
-		_item.setField4(field4);
-	}
-
-	/**
-	* Sets the field5 of this item.
-	*
-	* @param field5 the field5 of this item
-	*/
-	@Override
-	public void setField5(java.lang.String field5) {
-		_item.setField5(field5);
 	}
 
 	/**
@@ -606,6 +505,16 @@ public class ItemWrapper implements Item, ModelWrapper<Item> {
 	@Override
 	public void setPrimaryKeyObj(java.io.Serializable primaryKeyObj) {
 		_item.setPrimaryKeyObj(primaryKeyObj);
+	}
+
+	/**
+	* Sets the publish date of this item.
+	*
+	* @param publishDate the publish date of this item
+	*/
+	@Override
+	public void setPublishDate(Date publishDate) {
+		_item.setPublishDate(publishDate);
 	}
 
 	/**

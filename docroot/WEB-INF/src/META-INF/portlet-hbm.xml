@@ -13,15 +13,12 @@
 		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="createDate" type="org.hibernate.type.TimestampType" />
 		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
+		<property name="publishDate" type="org.hibernate.type.TimestampType" />
 		<property name="objectId" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="type" type="com.liferay.portal.dao.orm.hibernate.StringType" column="type_" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="lat" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="lng" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="field2" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
-		<property name="field3" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
-		<property name="field4" type="org.hibernate.type.TimestampType" />
-		<property name="field5" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 </hibernate-mapping>

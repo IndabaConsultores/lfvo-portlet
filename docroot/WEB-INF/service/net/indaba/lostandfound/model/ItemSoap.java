@@ -41,16 +41,13 @@ public class ItemSoap implements Serializable {
 		soapModel.setUserId(model.getUserId());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
+		soapModel.setPublishDate(model.getPublishDate());
 		soapModel.setObjectId(model.getObjectId());
 		soapModel.setName(model.getName());
 		soapModel.setType(model.getType());
 		soapModel.setDescription(model.getDescription());
 		soapModel.setLat(model.getLat());
 		soapModel.setLng(model.getLng());
-		soapModel.setField2(model.getField2());
-		soapModel.setField3(model.getField3());
-		soapModel.setField4(model.getField4());
-		soapModel.setField5(model.getField5());
 
 		return soapModel;
 	}
@@ -159,6 +156,14 @@ public class ItemSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
+	public Date getPublishDate() {
+		return _publishDate;
+	}
+
+	public void setPublishDate(Date publishDate) {
+		_publishDate = publishDate;
+	}
+
 	public String getObjectId() {
 		return _objectId;
 	}
@@ -207,42 +212,6 @@ public class ItemSoap implements Serializable {
 		_lng = lng;
 	}
 
-	public boolean getField2() {
-		return _field2;
-	}
-
-	public boolean isField2() {
-		return _field2;
-	}
-
-	public void setField2(boolean field2) {
-		_field2 = field2;
-	}
-
-	public int getField3() {
-		return _field3;
-	}
-
-	public void setField3(int field3) {
-		_field3 = field3;
-	}
-
-	public Date getField4() {
-		return _field4;
-	}
-
-	public void setField4(Date field4) {
-		_field4 = field4;
-	}
-
-	public String getField5() {
-		return _field5;
-	}
-
-	public void setField5(String field5) {
-		_field5 = field5;
-	}
-
 	private String _uuid;
 	private long _itemId;
 	private long _groupId;
@@ -250,14 +219,11 @@ public class ItemSoap implements Serializable {
 	private long _userId;
 	private Date _createDate;
 	private Date _modifiedDate;
+	private Date _publishDate;
 	private String _objectId;
 	private String _name;
 	private String _type;
 	private String _description;
 	private long _lat;
 	private long _lng;
-	private boolean _field2;
-	private int _field3;
-	private Date _field4;
-	private String _field5;
 }

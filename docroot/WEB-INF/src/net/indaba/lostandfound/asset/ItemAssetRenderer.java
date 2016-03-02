@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -99,6 +101,11 @@ public class ItemAssetRenderer extends BaseJSPAssetRenderer<Item> {
 	public String getJspPath(HttpServletRequest arg0, String arg1) {
 		// TODO Auto-generated method stub
 		return "/html/asset/item.jsp";
+	}
+	
+	@Override
+	public String renderActions(RenderRequest renderRequest, RenderResponse renderResponse) throws Exception {
+		return super.renderActions(renderRequest, renderResponse);
 	}
 
 }

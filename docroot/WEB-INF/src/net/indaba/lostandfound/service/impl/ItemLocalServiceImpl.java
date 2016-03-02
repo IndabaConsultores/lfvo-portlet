@@ -114,11 +114,14 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			}
 
 		}
-
-		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(Item.class.getName(), item.getItemId());
-		assetLinkLocalService.deleteLinks(assetEntry.getEntryId());
-
-		assetEntryLocalService.deleteEntry(assetEntry);
+		try {
+			AssetEntry assetEntry = assetEntryLocalService.fetchEntry(Item.class.getName(), item.getItemId());
+			assetLinkLocalService.deleteLinks(assetEntry.getEntryId());
+			assetEntryLocalService.deleteEntry(assetEntry);	
+		} catch (Exception e) {
+			_log.error("Error deleting assetEntry");
+		}
+		
 
 		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
 		indexer.delete(item);

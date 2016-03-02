@@ -79,16 +79,13 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 			{ "userId", Types.BIGINT },
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
+			{ "publishDate", Types.TIMESTAMP },
 			{ "objectId", Types.VARCHAR },
 			{ "name", Types.VARCHAR },
 			{ "type_", Types.VARCHAR },
 			{ "description", Types.VARCHAR },
 			{ "lat", Types.BIGINT },
-			{ "lng", Types.BIGINT },
-			{ "field2", Types.BOOLEAN },
-			{ "field3", Types.INTEGER },
-			{ "field4", Types.TIMESTAMP },
-			{ "field5", Types.VARCHAR }
+			{ "lng", Types.BIGINT }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -100,19 +97,16 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("publishDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("objectId", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("type_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("lat", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("lng", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("field2", Types.BOOLEAN);
-		TABLE_COLUMNS_MAP.put("field3", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("field4", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("field5", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table lfvo_Item (uuid_ VARCHAR(75) null,itemId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate DATE null,modifiedDate DATE null,objectId VARCHAR(75) null,name VARCHAR(75) null,type_ VARCHAR(75) null,description VARCHAR(75) null,lat LONG,lng LONG,field2 BOOLEAN,field3 INTEGER,field4 DATE null,field5 VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table lfvo_Item (uuid_ VARCHAR(75) null,itemId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate DATE null,modifiedDate DATE null,publishDate DATE null,objectId VARCHAR(75) null,name VARCHAR(75) null,type_ VARCHAR(75) null,description VARCHAR(75) null,lat LONG,lng LONG)";
 	public static final String TABLE_SQL_DROP = "drop table lfvo_Item";
 	public static final String ORDER_BY_JPQL = " ORDER BY item.createDate ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY lfvo_Item.createDate ASC";
@@ -153,16 +147,13 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		model.setUserId(soapModel.getUserId());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
+		model.setPublishDate(soapModel.getPublishDate());
 		model.setObjectId(soapModel.getObjectId());
 		model.setName(soapModel.getName());
 		model.setType(soapModel.getType());
 		model.setDescription(soapModel.getDescription());
 		model.setLat(soapModel.getLat());
 		model.setLng(soapModel.getLng());
-		model.setField2(soapModel.getField2());
-		model.setField3(soapModel.getField3());
-		model.setField4(soapModel.getField4());
-		model.setField5(soapModel.getField5());
 
 		return model;
 	}
@@ -234,16 +225,13 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		attributes.put("userId", getUserId());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("publishDate", getPublishDate());
 		attributes.put("objectId", getObjectId());
 		attributes.put("name", getName());
 		attributes.put("type", getType());
 		attributes.put("description", getDescription());
 		attributes.put("lat", getLat());
 		attributes.put("lng", getLng());
-		attributes.put("field2", getField2());
-		attributes.put("field3", getField3());
-		attributes.put("field4", getField4());
-		attributes.put("field5", getField5());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -295,6 +283,12 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 			setModifiedDate(modifiedDate);
 		}
 
+		Date publishDate = (Date)attributes.get("publishDate");
+
+		if (publishDate != null) {
+			setPublishDate(publishDate);
+		}
+
 		String objectId = (String)attributes.get("objectId");
 
 		if (objectId != null) {
@@ -329,30 +323,6 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 
 		if (lng != null) {
 			setLng(lng);
-		}
-
-		Boolean field2 = (Boolean)attributes.get("field2");
-
-		if (field2 != null) {
-			setField2(field2);
-		}
-
-		Integer field3 = (Integer)attributes.get("field3");
-
-		if (field3 != null) {
-			setField3(field3);
-		}
-
-		Date field4 = (Date)attributes.get("field4");
-
-		if (field4 != null) {
-			setField4(field4);
-		}
-
-		String field5 = (String)attributes.get("field5");
-
-		if (field5 != null) {
-			setField5(field5);
 		}
 	}
 
@@ -496,6 +466,17 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 
 	@JSON
 	@Override
+	public Date getPublishDate() {
+		return _publishDate;
+	}
+
+	@Override
+	public void setPublishDate(Date publishDate) {
+		_publishDate = publishDate;
+	}
+
+	@JSON
+	@Override
 	public String getObjectId() {
 		if (_objectId == null) {
 			return StringPool.BLANK;
@@ -580,60 +561,6 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		_lng = lng;
 	}
 
-	@JSON
-	@Override
-	public boolean getField2() {
-		return _field2;
-	}
-
-	@Override
-	public boolean isField2() {
-		return _field2;
-	}
-
-	@Override
-	public void setField2(boolean field2) {
-		_field2 = field2;
-	}
-
-	@JSON
-	@Override
-	public int getField3() {
-		return _field3;
-	}
-
-	@Override
-	public void setField3(int field3) {
-		_field3 = field3;
-	}
-
-	@JSON
-	@Override
-	public Date getField4() {
-		return _field4;
-	}
-
-	@Override
-	public void setField4(Date field4) {
-		_field4 = field4;
-	}
-
-	@JSON
-	@Override
-	public String getField5() {
-		if (_field5 == null) {
-			return StringPool.BLANK;
-		}
-		else {
-			return _field5;
-		}
-	}
-
-	@Override
-	public void setField5(String field5) {
-		_field5 = field5;
-	}
-
 	@Override
 	public StagedModelType getStagedModelType() {
 		return new StagedModelType(PortalUtil.getClassNameId(
@@ -678,16 +605,13 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		itemImpl.setUserId(getUserId());
 		itemImpl.setCreateDate(getCreateDate());
 		itemImpl.setModifiedDate(getModifiedDate());
+		itemImpl.setPublishDate(getPublishDate());
 		itemImpl.setObjectId(getObjectId());
 		itemImpl.setName(getName());
 		itemImpl.setType(getType());
 		itemImpl.setDescription(getDescription());
 		itemImpl.setLat(getLat());
 		itemImpl.setLng(getLng());
-		itemImpl.setField2(getField2());
-		itemImpl.setField3(getField3());
-		itemImpl.setField4(getField4());
-		itemImpl.setField5(getField5());
 
 		itemImpl.resetOriginalValues();
 
@@ -801,6 +725,15 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 			itemCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
+		Date publishDate = getPublishDate();
+
+		if (publishDate != null) {
+			itemCacheModel.publishDate = publishDate.getTime();
+		}
+		else {
+			itemCacheModel.publishDate = Long.MIN_VALUE;
+		}
+
 		itemCacheModel.objectId = getObjectId();
 
 		String objectId = itemCacheModel.objectId;
@@ -837,33 +770,12 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 
 		itemCacheModel.lng = getLng();
 
-		itemCacheModel.field2 = getField2();
-
-		itemCacheModel.field3 = getField3();
-
-		Date field4 = getField4();
-
-		if (field4 != null) {
-			itemCacheModel.field4 = field4.getTime();
-		}
-		else {
-			itemCacheModel.field4 = Long.MIN_VALUE;
-		}
-
-		itemCacheModel.field5 = getField5();
-
-		String field5 = itemCacheModel.field5;
-
-		if ((field5 != null) && (field5.length() == 0)) {
-			itemCacheModel.field5 = null;
-		}
-
 		return itemCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(35);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -879,6 +791,8 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		sb.append(getCreateDate());
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
+		sb.append(", publishDate=");
+		sb.append(getPublishDate());
 		sb.append(", objectId=");
 		sb.append(getObjectId());
 		sb.append(", name=");
@@ -891,14 +805,6 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		sb.append(getLat());
 		sb.append(", lng=");
 		sb.append(getLng());
-		sb.append(", field2=");
-		sb.append(getField2());
-		sb.append(", field3=");
-		sb.append(getField3());
-		sb.append(", field4=");
-		sb.append(getField4());
-		sb.append(", field5=");
-		sb.append(getField5());
 		sb.append("}");
 
 		return sb.toString();
@@ -906,7 +812,7 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(55);
+		StringBundler sb = new StringBundler(46);
 
 		sb.append("<model><model-name>");
 		sb.append("net.indaba.lostandfound.model.Item");
@@ -941,6 +847,10 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>publishDate</column-name><column-value><![CDATA[");
+		sb.append(getPublishDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>objectId</column-name><column-value><![CDATA[");
 		sb.append(getObjectId());
 		sb.append("]]></column-value></column>");
@@ -963,22 +873,6 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		sb.append(
 			"<column><column-name>lng</column-name><column-value><![CDATA[");
 		sb.append(getLng());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>field2</column-name><column-value><![CDATA[");
-		sb.append(getField2());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>field3</column-name><column-value><![CDATA[");
-		sb.append(getField3());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>field4</column-name><column-value><![CDATA[");
-		sb.append(getField4());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>field5</column-name><column-value><![CDATA[");
-		sb.append(getField5());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -1003,16 +897,13 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
+	private Date _publishDate;
 	private String _objectId;
 	private String _name;
 	private String _type;
 	private String _description;
 	private long _lat;
 	private long _lng;
-	private boolean _field2;
-	private int _field3;
-	private Date _field4;
-	private String _field5;
 	private long _columnBitmask;
 	private Item _escapedModel;
 }
