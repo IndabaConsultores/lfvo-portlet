@@ -35,14 +35,14 @@ public class ItemServiceClpInvoker {
 
 		_methodParameterTypes39 = new String[] {
 				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.service.ServiceContext"
+				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 
 		_methodName40 = "addOrUpdateItem";
 
 		_methodParameterTypes40 = new String[] {
 				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.service.ServiceContext", "boolean"
+				"com.liferay.portal.kernel.service.ServiceContext", "boolean"
 			};
 
 		_methodName41 = "deleteItem";
@@ -76,13 +76,13 @@ public class ItemServiceClpInvoker {
 		if (_methodName39.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes39, parameterTypes)) {
 			return ItemServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
-				(com.liferay.portal.service.ServiceContext)arguments[1]);
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName40.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes40, parameterTypes)) {
 			return ItemServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
-				(com.liferay.portal.service.ServiceContext)arguments[1],
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1],
 				((Boolean)arguments[2]).booleanValue());
 		}
 

@@ -20,10 +20,13 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
+import com.liferay.portal.kernel.service.BaseService;
+import com.liferay.portal.kernel.service.InvokableService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Transactional;
-import com.liferay.portal.service.BaseService;
-import com.liferay.portal.service.InvokableService;
+
+import net.indaba.lostandfound.model.Item;
 
 /**
  * Provides the remote service interface for Item. Methods of this
@@ -47,28 +50,21 @@ public interface ItemService extends BaseService, InvokableService {
 	 *
 	 * Never modify or reference this interface directly. Always use {@link ItemServiceUtil} to access the item remote service. Add custom service methods to {@link net.indaba.lostandfound.service.impl.ItemServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public net.indaba.lostandfound.model.Item addOrUpdateItem(
-		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext)
+	public Item addOrUpdateItem(Item item, ServiceContext serviceContext)
 		throws PortalException;
 
-	public net.indaba.lostandfound.model.Item addOrUpdateItem(
-		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext,
+	public Item addOrUpdateItem(Item item, ServiceContext serviceContext,
 		boolean updateFirebase) throws PortalException;
 
-	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item) throws PortalException;
+	public Item deleteItem(Item item) throws PortalException;
 
-	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item, boolean updateFirebase)
+	public Item deleteItem(Item item, boolean updateFirebase)
 		throws PortalException;
 
-	public net.indaba.lostandfound.model.Item deleteItem(long itemId)
-		throws PortalException;
+	public Item deleteItem(long itemId) throws PortalException;
 
-	public net.indaba.lostandfound.model.Item deleteItem(long itemId,
-		boolean updateFirebase) throws PortalException;
+	public Item deleteItem(long itemId, boolean updateFirebase)
+		throws PortalException;
 
 	/**
 	* Returns the OSGi service identifier.

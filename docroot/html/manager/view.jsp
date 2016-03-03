@@ -8,7 +8,14 @@ List<Item> items = (List<Item>)renderRequest.getAttribute("items");
 	<liferay-ui:search-container-results results="<%=items%>"/>
 	<liferay-ui:search-container-row className="net.indaba.lostandfound.model.Item" modelVar="item" >
 		<liferay-ui:search-container-column-text>
-			<%=item.getName()%>
+			
+			<portlet:renderURL var="editItemURL">
+				<portlet:param name="mvcPath" value="<%=ItemManagerPortlet.PATH_EDIT_ITEM %>" />
+				<portlet:param name="itemId" value="<%=String.valueOf(item.getItemId()) %>" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+			</portlet:renderURL>
+			<a href="<%=editItemURL%>"><%=item.getName()%></a>
+			
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-jsp
 			cssClass="list-group-item-field"
