@@ -76,6 +76,21 @@ public class ItemManagerPortlet extends MVCPortlet {
 		deleteItem(actionRequest,actionResponse);
 		
 	}
+	
+	public void doDataDiagnosis(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws IOException, PortletException, PortalException {
+		_log.debug("doDataDiagnosis ");
+		
+		//TODO: implement data diagnosis
+	}
+	
+	public void doDataSync(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws IOException, PortletException, PortalException {
+		_log.debug("doDataDiagnosis ");
+		
+		//TODO: implement data sync
+		
+	}
 
 	Log _log = LogFactoryUtil.getLog(this.getClass());
 	
