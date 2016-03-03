@@ -17,8 +17,8 @@ package net.indaba.lostandfound.service;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
+import com.liferay.portal.kernel.service.InvokableService;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
-import com.liferay.portal.service.InvokableService;
 
 /**
  * Provides the remote service utility for Item. This utility wraps
@@ -43,14 +43,14 @@ public class ItemServiceUtil {
 	 */
 	public static net.indaba.lostandfound.model.Item addOrUpdateItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().addOrUpdateItem(item, serviceContext);
 	}
 
 	public static net.indaba.lostandfound.model.Item addOrUpdateItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext,
 		boolean updateFirebase)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().addOrUpdateItem(item, serviceContext, updateFirebase);

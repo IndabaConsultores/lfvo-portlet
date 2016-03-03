@@ -19,9 +19,9 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.auth.HttpPrincipal;
+import com.liferay.portal.kernel.service.http.TunnelUtil;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
-import com.liferay.portal.service.http.TunnelUtil;
 
 import net.indaba.lostandfound.service.ItemServiceUtil;
 
@@ -57,7 +57,7 @@ import net.indaba.lostandfound.service.ItemServiceUtil;
 public class ItemServiceHttp {
 	public static net.indaba.lostandfound.model.Item addOrUpdateItem(
 		HttpPrincipal httpPrincipal, net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
@@ -90,7 +90,7 @@ public class ItemServiceHttp {
 
 	public static net.indaba.lostandfound.model.Item addOrUpdateItem(
 		HttpPrincipal httpPrincipal, net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext,
 		boolean updateFirebase)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -252,11 +252,12 @@ public class ItemServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(ItemServiceHttp.class);
 	private static final Class<?>[] _addOrUpdateItemParameterTypes0 = new Class[] {
 			net.indaba.lostandfound.model.Item.class,
-			com.liferay.portal.service.ServiceContext.class
+			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _addOrUpdateItemParameterTypes1 = new Class[] {
 			net.indaba.lostandfound.model.Item.class,
-			com.liferay.portal.service.ServiceContext.class, boolean.class
+			com.liferay.portal.kernel.service.ServiceContext.class,
+			boolean.class
 		};
 	private static final Class<?>[] _deleteItemParameterTypes2 = new Class[] {
 			long.class, boolean.class

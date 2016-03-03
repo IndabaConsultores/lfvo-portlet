@@ -1,5 +1,5 @@
+<%@page import="com.liferay.trash.kernel.util.TrashUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.search.ResultRow"%>
-<%@page import="com.liferay.portlet.trash.util.TrashUtil"%>
 <%@ include file="/html/init.jsp"%>
 
 <%

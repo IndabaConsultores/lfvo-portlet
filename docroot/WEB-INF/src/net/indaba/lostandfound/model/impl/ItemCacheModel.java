@@ -16,10 +16,10 @@ package net.indaba.lostandfound.model.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.util.HashUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.model.CacheModel;
 
 import net.indaba.lostandfound.model.Item;
 
@@ -176,9 +176,13 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		uuid = objectInput.readUTF();
+
 		itemId = objectInput.readLong();
+
 		groupId = objectInput.readLong();
+
 		companyId = objectInput.readLong();
+
 		userId = objectInput.readLong();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
@@ -187,7 +191,9 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 		name = objectInput.readUTF();
 		type = objectInput.readUTF();
 		description = objectInput.readUTF();
+
 		lat = objectInput.readLong();
+
 		lng = objectInput.readLong();
 	}
 
@@ -202,8 +208,11 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 		}
 
 		objectOutput.writeLong(itemId);
+
 		objectOutput.writeLong(groupId);
+
 		objectOutput.writeLong(companyId);
+
 		objectOutput.writeLong(userId);
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
@@ -238,6 +247,7 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 		}
 
 		objectOutput.writeLong(lat);
+
 		objectOutput.writeLong(lng);
 	}
 

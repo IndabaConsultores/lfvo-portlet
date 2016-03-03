@@ -16,8 +16,9 @@ package net.indaba.lostandfound.service.persistence;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.portal.service.persistence.BasePersistence;
+import com.liferay.portal.kernel.service.persistence.BasePersistence;
 
+import net.indaba.lostandfound.exception.NoSuchItemException;
 import net.indaba.lostandfound.model.Item;
 
 /**
@@ -109,7 +110,7 @@ public interface ItemPersistence extends BasePersistence<Item> {
 	*/
 	public Item findByUuid_First(java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Item> orderByComparator)
-		throws net.indaba.lostandfound.exception.NoSuchItemException;
+		throws NoSuchItemException;
 
 	/**
 	* Returns the first item in the ordered set where uuid = &#63;.
@@ -131,7 +132,7 @@ public interface ItemPersistence extends BasePersistence<Item> {
 	*/
 	public Item findByUuid_Last(java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Item> orderByComparator)
-		throws net.indaba.lostandfound.exception.NoSuchItemException;
+		throws NoSuchItemException;
 
 	/**
 	* Returns the last item in the ordered set where uuid = &#63;.
@@ -154,7 +155,7 @@ public interface ItemPersistence extends BasePersistence<Item> {
 	*/
 	public Item[] findByUuid_PrevAndNext(long itemId, java.lang.String uuid,
 		com.liferay.portal.kernel.util.OrderByComparator<Item> orderByComparator)
-		throws net.indaba.lostandfound.exception.NoSuchItemException;
+		throws NoSuchItemException;
 
 	/**
 	* Removes all the items where uuid = &#63; from the database.
@@ -180,7 +181,7 @@ public interface ItemPersistence extends BasePersistence<Item> {
 	* @throws NoSuchItemException if a matching item could not be found
 	*/
 	public Item findByUUID_G(java.lang.String uuid, long groupId)
-		throws net.indaba.lostandfound.exception.NoSuchItemException;
+		throws NoSuchItemException;
 
 	/**
 	* Returns the item where uuid = &#63; and groupId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
@@ -210,7 +211,7 @@ public interface ItemPersistence extends BasePersistence<Item> {
 	* @return the item that was removed
 	*/
 	public Item removeByUUID_G(java.lang.String uuid, long groupId)
-		throws net.indaba.lostandfound.exception.NoSuchItemException;
+		throws NoSuchItemException;
 
 	/**
 	* Returns the number of items where uuid = &#63; and groupId = &#63;.
@@ -296,7 +297,7 @@ public interface ItemPersistence extends BasePersistence<Item> {
 	*/
 	public Item findByUuid_C_First(java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Item> orderByComparator)
-		throws net.indaba.lostandfound.exception.NoSuchItemException;
+		throws NoSuchItemException;
 
 	/**
 	* Returns the first item in the ordered set where uuid = &#63; and companyId = &#63;.
@@ -320,7 +321,7 @@ public interface ItemPersistence extends BasePersistence<Item> {
 	*/
 	public Item findByUuid_C_Last(java.lang.String uuid, long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Item> orderByComparator)
-		throws net.indaba.lostandfound.exception.NoSuchItemException;
+		throws NoSuchItemException;
 
 	/**
 	* Returns the last item in the ordered set where uuid = &#63; and companyId = &#63;.
@@ -346,7 +347,7 @@ public interface ItemPersistence extends BasePersistence<Item> {
 	public Item[] findByUuid_C_PrevAndNext(long itemId, java.lang.String uuid,
 		long companyId,
 		com.liferay.portal.kernel.util.OrderByComparator<Item> orderByComparator)
-		throws net.indaba.lostandfound.exception.NoSuchItemException;
+		throws NoSuchItemException;
 
 	/**
 	* Removes all the items where uuid = &#63; and companyId = &#63; from the database.
@@ -394,8 +395,7 @@ public interface ItemPersistence extends BasePersistence<Item> {
 	* @return the item that was removed
 	* @throws NoSuchItemException if a item with the primary key could not be found
 	*/
-	public Item remove(long itemId)
-		throws net.indaba.lostandfound.exception.NoSuchItemException;
+	public Item remove(long itemId) throws NoSuchItemException;
 
 	public Item updateImpl(Item item);
 
@@ -406,8 +406,7 @@ public interface ItemPersistence extends BasePersistence<Item> {
 	* @return the item
 	* @throws NoSuchItemException if a item with the primary key could not be found
 	*/
-	public Item findByPrimaryKey(long itemId)
-		throws net.indaba.lostandfound.exception.NoSuchItemException;
+	public Item findByPrimaryKey(long itemId) throws NoSuchItemException;
 
 	/**
 	* Returns the item with the primary key or returns <code>null</code> if it could not be found.

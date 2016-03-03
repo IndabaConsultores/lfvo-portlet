@@ -16,7 +16,7 @@ package net.indaba.lostandfound.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.portal.service.ServiceWrapper;
+import com.liferay.portal.kernel.service.ServiceWrapper;
 
 /**
  * Provides a wrapper for {@link ItemService}.
@@ -35,7 +35,7 @@ public class ItemServiceWrapper implements ItemService,
 	@Override
 	public net.indaba.lostandfound.model.Item addOrUpdateItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _itemService.addOrUpdateItem(item, serviceContext);
 	}
@@ -43,7 +43,7 @@ public class ItemServiceWrapper implements ItemService,
 	@Override
 	public net.indaba.lostandfound.model.Item addOrUpdateItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext,
 		boolean updateFirebase)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _itemService.addOrUpdateItem(item, serviceContext, updateFirebase);

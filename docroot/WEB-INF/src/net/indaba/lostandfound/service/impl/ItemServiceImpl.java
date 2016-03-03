@@ -14,49 +14,22 @@
 
 package net.indaba.lostandfound.service.impl;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import com.liferay.portal.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portal.kernel.service.ServiceContext;
 
 import aQute.bnd.annotation.ProviderType;
-import net.indaba.lostandfound.exception.NoSuchItemException;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.indaba.lostandfound.service.base.ItemServiceBaseImpl;
-import net.thegreshams.firebase4j.error.FirebaseException;
-import net.thegreshams.firebase4j.error.JacksonUtilityException;
-import net.thegreshams.firebase4j.model.FirebaseResponse;
-import net.thegreshams.firebase4j.service.Firebase;
 
 /**
  * The implementation of the item remote service.
  *
  * <p>
- * All custom service methods should be put in this class. Whenever methods are
- * added, rerun ServiceBuilder to copy their definitions into the
- * {@link net.indaba.lostandfound.service.ItemService} interface.
+ * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link net.indaba.lostandfound.service.ItemService} interface.
  *
  * <p>
- * This is a remote service. Methods of this service are expected to have
- * security checks based on the propagated JAAS credentials because this service
- * can be accessed remotely.
+ * This is a remote service. Methods of this service are expected to have security checks based on the propagated JAAS credentials because this service can be accessed remotely.
  * </p>
  *
  * @author aritz
@@ -65,7 +38,12 @@ import net.thegreshams.firebase4j.service.Firebase;
  */
 @ProviderType
 public class ItemServiceImpl extends ItemServiceBaseImpl {
-
+	/*
+	 * NOTE FOR DEVELOPERS:
+	 *
+	 * Never reference this class directly. Always use {@link net.indaba.lostandfound.service.ItemServiceUtil} to access the item remote service.
+	 */
+	
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) throws PortalException {
 		return ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
 	}
@@ -89,5 +67,4 @@ public class ItemServiceImpl extends ItemServiceBaseImpl {
 	public Item deleteItem(Item item) throws PortalException {
 		return ItemLocalServiceUtil.deleteItem(item);
 	}
-	
 }

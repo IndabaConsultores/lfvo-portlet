@@ -16,7 +16,7 @@ package net.indaba.lostandfound.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.portal.service.InvokableService;
+import com.liferay.portal.kernel.service.InvokableService;
 
 /**
  * @author aritz
@@ -31,14 +31,14 @@ public class ItemServiceClp implements ItemService {
 
 		_methodParameterTypes0 = new String[] {
 				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.service.ServiceContext"
+				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 
 		_methodName1 = "addOrUpdateItem";
 
 		_methodParameterTypes1 = new String[] {
 				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.service.ServiceContext", "boolean"
+				"com.liferay.portal.kernel.service.ServiceContext", "boolean"
 			};
 
 		_methodName2 = "deleteItem";
@@ -69,7 +69,7 @@ public class ItemServiceClp implements ItemService {
 	@Override
 	public net.indaba.lostandfound.model.Item addOrUpdateItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
@@ -104,7 +104,7 @@ public class ItemServiceClp implements ItemService {
 	@Override
 	public net.indaba.lostandfound.model.Item addOrUpdateItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext,
 		boolean updateFirebase)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;

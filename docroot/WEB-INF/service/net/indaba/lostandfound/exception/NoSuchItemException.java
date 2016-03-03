@@ -14,10 +14,9 @@
 
 package net.indaba.lostandfound.exception;
 
-import com.liferay.portal.exception.NoSuchModelException;
-
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.kernel.exception.NoSuchModelException;
 
 /**
  * @author aritz

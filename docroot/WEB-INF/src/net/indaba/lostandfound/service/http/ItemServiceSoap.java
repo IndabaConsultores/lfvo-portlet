@@ -67,7 +67,7 @@ import java.rmi.RemoteException;
 public class ItemServiceSoap {
 	public static net.indaba.lostandfound.model.ItemSoap addOrUpdateItem(
 		net.indaba.lostandfound.model.ItemSoap item,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
 			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.addOrUpdateItem(net.indaba.lostandfound.model.impl.ItemModelImpl.toModel(
@@ -84,7 +84,7 @@ public class ItemServiceSoap {
 
 	public static net.indaba.lostandfound.model.ItemSoap addOrUpdateItem(
 		net.indaba.lostandfound.model.ItemSoap item,
-		com.liferay.portal.service.ServiceContext serviceContext,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext,
 		boolean updateFirebase) throws RemoteException {
 		try {
 			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.addOrUpdateItem(net.indaba.lostandfound.model.impl.ItemModelImpl.toModel(

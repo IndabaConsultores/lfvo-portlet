@@ -16,7 +16,7 @@ package net.indaba.lostandfound.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.portal.service.InvokableLocalService;
+import com.liferay.portal.kernel.service.InvokableLocalService;
 
 /**
  * @author aritz
@@ -37,14 +37,14 @@ public class ItemLocalServiceClp implements ItemLocalService {
 
 		_methodParameterTypes1 = new String[] {
 				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.service.ServiceContext"
+				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 
 		_methodName2 = "addOrUpdateItem";
 
 		_methodParameterTypes2 = new String[] {
 				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.service.ServiceContext", "boolean"
+				"com.liferay.portal.kernel.service.ServiceContext", "boolean"
 			};
 
 		_methodName3 = "createItem";
@@ -74,7 +74,7 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		_methodName8 = "deletePersistedModel";
 
 		_methodParameterTypes8 = new String[] {
-				"com.liferay.portal.model.PersistedModel"
+				"com.liferay.portal.kernel.model.PersistedModel"
 			};
 
 		_methodName9 = "dynamicQuery";
@@ -128,7 +128,7 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		_methodName18 = "getExportActionableDynamicQuery";
 
 		_methodParameterTypes18 = new String[] {
-				"com.liferay.portlet.exportimport.lar.PortletDataContext"
+				"com.liferay.exportimport.kernel.lar.PortletDataContext"
 			};
 
 		_methodName19 = "getIndexableActionableDynamicQuery";
@@ -205,7 +205,7 @@ public class ItemLocalServiceClp implements ItemLocalService {
 	@Override
 	public net.indaba.lostandfound.model.Item addOrUpdateItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
@@ -240,7 +240,7 @@ public class ItemLocalServiceClp implements ItemLocalService {
 	@Override
 	public net.indaba.lostandfound.model.Item addOrUpdateItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext,
 		boolean updateFirebase)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
@@ -421,8 +421,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 	}
 
 	@Override
-	public com.liferay.portal.model.PersistedModel deletePersistedModel(
-		com.liferay.portal.model.PersistedModel persistedModel)
+	public com.liferay.portal.kernel.model.PersistedModel deletePersistedModel(
+		com.liferay.portal.kernel.model.PersistedModel persistedModel)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
@@ -447,7 +447,7 @@ public class ItemLocalServiceClp implements ItemLocalService {
 			}
 		}
 
-		return (com.liferay.portal.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
+		return (com.liferay.portal.kernel.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
 	}
 
 	@Override
@@ -693,7 +693,7 @@ public class ItemLocalServiceClp implements ItemLocalService {
 
 	@Override
 	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery getExportActionableDynamicQuery(
-		com.liferay.portlet.exportimport.lar.PortletDataContext portletDataContext) {
+		com.liferay.exportimport.kernel.lar.PortletDataContext portletDataContext) {
 		Object returnObj = null;
 
 		try {
@@ -931,7 +931,7 @@ public class ItemLocalServiceClp implements ItemLocalService {
 	}
 
 	@Override
-	public com.liferay.portal.model.PersistedModel getPersistedModel(
+	public com.liferay.portal.kernel.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
@@ -957,7 +957,7 @@ public class ItemLocalServiceClp implements ItemLocalService {
 			}
 		}
 
-		return (com.liferay.portal.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
+		return (com.liferay.portal.kernel.model.PersistedModel)ClpSerializer.translateOutput(returnObj);
 	}
 
 	@Override

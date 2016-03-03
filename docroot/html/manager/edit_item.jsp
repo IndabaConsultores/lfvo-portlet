@@ -25,15 +25,14 @@ else{
 	<liferay-ui:asset-tags-error />
 	<liferay-ui:panel defaultState="closed" extended="<%= false %>" id="guestbookCategorizationPanel" persistState="<%= true %>" title="categorization">
 		<aui:fieldset>
-			<aui:input classPK="<%= (item != null) ? item.getItemId() : 0 %>" name="categories" type="assetCategories" />
-
-			<aui:input classPK="<%= (item != null) ? item.getItemId() : 0 %>" name="tags" type="assetTags" />
+			<liferay-ui:asset-categories-selector className="net.indaba.lostandfound.model.Item" classPK="<%=item.getItemId()%>"/>
+			<liferay-ui:asset-tags-selector className="net.indaba.lostandfound.model.Item" classPK="<%=item.getItemId()%>"/>
 		</aui:fieldset>
 	</liferay-ui:panel>
 
 
 	<aui:button-row>
-		<aui:button type="submit" value="add"></aui:button>
+		<aui:button type="submit" value='<%=item.getItemId()==0?"add":"save"%>'></aui:button>
 		<aui:button type="button" value="cancel" href="<%=redirect %>"></aui:button>
 	</aui:button-row>
 

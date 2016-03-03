@@ -16,15 +16,32 @@ package net.indaba.lostandfound.service;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.exportimport.kernel.lar.PortletDataContext;
+
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.service.BaseLocalService;
+import com.liferay.portal.kernel.service.InvokableLocalService;
+import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
-import com.liferay.portal.service.BaseLocalService;
-import com.liferay.portal.service.InvokableLocalService;
-import com.liferay.portal.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.util.OrderByComparator;
+
+import net.indaba.lostandfound.model.Item;
+
+import java.io.Serializable;
+
+import java.util.List;
 
 /**
  * Provides the local service interface for Item. Methods of this
@@ -55,18 +72,13 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @param item the item
 	* @return the item that was added
 	*/
-	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
-	public net.indaba.lostandfound.model.Item addItem(
-		net.indaba.lostandfound.model.Item item);
+	@Indexable(type = IndexableType.REINDEX)
+	public Item addItem(Item item);
 
-	public net.indaba.lostandfound.model.Item addOrUpdateItem(
-		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext)
+	public Item addOrUpdateItem(Item item, ServiceContext serviceContext)
 		throws PortalException;
 
-	public net.indaba.lostandfound.model.Item addOrUpdateItem(
-		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.service.ServiceContext serviceContext,
+	public Item addOrUpdateItem(Item item, ServiceContext serviceContext,
 		boolean updateFirebase) throws PortalException;
 
 	/**
@@ -75,7 +87,7 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @param itemId the primary key for the new item
 	* @return the new item
 	*/
-	public net.indaba.lostandfound.model.Item createItem(long itemId);
+	public Item createItem(long itemId);
 
 	/**
 	* Deletes the item from the database. Also notifies the appropriate model listeners.
@@ -84,12 +96,10 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @return the item that was removed
 	* @throws PortalException
 	*/
-	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.DELETE)
-	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item) throws PortalException;
+	@Indexable(type = IndexableType.DELETE)
+	public Item deleteItem(Item item) throws PortalException;
 
-	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item, boolean updateFirebase)
+	public Item deleteItem(Item item, boolean updateFirebase)
 		throws PortalException;
 
 	/**
@@ -99,22 +109,20 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @return the item that was removed
 	* @throws PortalException if a item with the primary key could not be found
 	*/
-	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.DELETE)
-	public net.indaba.lostandfound.model.Item deleteItem(long itemId)
-		throws PortalException;
+	@Indexable(type = IndexableType.DELETE)
+	public Item deleteItem(long itemId) throws PortalException;
 
-	public net.indaba.lostandfound.model.Item deleteItem(long itemId,
-		boolean updateFirebase) throws PortalException;
+	public Item deleteItem(long itemId, boolean updateFirebase)
+		throws PortalException;
 
 	/**
 	* @throws PortalException
 	*/
 	@Override
-	public com.liferay.portal.model.PersistedModel deletePersistedModel(
-		com.liferay.portal.model.PersistedModel persistedModel)
+	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
 		throws PortalException;
 
-	public com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery();
+	public DynamicQuery dynamicQuery();
 
 	/**
 	* Performs a dynamic query on the database and returns the matching rows.
@@ -122,8 +130,7 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @param dynamicQuery the dynamic query
 	* @return the matching rows
 	*/
-	public <T> java.util.List<T> dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery);
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery);
 
 	/**
 	* Performs a dynamic query on the database and returns a range of the matching rows.
@@ -137,8 +144,7 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @param end the upper bound of the range of model instances (not inclusive)
 	* @return the range of matching rows
 	*/
-	public <T> java.util.List<T> dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
 		int end);
 
 	/**
@@ -154,10 +160,8 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	* @return the ordered range of matching rows
 	*/
-	public <T> java.util.List<T> dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end,
-		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator);
+	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
+		int end, OrderByComparator<T> orderByComparator);
 
 	/**
 	* Returns the number of rows matching the dynamic query.
@@ -165,8 +169,7 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @param dynamicQuery the dynamic query
 	* @return the number of rows matching the dynamic query
 	*/
-	public long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery);
+	public long dynamicQueryCount(DynamicQuery dynamicQuery);
 
 	/**
 	* Returns the number of rows matching the dynamic query.
@@ -175,12 +178,11 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @param projection the projection to apply to the query
 	* @return the number of rows matching the dynamic query
 	*/
-	public long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
-		com.liferay.portal.kernel.dao.orm.Projection projection);
+	public long dynamicQueryCount(DynamicQuery dynamicQuery,
+		Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public net.indaba.lostandfound.model.Item fetchItem(long itemId);
+	public Item fetchItem(long itemId);
 
 	/**
 	* Returns the item matching the UUID and group.
@@ -190,18 +192,17 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @return the matching item, or <code>null</code> if a matching item could not be found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public net.indaba.lostandfound.model.Item fetchItemByUuidAndGroupId(
-		java.lang.String uuid, long groupId);
+	public Item fetchItemByUuidAndGroupId(java.lang.String uuid, long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery();
+	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery getExportActionableDynamicQuery(
-		com.liferay.portlet.exportimport.lar.PortletDataContext portletDataContext);
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		PortletDataContext portletDataContext);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
+	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
 	/**
 	* Returns the item with the primary key.
@@ -211,8 +212,7 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @throws PortalException if a item with the primary key could not be found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public net.indaba.lostandfound.model.Item getItem(long itemId)
-		throws PortalException;
+	public Item getItem(long itemId) throws PortalException;
 
 	/**
 	* Returns the item matching the UUID and group.
@@ -223,8 +223,8 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @throws PortalException if a matching item could not be found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public net.indaba.lostandfound.model.Item getItemByUuidAndGroupId(
-		java.lang.String uuid, long groupId) throws PortalException;
+	public Item getItemByUuidAndGroupId(java.lang.String uuid, long groupId)
+		throws PortalException;
 
 	/**
 	* Returns a range of all the items.
@@ -238,8 +238,7 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @return the range of items
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<net.indaba.lostandfound.model.Item> getItems(
-		int start, int end);
+	public List<Item> getItems(int start, int end);
 
 	/**
 	* Returns all the items matching the UUID and company.
@@ -249,8 +248,8 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @return the matching items, or an empty list if no matches were found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<net.indaba.lostandfound.model.Item> getItemsByUuidAndCompanyId(
-		java.lang.String uuid, long companyId);
+	public List<Item> getItemsByUuidAndCompanyId(java.lang.String uuid,
+		long companyId);
 
 	/**
 	* Returns a range of items matching the UUID and company.
@@ -263,9 +262,9 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @return the range of matching items, or an empty list if no matches were found
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<net.indaba.lostandfound.model.Item> getItemsByUuidAndCompanyId(
-		java.lang.String uuid, long companyId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<net.indaba.lostandfound.model.Item> orderByComparator);
+	public List<Item> getItemsByUuidAndCompanyId(java.lang.String uuid,
+		long companyId, int start, int end,
+		OrderByComparator<Item> orderByComparator);
 
 	/**
 	* Returns the number of items.
@@ -284,8 +283,8 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public com.liferay.portal.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj) throws PortalException;
+	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
+		throws PortalException;
 
 	@Override
 	public java.lang.Object invokeMethod(java.lang.String name,
@@ -298,7 +297,6 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	* @param item the item
 	* @return the item that was updated
 	*/
-	@com.liferay.portal.kernel.search.Indexable(type = IndexableType.REINDEX)
-	public net.indaba.lostandfound.model.Item updateItem(
-		net.indaba.lostandfound.model.Item item);
+	@Indexable(type = IndexableType.REINDEX)
+	public Item updateItem(Item item);
 }

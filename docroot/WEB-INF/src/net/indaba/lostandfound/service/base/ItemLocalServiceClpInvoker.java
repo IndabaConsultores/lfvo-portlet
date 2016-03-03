@@ -106,13 +106,13 @@ public class ItemLocalServiceClpInvoker {
 		_methodName16 = "getExportActionableDynamicQuery";
 
 		_methodParameterTypes16 = new String[] {
-				"com.liferay.portlet.exportimport.lar.PortletDataContext"
+				"com.liferay.exportimport.kernel.lar.PortletDataContext"
 			};
 
 		_methodName17 = "deletePersistedModel";
 
 		_methodParameterTypes17 = new String[] {
-				"com.liferay.portal.model.PersistedModel"
+				"com.liferay.portal.kernel.model.PersistedModel"
 			};
 
 		_methodName18 = "getPersistedModel";
@@ -156,14 +156,14 @@ public class ItemLocalServiceClpInvoker {
 
 		_methodParameterTypes56 = new String[] {
 				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.service.ServiceContext"
+				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 
 		_methodName57 = "addOrUpdateItem";
 
 		_methodParameterTypes57 = new String[] {
 				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.service.ServiceContext", "boolean"
+				"com.liferay.portal.kernel.service.ServiceContext", "boolean"
 			};
 
 		_methodName58 = "deleteItem";
@@ -273,12 +273,12 @@ public class ItemLocalServiceClpInvoker {
 
 		if (_methodName16.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes16, parameterTypes)) {
-			return ItemLocalServiceUtil.getExportActionableDynamicQuery((com.liferay.portlet.exportimport.lar.PortletDataContext)arguments[0]);
+			return ItemLocalServiceUtil.getExportActionableDynamicQuery((com.liferay.exportimport.kernel.lar.PortletDataContext)arguments[0]);
 		}
 
 		if (_methodName17.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes17, parameterTypes)) {
-			return ItemLocalServiceUtil.deletePersistedModel((com.liferay.portal.model.PersistedModel)arguments[0]);
+			return ItemLocalServiceUtil.deletePersistedModel((com.liferay.portal.kernel.model.PersistedModel)arguments[0]);
 		}
 
 		if (_methodName18.equals(name) &&
@@ -331,13 +331,13 @@ public class ItemLocalServiceClpInvoker {
 		if (_methodName56.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes56, parameterTypes)) {
 			return ItemLocalServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
-				(com.liferay.portal.service.ServiceContext)arguments[1]);
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName57.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes57, parameterTypes)) {
 			return ItemLocalServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
-				(com.liferay.portal.service.ServiceContext)arguments[1],
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1],
 				((Boolean)arguments[2]).booleanValue());
 		}
 

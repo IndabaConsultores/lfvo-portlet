@@ -9,9 +9,9 @@ import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.asset.kernel.model.BaseJSPAssetRenderer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portlet.asset.model.BaseJSPAssetRenderer;
 
 import net.indaba.lostandfound.model.Item;
 
