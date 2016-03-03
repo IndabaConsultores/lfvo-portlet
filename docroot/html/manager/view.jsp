@@ -1,34 +1,46 @@
 <%@ include file="/html/init.jsp" %>
+
 <%
-List<Item> items = (List<Item>)renderRequest.getAttribute("items");
+String navigation = ParamUtil.getString(request, "navigation", "items");
+
+PortletURL portletURL = renderResponse.createRenderURL();
+portletURL.setParameter("navigation", navigation);
+
 %>
 
-<liferay-ui:search-container
-	emptyResultsMessage="no-item-was-found" >
-	<liferay-ui:search-container-results results="<%=items%>"/>
-	<liferay-ui:search-container-row className="net.indaba.lostandfound.model.Item" modelVar="item" >
-		<liferay-ui:search-container-column-text>
-			
-			<portlet:renderURL var="editItemURL">
-				<portlet:param name="mvcPath" value="<%=ItemManagerPortlet.PATH_EDIT_ITEM %>" />
-				<portlet:param name="itemId" value="<%=String.valueOf(item.getItemId()) %>" />
-				<portlet:param name="redirect" value="<%= currentURL %>" />
-			</portlet:renderURL>
-			<a href="<%=editItemURL%>"><%=item.getName()%></a>
-			
-		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-jsp
-			cssClass="list-group-item-field"
-			path="/html/manager/item_action.jsp"
-		/>
-	</liferay-ui:search-container-row>
-	<liferay-ui:search-iterator  markupView="lexicon" />
-</liferay-ui:search-container>
+<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon" >
+	<aui:nav cssClass="navbar-nav">
+		<portlet:renderURL var="viewItemsURL" />
 
-<aui:button-row>
-	<portlet:renderURL var="addItemURL">
-		<portlet:param name="mvcPath" value="<%=ItemManagerPortlet.PATH_EDIT_ITEM %>" />
-		<portlet:param name="redirect" value="<%= currentURL %>" />
-	</portlet:renderURL>
-	<aui:button href="<%= addItemURL.toString() %>" value="add"></aui:button>
-</aui:button-row>
+		<aui:nav-item
+			href="<%=viewItemsURL%>"
+			label="items"
+			selected='<%= navigation.equals("items") %>'
+		/>
+
+		<portlet:renderURL var="adminURL">
+			<portlet:param name="navigation" value="admin" />
+		</portlet:renderURL>
+
+		<aui:nav-item
+			href="<%=adminURL%>"
+			label="administration"
+			selected='<%= navigation.equals("admin") %>'
+		/>
+	</aui:nav>
+
+	<aui:form action="<%= portletURL.toString() %>" name="searchFm">
+		<aui:nav-bar-search>
+			<liferay-ui:input-search markupView="lexicon" />
+		</aui:nav-bar-search>
+	</aui:form>
+</aui:nav-bar>
+
+<c:choose>
+	<c:when test='<%= navigation.equals("items") %>'>
+		<liferay-util:include page="/html/manager/view_items.jsp" servletContext="<%= application %>" />
+	</c:when>
+	<c:otherwise>
+		<liferay-util:include page="/html/manager/view_admin.jsp" servletContext="<%= application %>" />
+	</c:otherwise>
+</c:choose>
