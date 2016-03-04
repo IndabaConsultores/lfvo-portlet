@@ -14,3 +14,10 @@ create table lfvo_Item (
 	lat LONG,
 	lng LONG
 );
+
+create table lfvo_LFImage (
+	uuid_ VARCHAR(75) null,
+	lfImageId LONG not null primary key,
+	itemId LONG,
+	image BLOB
+);

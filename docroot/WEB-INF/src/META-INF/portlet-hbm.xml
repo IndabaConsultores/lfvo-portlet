@@ -3,6 +3,7 @@
 
 <hibernate-mapping default-lazy="false" auto-import="false">
 	<import class="net.indaba.lostandfound.model.Item" />
+	<import class="net.indaba.lostandfound.model.LFImage" />
 	<class name="net.indaba.lostandfound.model.impl.ItemImpl" table="lfvo_Item">
 		<id name="itemId" type="long">
 			<generator class="assigned" />
@@ -20,5 +21,21 @@
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="lat" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="lng" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+	<class name="net.indaba.lostandfound.model.impl.LFImageImpl" table="lfvo_LFImage">
+		<id name="lfImageId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="uuid" type="com.liferay.portal.dao.orm.hibernate.StringType" column="uuid_" />
+		<property name="itemId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<one-to-one name="imageBlobModel" access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" class="net.indaba.lostandfound.model.LFImageImageBlobModel" cascade="save-update" outer-join="false" constrained="true" />
+	</class>
+	<class name="net.indaba.lostandfound.model.LFImageImageBlobModel" table="lfvo_LFImage" lazy="true">
+		<id name="lfImageId" column="lfImageId">
+			<generator class="foreign">
+				<param name="property">net.indaba.lostandfound.model.impl.LFImageImpl</param>
+			</generator>
+		</id>
+		<property column="image" name="imageBlob" type="blob" />
 	</class>
 </hibernate-mapping>

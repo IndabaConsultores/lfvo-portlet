@@ -27,102 +27,102 @@ import java.util.Arrays;
 @ProviderType
 public class ItemServiceClpInvoker {
 	public ItemServiceClpInvoker() {
-		_methodName34 = "getOSGiServiceIdentifier";
+		_methodName40 = "getOSGiServiceIdentifier";
 
-		_methodParameterTypes34 = new String[] {  };
+		_methodParameterTypes40 = new String[] {  };
 
-		_methodName39 = "addOrUpdateItem";
+		_methodName45 = "addOrUpdateItem";
 
-		_methodParameterTypes39 = new String[] {
+		_methodParameterTypes45 = new String[] {
 				"net.indaba.lostandfound.model.Item",
 				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 
-		_methodName40 = "addOrUpdateItem";
+		_methodName46 = "addOrUpdateItem";
 
-		_methodParameterTypes40 = new String[] {
+		_methodParameterTypes46 = new String[] {
 				"net.indaba.lostandfound.model.Item",
 				"com.liferay.portal.kernel.service.ServiceContext", "boolean"
 			};
 
-		_methodName41 = "deleteItem";
+		_methodName47 = "deleteItem";
 
-		_methodParameterTypes41 = new String[] { "long", "boolean" };
+		_methodParameterTypes47 = new String[] { "long", "boolean" };
 
-		_methodName42 = "deleteItem";
+		_methodName48 = "deleteItem";
 
-		_methodParameterTypes42 = new String[] { "long" };
+		_methodParameterTypes48 = new String[] { "long" };
 
-		_methodName43 = "deleteItem";
+		_methodName49 = "deleteItem";
 
-		_methodParameterTypes43 = new String[] {
+		_methodParameterTypes49 = new String[] {
 				"net.indaba.lostandfound.model.Item", "boolean"
 			};
 
-		_methodName44 = "deleteItem";
+		_methodName50 = "deleteItem";
 
-		_methodParameterTypes44 = new String[] {
+		_methodParameterTypes50 = new String[] {
 				"net.indaba.lostandfound.model.Item"
 			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
-		if (_methodName34.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes34, parameterTypes)) {
+		if (_methodName40.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes40, parameterTypes)) {
 			return ItemServiceUtil.getOSGiServiceIdentifier();
 		}
 
-		if (_methodName39.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes39, parameterTypes)) {
+		if (_methodName45.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes45, parameterTypes)) {
 			return ItemServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
 				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
-		if (_methodName40.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes40, parameterTypes)) {
+		if (_methodName46.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes46, parameterTypes)) {
 			return ItemServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
 				(com.liferay.portal.kernel.service.ServiceContext)arguments[1],
 				((Boolean)arguments[2]).booleanValue());
 		}
 
-		if (_methodName41.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes41, parameterTypes)) {
+		if (_methodName47.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes47, parameterTypes)) {
 			return ItemServiceUtil.deleteItem(((Long)arguments[0]).longValue(),
 				((Boolean)arguments[1]).booleanValue());
 		}
 
-		if (_methodName42.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes42, parameterTypes)) {
+		if (_methodName48.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes48, parameterTypes)) {
 			return ItemServiceUtil.deleteItem(((Long)arguments[0]).longValue());
 		}
 
-		if (_methodName43.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes43, parameterTypes)) {
+		if (_methodName49.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes49, parameterTypes)) {
 			return ItemServiceUtil.deleteItem((net.indaba.lostandfound.model.Item)arguments[0],
 				((Boolean)arguments[1]).booleanValue());
 		}
 
-		if (_methodName44.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes44, parameterTypes)) {
+		if (_methodName50.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes50, parameterTypes)) {
 			return ItemServiceUtil.deleteItem((net.indaba.lostandfound.model.Item)arguments[0]);
 		}
 
 		throw new UnsupportedOperationException();
 	}
 
-	private String _methodName34;
-	private String[] _methodParameterTypes34;
-	private String _methodName39;
-	private String[] _methodParameterTypes39;
 	private String _methodName40;
 	private String[] _methodParameterTypes40;
-	private String _methodName41;
-	private String[] _methodParameterTypes41;
-	private String _methodName42;
-	private String[] _methodParameterTypes42;
-	private String _methodName43;
-	private String[] _methodParameterTypes43;
-	private String _methodName44;
-	private String[] _methodParameterTypes44;
+	private String _methodName45;
+	private String[] _methodParameterTypes45;
+	private String _methodName46;
+	private String[] _methodParameterTypes46;
+	private String _methodName47;
+	private String[] _methodParameterTypes47;
+	private String _methodName48;
+	private String[] _methodParameterTypes48;
+	private String _methodName49;
+	private String[] _methodParameterTypes49;
+	private String _methodName50;
+	private String[] _methodParameterTypes50;
 }

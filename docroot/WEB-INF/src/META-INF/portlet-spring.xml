@@ -4,4 +4,7 @@
 	<bean id="net.indaba.lostandfound.service.ItemLocalService" class="net.indaba.lostandfound.service.impl.ItemLocalServiceImpl" />
 	<bean id="net.indaba.lostandfound.service.ItemService" class="net.indaba.lostandfound.service.impl.ItemServiceImpl" />
 	<bean id="net.indaba.lostandfound.service.persistence.ItemPersistence" class="net.indaba.lostandfound.service.persistence.impl.ItemPersistenceImpl" parent="basePersistence" />
+	<bean id="net.indaba.lostandfound.service.LFImageLocalService" class="net.indaba.lostandfound.service.impl.LFImageLocalServiceImpl" />
+	<bean id="net.indaba.lostandfound.service.LFImageService" class="net.indaba.lostandfound.service.impl.LFImageServiceImpl" />
+	<bean id="net.indaba.lostandfound.service.persistence.LFImagePersistence" class="net.indaba.lostandfound.service.persistence.impl.LFImagePersistenceImpl" parent="basePersistence" />
 </beans>

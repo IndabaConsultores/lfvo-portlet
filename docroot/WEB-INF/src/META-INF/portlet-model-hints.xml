@@ -17,4 +17,10 @@
 		<field name="lat" type="long" />
 		<field name="lng" type="long" />
 	</model>
+	<model name="net.indaba.lostandfound.model.LFImage">
+		<field name="uuid" type="String" />
+		<field name="lfImageId" type="long" />
+		<field name="itemId" type="long" />
+		<field name="image" type="Blob" />
+	</model>
 </model-hints>

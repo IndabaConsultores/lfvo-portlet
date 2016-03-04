@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.messaging.Message;
 import net.indaba.lostandfound.service.ClpSerializer;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.indaba.lostandfound.service.ItemServiceUtil;
+import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
+import net.indaba.lostandfound.service.LFImageServiceUtil;
 
 /**
  * @author aritz
@@ -42,6 +44,9 @@ public class ClpMessageListener extends BaseMessageListener {
 			ItemLocalServiceUtil.clearService();
 
 			ItemServiceUtil.clearService();
+			LFImageLocalServiceUtil.clearService();
+
+			LFImageServiceUtil.clearService();
 		}
 	}
 }

@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.ItemLocalService;
 import net.indaba.lostandfound.service.persistence.ItemPersistence;
+import net.indaba.lostandfound.service.persistence.LFImagePersistence;
 
 import java.io.Serializable;
 
@@ -460,6 +461,43 @@ public abstract class ItemLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the l f image local service.
+	 *
+	 * @return the l f image local service
+	 */
+	public net.indaba.lostandfound.service.LFImageLocalService getLFImageLocalService() {
+		return lfImageLocalService;
+	}
+
+	/**
+	 * Sets the l f image local service.
+	 *
+	 * @param lfImageLocalService the l f image local service
+	 */
+	public void setLFImageLocalService(
+		net.indaba.lostandfound.service.LFImageLocalService lfImageLocalService) {
+		this.lfImageLocalService = lfImageLocalService;
+	}
+
+	/**
+	 * Returns the l f image persistence.
+	 *
+	 * @return the l f image persistence
+	 */
+	public LFImagePersistence getLFImagePersistence() {
+		return lfImagePersistence;
+	}
+
+	/**
+	 * Sets the l f image persistence.
+	 *
+	 * @param lfImagePersistence the l f image persistence
+	 */
+	public void setLFImagePersistence(LFImagePersistence lfImagePersistence) {
+		this.lfImagePersistence = lfImagePersistence;
+	}
+
+	/**
 	 * Returns the counter local service.
 	 *
 	 * @return the counter local service
@@ -729,6 +767,10 @@ public abstract class ItemLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected ItemLocalService itemLocalService;
 	@BeanReference(type = ItemPersistence.class)
 	protected ItemPersistence itemPersistence;
+	@BeanReference(type = net.indaba.lostandfound.service.LFImageLocalService.class)
+	protected net.indaba.lostandfound.service.LFImageLocalService lfImageLocalService;
+	@BeanReference(type = LFImagePersistence.class)
+	protected LFImagePersistence lfImagePersistence;
 	@BeanReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
 	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
 	@BeanReference(type = com.liferay.portal.kernel.service.ClassNameLocalService.class)
