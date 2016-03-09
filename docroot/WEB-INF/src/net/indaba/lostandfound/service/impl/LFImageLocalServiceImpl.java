@@ -14,8 +14,10 @@
 
 package net.indaba.lostandfound.service.impl;
 
-import aQute.bnd.annotation.ProviderType;
+import java.util.List;
 
+import aQute.bnd.annotation.ProviderType;
+import net.indaba.lostandfound.model.LFImage;
 import net.indaba.lostandfound.service.base.LFImageLocalServiceBaseImpl;
 
 /**
@@ -39,4 +41,9 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 	 *
 	 * Never reference this class directly. Always use {@link net.indaba.lostandfound.service.LFImageLocalServiceUtil} to access the l f image local service.
 	 */
+	
+	public List<LFImage> findByItemId(long itemId){
+		return lfImagePersistence.findByItemId(itemId);
+	}
+	
 }

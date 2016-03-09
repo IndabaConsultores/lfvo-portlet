@@ -130,6 +130,10 @@ public class LFImageLocalServiceClpInvoker {
 		_methodName43 = "getOSGiServiceIdentifier";
 
 		_methodParameterTypes43 = new String[] {  };
+
+		_methodName48 = "findByItemId";
+
+		_methodParameterTypes48 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -246,6 +250,11 @@ public class LFImageLocalServiceClpInvoker {
 			return LFImageLocalServiceUtil.getOSGiServiceIdentifier();
 		}
 
+		if (_methodName48.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes48, parameterTypes)) {
+			return LFImageLocalServiceUtil.findByItemId(((Long)arguments[0]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -291,4 +300,6 @@ public class LFImageLocalServiceClpInvoker {
 	private String[] _methodParameterTypes20;
 	private String _methodName43;
 	private String[] _methodParameterTypes43;
+	private String _methodName48;
+	private String[] _methodParameterTypes48;
 }
