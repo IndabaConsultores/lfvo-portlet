@@ -4,8 +4,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -13,7 +17,7 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.model.Item;
@@ -25,14 +29,13 @@ import net.thegreshams.firebase4j.model.FirebaseResponse;
 import net.thegreshams.firebase4j.service.Firebase;
 
 public class FirebaseSyncUtil {
-	
+
 	static private List<Item> liferayUnsyncedItems;
-	static private List<Item> firebaseUnsyncedItems;
-	
+	static private Map<String, Item> firebaseUnsyncedItems;
+
 	static private long lastSyncDate = 0;
 
 	static private final String FB_URI = "https://brilliant-torch-8285.firebaseio.com";
-	
 
 	public static boolean isSyncEnabled() {
 		String firebaseSyncEnabled = PortletProps.get("firebase.sync.enabled");
@@ -52,9 +55,9 @@ public class FirebaseSyncUtil {
 		return items;
 	}
 
-	private static List<Item> getFirebaseItemsAfter(long firebaseTS)
+	private static Map<String, Item> getFirebaseItemsAfter(long firebaseTS)
 			throws FirebaseException, UnsupportedEncodingException {
-		List<Item> items = new ArrayList<Item>();
+		Map<String, Item> items = new LinkedHashMap<String, Item>();
 
 		Firebase firebase = new Firebase(FB_URI + "/items");
 		/* Get lost alerts */
@@ -63,35 +66,55 @@ public class FirebaseSyncUtil {
 		FirebaseResponse response = firebase.get("/alert/lost");
 		Map<String, Object> lostItems = response.getBody();
 		Item item, itemLocal;
-		for (Object o : lostItems.values()) {
-			Map<String, Object> map = (Map<String, Object>) o;
+		Iterator<Entry<String, Object>> it = lostItems.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, Object> e = it.next();
+			Map<String, Object> map = (Map<String, Object>) e.getValue();
 			item = mapToItem(map);
 			item.setType("lost");
 			if (item.getItemId() != 0) {
-				itemLocal = ItemLocalServiceUtil.fetchItem(item.getItemId());
-				if (item.getModifiedDate().compareTo(itemLocal.getModifiedDate()) > 0)
-					items.add(item);
+				items.put(e.getKey(), item);
 			} else {
 				item.setNew(true);
-				items.add(item);
+				items.put(e.getKey(), item);
 			}
 		}
 		/* Get found alerts */
+		firebase = new Firebase(FB_URI + "/items");
 		firebase.addQuery("orderBy", "\"modifiedAt\"");
 		firebase.addQuery("startAt", String.valueOf(firebaseTS));
 		response = firebase.get("/alert/found");
 		lostItems = response.getBody();
-		for (Object o : lostItems.values()) {
-			Map<String, Object> map = (Map<String, Object>) o;
+		it = lostItems.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, Object> e = it.next();
+			Map<String, Object> map = (Map<String, Object>) e.getValue();
 			item = mapToItem(map);
 			item.setType("found");
 			if (item.getItemId() != 0) {
-				itemLocal = ItemLocalServiceUtil.fetchItem(item.getItemId());
-				if (item.getModifiedDate().compareTo(itemLocal.getModifiedDate()) > 0)
-					items.add(item);
+				items.put(e.getKey(), item);
 			} else {
 				item.setNew(true);
-				items.add(item);
+				items.put(e.getKey(), item);
+			}
+		}
+		/* Get office items */
+		firebase = new Firebase(FB_URI + "/items");
+		firebase.addQuery("orderBy", "\"modifiedAt\"");
+		firebase.addQuery("startAt", String.valueOf(firebaseTS));
+		response = firebase.get("/office");
+		lostItems = response.getBody();
+		it = lostItems.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, Object> e = it.next();
+			Map<String, Object> map = (Map<String, Object>) e.getValue();
+			item = mapToItem(map);
+			item.setType("office");
+			if (item.getItemId() != 0) {
+				items.put(e.getKey(), item);
+			} else {
+				item.setNew(true);
+				items.put(e.getKey(), item);
 			}
 		}
 		return items;
@@ -118,53 +141,57 @@ public class FirebaseSyncUtil {
 		FirebaseResponse response = firebase.get("");
 
 		Map<String, Object> responseMap = response.getBody();
-		long syncTS = (long) responseMap.get("Sync");
+		Object o = responseMap.get("Sync");
+		long syncTS = (o == null) ? 0 : new Long(o.toString());
 
 		/* Get Liferay items that were added/updated after last sync time */
 		List<Item> lrItemList = getLiferayItemsAfter(syncTS);
 		/* Get Firebase items that were added/updated after last sync time */
-		List<Item> fbItemList = getFirebaseItemsAfter(syncTS);
-		
+		Map<String, Item> fbItemsAux = getFirebaseItemsAfter(syncTS);
+		Map<String, Item> fbItems = new LinkedHashMap<String, Item>();
+
 		Map<Long, Item> lrItems = new HashMap<Long, Item>();
-		List<Item> lrItemsList = new ArrayList<Item>();
-		List<Item> fbItemsList = new ArrayList<Item>();
-		
+
 		/* Convert list to map for faster access by itemId */
 		for (Item i : lrItemList) {
 			lrItems.put(i.getItemId(), i);
 		}
-		Item lrItem;
-		for (Item fbItem : fbItemList) {
+		Item lrItem, fbItem;
+		for (Entry<String, Item> e : fbItemsAux.entrySet()) {
+			fbItem = e.getValue();
 			lrItem = lrItems.get(fbItem.getItemId());
 			if (lrItem != null) {
 				int dateComp = lrItem.getModifiedDate().compareTo(fbItem.getModifiedDate());
 				if (dateComp == 0) {
-					/* both items are in sync; remove from LRList */
+					/* both items are in sync; remove from both*/
 					lrItems.remove(lrItem.getItemId());
-				} else if (dateComp < 0) {
-					/* fbItem is more recent; add to fbList */
-					fbItemsList.add(fbItem);
+				} else if (dateComp > 0) {
+					/* lrItem is more recent; remove from fbItems */
+				} else {
+					/* fbItem is more recent; remove from lrItems*/
+					lrItems.remove(lrItem.getItemId());
+					fbItems.put(e.getKey(), e.getValue());
 				}
 			} else {
 				/* Item exists in FB but not in LR */
-				fbItemsList.add(fbItem);
+				fbItems.put(e.getKey(), e.getValue());
 			}
 		}
 		liferayUnsyncedItems = new ArrayList<Item>(lrItems.values());
-		firebaseUnsyncedItems = fbItemList;
+		firebaseUnsyncedItems = fbItems;
 		lastSyncDate = System.currentTimeMillis();
 	}
-	
+
 	public static List<Item> getLiferayUnsyncedItems() {
 		return liferayUnsyncedItems;
 	}
-	
+
 	public static List<Item> getFirebaseUnsyncedItems() {
-		return firebaseUnsyncedItems;
+		return new ArrayList<Item>(firebaseUnsyncedItems.values());
 	}
-	
-	public static void resyncItems() throws UnsupportedEncodingException, 
-	FirebaseException, JacksonUtilityException, PortalException {
+
+	public static void resyncItems()
+			throws UnsupportedEncodingException, FirebaseException, JacksonUtilityException, PortalException {
 		/* Push items to Firebase */
 		for (Item i : liferayUnsyncedItems) {
 			addOrUpdateItem(i);
@@ -174,9 +201,29 @@ public class FirebaseSyncUtil {
 		/* Add items to Database */
 		ServiceContext serviceContext = new ServiceContext();
 		serviceContext.setUserId(25602);
-		for (Item i : firebaseUnsyncedItems) {
-			ItemLocalServiceUtil.addOrUpdateItem(i, serviceContext);
-		}			
+		Item item;
+		boolean isNew;
+		for (Entry<String, Item> e : firebaseUnsyncedItems.entrySet()) {
+			item = e.getValue();
+			isNew = e.getValue().isNew();
+			item = ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
+			if (isNew) {
+				String itemTypePath = getItemPath(item);
+
+				Firebase firebase = new Firebase(FB_URI + itemTypePath);
+				String itemKey = e.getKey();
+				Map<String, Object> itemMap = new HashMap<String, Object>();
+				itemMap.put("id", item.getItemId());
+				FirebaseResponse response;
+				response = firebase.patch("/" + itemKey, itemMap);
+				if (response.getCode() == 200) {
+					updateModifiedAt(item.getModifiedDate());
+					_log.debug("Firebase update sucessful");
+				} else {
+					_log.debug("Firebase update unsuccessful. Response code: " + response.getCode());
+				}
+			}
+		}
 		firebaseUnsyncedItems = null;
 		Map<String, Object> dateMap = new HashMap<String, Object>();
 		dateMap.put("Liferay", System.currentTimeMillis());
@@ -185,14 +232,14 @@ public class FirebaseSyncUtil {
 			dateMap.put("Sync", lastSyncDate);
 		updateModifiedAt(dateMap);
 	}
-	
+
 	private static void updateModifiedAt(Date date)
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
 		Map<String, Object> dateMap = new HashMap<String, Object>();
 		dateMap.put("Liferay", date);
 		updateModifiedAt(dateMap);
 	}
-	
+
 	private static void updateModifiedAt(Map<String, Object> dateMap)
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
 		Firebase firebase = new Firebase(FB_URI);
@@ -202,9 +249,9 @@ public class FirebaseSyncUtil {
 	public static void addOrUpdateItem(Item item)
 			throws FirebaseException, JacksonUtilityException, UnsupportedEncodingException {
 		String itemTypePath = getItemPath(item);
-	
+
 		Firebase firebase = new Firebase(FB_URI + itemTypePath);
-	
+
 		String itemKey = getFirebaseKey(item);
 		Map<String, Object> itemMap = itemToMap(item);
 		FirebaseResponse response;
@@ -313,16 +360,29 @@ public class FirebaseSyncUtil {
 
 	private static Item mapToItem(Map<String, Object> map) {
 		Item item = new ItemImpl();
-		item.setItemId((int) map.get("id"));
-		item.setName((String) map.get("name"));
-		item.setDescription((String) map.get("description"));
-		item.setCreateDate(new Date((long) map.get("createdAt")));
-		item.setModifiedDate(new Date((long) map.get("modifiedAt")));
-		item.setGroupId((int) map.get("groupId"));
-		item.setCompanyId((int) map.get("companyId"));
-		Map<String, Object> locationMap = (Map<String, Object>) map.get("location");
-		item.setLat((int) locationMap.get("latitude"));
-		item.setLng((int) locationMap.get("longitude"));
+		Object o;
+		o = map.get("id");
+		item.setItemId(o != null ? Long.valueOf(o.toString()) : 0);
+		o = map.get("name");
+		item.setName(o != null ? (String) o : "");
+		o = map.get("description");
+		item.setDescription(o != null ? (String) o : "");
+		o = map.get("createdAt");
+		item.setCreateDate(new Date(o != null ? Long.valueOf(o.toString()) : 0));
+		o = map.get("modifiedAt");
+		item.setModifiedDate(new Date(o != null ? Long.valueOf(o.toString()) : 0));
+		o = map.get("groupId");
+		item.setGroupId(o != null ? Long.valueOf(o.toString()) : 0);
+		o = map.get("companyId");
+		item.setCompanyId(o != null ? Long.valueOf(o.toString()) : 0);
+		o = map.get("location");
+		if (o != null) {
+			Map<String, Object> locationMap = (Map<String, Object>) o;
+			o = locationMap.get("latitude");
+			item.setLat(o != null ? Long.valueOf(o.toString()) : 0);
+			o = locationMap.get("longitude");
+			item.setLng(o != null ? Long.valueOf(o.toString()) : 0);
+		}
 		return item;
 	}
 

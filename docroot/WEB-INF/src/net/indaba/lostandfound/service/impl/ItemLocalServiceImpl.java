@@ -102,7 +102,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			try {
 				_log.debug("Deleting item in Firebase");
 				FirebaseSyncUtil.deleteItem(item);
-			} catch (FirebaseException | Exception e) {
+			} catch (FirebaseException | Exception | JacksonUtilityException e) {
 				_log.error("Error deleting item " + item.getItemId(), e);
 				e.printStackTrace();
 			}
