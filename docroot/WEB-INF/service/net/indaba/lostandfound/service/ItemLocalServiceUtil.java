@@ -257,6 +257,12 @@ public class ItemLocalServiceUtil {
 		return getService().getItemByUuidAndGroupId(uuid, groupId);
 	}
 
+	public static java.util.List<net.indaba.lostandfound.model.Item> getItems(
+		long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getItems(groupId, start, end);
+	}
+
 	/**
 	* Returns a range of all the items.
 	*

@@ -26,11 +26,16 @@
 		<column name="description" type="String"></column>
 		<column name="lat" type="long"></column>
 		<column name="lng" type="long"></column>
-
+		
 		<!-- Order -->
 		<order by="asc">
 			<order-column name="createDate"></order-column>
 		</order>
+		
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+		
 		<!-- Finder methods -->
 		<!-- References -->
 		<reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />

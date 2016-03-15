@@ -270,6 +270,13 @@ public class ItemLocalServiceWrapper implements ItemLocalService,
 		return _itemLocalService.getItemByUuidAndGroupId(uuid, groupId);
 	}
 
+	@Override
+	public java.util.List<net.indaba.lostandfound.model.Item> getItems(
+		long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _itemLocalService.getItems(groupId, start, end);
+	}
+
 	/**
 	* Returns a range of all the items.
 	*

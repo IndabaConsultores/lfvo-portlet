@@ -35,17 +35,19 @@ else{
 		</aui:fieldset>
 	</liferay-ui:panel>
 
+
 <%
 List<LFImage> lfImages = LFImageLocalServiceUtil.findByItemId(itemId);
 for(LFImage lfImage : lfImages){
 	StringWriter writer = new StringWriter();
 	IOUtils.copy(lfImage.getImage().getBinaryStream(), writer);
 %>
-<img src="data:image/png;base64,<%=writer.toString()%>" width="50px"/>
+
+<liferay-frontend:image-card imageUrl="<%="data:image/png;base64," + writer.toString()%>" cssClass="LFImage"></liferay-frontend:image-card>
+
 <%
 }
 %>
-
 
 	<aui:button-row>
 		<aui:button type="submit" value='<%=item.getItemId()==0?"add":"save"%>'></aui:button>

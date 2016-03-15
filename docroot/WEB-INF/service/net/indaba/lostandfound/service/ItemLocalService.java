@@ -226,6 +226,10 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	public Item getItemByUuidAndGroupId(java.lang.String uuid, long groupId)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Item> getItems(long groupId, int start, int end)
+		throws PortalException;
+
 	/**
 	* Returns a range of all the items.
 	*

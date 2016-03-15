@@ -152,37 +152,41 @@ public class ItemLocalServiceClpInvoker {
 
 		_methodParameterTypes55 = new String[] {  };
 
-		_methodName60 = "addOrUpdateItem";
+		_methodName60 = "getItems";
 
-		_methodParameterTypes60 = new String[] {
-				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.kernel.service.ServiceContext"
-			};
+		_methodParameterTypes60 = new String[] { "long", "int", "int" };
 
 		_methodName61 = "addOrUpdateItem";
 
 		_methodParameterTypes61 = new String[] {
 				"net.indaba.lostandfound.model.Item",
+				"com.liferay.portal.kernel.service.ServiceContext"
+			};
+
+		_methodName62 = "addOrUpdateItem";
+
+		_methodParameterTypes62 = new String[] {
+				"net.indaba.lostandfound.model.Item",
 				"com.liferay.portal.kernel.service.ServiceContext", "boolean"
 			};
 
-		_methodName62 = "deleteItem";
-
-		_methodParameterTypes62 = new String[] { "long", "boolean" };
-
 		_methodName63 = "deleteItem";
 
-		_methodParameterTypes63 = new String[] { "long" };
+		_methodParameterTypes63 = new String[] { "long", "boolean" };
 
 		_methodName64 = "deleteItem";
 
-		_methodParameterTypes64 = new String[] {
-				"net.indaba.lostandfound.model.Item", "boolean"
-			};
+		_methodParameterTypes64 = new String[] { "long" };
 
 		_methodName65 = "deleteItem";
 
 		_methodParameterTypes65 = new String[] {
+				"net.indaba.lostandfound.model.Item", "boolean"
+			};
+
+		_methodName66 = "deleteItem";
+
+		_methodParameterTypes66 = new String[] {
 				"net.indaba.lostandfound.model.Item"
 			};
 	}
@@ -330,36 +334,43 @@ public class ItemLocalServiceClpInvoker {
 
 		if (_methodName60.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes60, parameterTypes)) {
-			return ItemLocalServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
-				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
+			return ItemLocalServiceUtil.getItems(((Long)arguments[0]).longValue(),
+				((Integer)arguments[1]).intValue(),
+				((Integer)arguments[2]).intValue());
 		}
 
 		if (_methodName61.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes61, parameterTypes)) {
 			return ItemLocalServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
-				(com.liferay.portal.kernel.service.ServiceContext)arguments[1],
-				((Boolean)arguments[2]).booleanValue());
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName62.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes62, parameterTypes)) {
-			return ItemLocalServiceUtil.deleteItem(((Long)arguments[0]).longValue(),
-				((Boolean)arguments[1]).booleanValue());
+			return ItemLocalServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1],
+				((Boolean)arguments[2]).booleanValue());
 		}
 
 		if (_methodName63.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes63, parameterTypes)) {
-			return ItemLocalServiceUtil.deleteItem(((Long)arguments[0]).longValue());
+			return ItemLocalServiceUtil.deleteItem(((Long)arguments[0]).longValue(),
+				((Boolean)arguments[1]).booleanValue());
 		}
 
 		if (_methodName64.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes64, parameterTypes)) {
-			return ItemLocalServiceUtil.deleteItem((net.indaba.lostandfound.model.Item)arguments[0],
-				((Boolean)arguments[1]).booleanValue());
+			return ItemLocalServiceUtil.deleteItem(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName65.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes65, parameterTypes)) {
+			return ItemLocalServiceUtil.deleteItem((net.indaba.lostandfound.model.Item)arguments[0],
+				((Boolean)arguments[1]).booleanValue());
+		}
+
+		if (_methodName66.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes66, parameterTypes)) {
 			return ItemLocalServiceUtil.deleteItem((net.indaba.lostandfound.model.Item)arguments[0]);
 		}
 
@@ -428,4 +439,6 @@ public class ItemLocalServiceClpInvoker {
 	private String[] _methodParameterTypes64;
 	private String _methodName65;
 	private String[] _methodParameterTypes65;
+	private String _methodName66;
+	private String[] _methodParameterTypes66;
 }

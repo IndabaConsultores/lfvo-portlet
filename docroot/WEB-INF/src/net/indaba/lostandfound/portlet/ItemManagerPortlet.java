@@ -24,10 +24,12 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.model.LFImage;
@@ -41,9 +43,15 @@ public class ItemManagerPortlet extends MVCPortlet {
 	public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
 		_log.debug("doView");
-		List<Item> items = ItemLocalServiceUtil.getItems(-1, -1);
-		_log.debug("got " + items.size() + " items") ;
-		renderRequest.setAttribute("items", items);
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		List<Item> items;
+		try {
+			items = ItemLocalServiceUtil.getItems(themeDisplay.getScopeGroupId(), -1, -1);
+			renderRequest.setAttribute("items", items);
+		} catch (PortalException e) {
+			e.printStackTrace();
+		}
+		
 		super.doView(renderRequest, renderResponse);
 	}
 

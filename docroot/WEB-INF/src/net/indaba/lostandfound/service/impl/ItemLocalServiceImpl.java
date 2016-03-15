@@ -14,6 +14,8 @@
 
 package net.indaba.lostandfound.service.impl;
 
+import java.util.List;
+
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLinkConstants;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
@@ -52,6 +54,10 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	 *
 	 * Never reference this class directly. Always use {@link net.indaba.lostandfound.service.ItemLocalServiceUtil} to access the item local service.
 	 */
+	
+	public List<Item> getItems(long groupId, int start, int end) throws PortalException {
+		return itemPersistence.findByGroupId(groupId, start, end);
+	}
 	
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) throws PortalException {
 		return addOrUpdateItem(item, serviceContext, false);
