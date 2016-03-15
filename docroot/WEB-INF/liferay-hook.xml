@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 7.0.0//EN" "http://www.liferay.com/dtd/liferay-hook_7_0_0.dtd">
+
+<hook>
+	<service>
+		<service-type>
+			com.liferay.asset.kernel.service.AssetCategoryLocalService
+		</service-type>
+		<service-impl>
+			net.indaba.lostandfound.hook.LFAssetCategoryLocalService
+		</service-impl>
+	</service>
+	<service>
+		<service-type>
+			com.liferay.asset.kernel.service.AssetTagLocalService
+		</service-type>
+		<service-impl>
+			net.indaba.lostandfound.hook.LFAssetTagLocalService
+		</service-impl>
+	</service>
+</hook>
