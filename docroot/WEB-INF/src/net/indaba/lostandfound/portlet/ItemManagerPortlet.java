@@ -31,11 +31,14 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import net.indaba.lostandfound.firebase.FirebaseSyncUtil;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.model.LFImage;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.indaba.lostandfound.service.ItemServiceUtil;
 import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
+import net.thegreshams.firebase4j.error.FirebaseException;
+import net.thegreshams.firebase4j.error.JacksonUtilityException;
 
 public class ItemManagerPortlet extends MVCPortlet {
 
@@ -103,6 +106,13 @@ public class ItemManagerPortlet extends MVCPortlet {
 		_log.debug("doDataDiagnosis ");
 		
 		//TODO: implement data diagnosis
+		try {
+			FirebaseSyncUtil.updateUnsyncedItemsExh();
+			System.out.println(FirebaseSyncUtil.getFirebaseUnsyncedItems());
+		} catch (FirebaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void doDataSync(ActionRequest actionRequest, ActionResponse actionResponse)
@@ -110,6 +120,13 @@ public class ItemManagerPortlet extends MVCPortlet {
 		_log.debug("doDataDiagnosis ");
 		
 		//TODO: implement data sync
+		try {
+			if (true)
+				FirebaseSyncUtil.resyncItems();
+		} catch (FirebaseException | JacksonUtilityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		
 	}
 	
