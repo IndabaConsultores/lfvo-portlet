@@ -9,6 +9,7 @@ import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
@@ -23,7 +24,8 @@ public class LFAssetTagLocalService extends AssetTagLocalServiceWrapper {
 	public LFAssetTagLocalService(AssetTagLocalService assetTagLocalService) {
 		super(assetTagLocalService);
 	}
-
+	
+	@Override
 	public AssetTag addTag(long userId, long groupId, String name, ServiceContext serviceContext) throws com.liferay.portal.kernel.exception.PortalException {
 		AssetTag tag = super.addTag(userId, groupId, name, serviceContext);
 		if (firebaseUtil.isSyncEnabled()) {
@@ -63,5 +65,11 @@ public class LFAssetTagLocalService extends AssetTagLocalServiceWrapper {
 			}
 		}		
 		super.deleteTag(tag);
+	}
+	
+	@Override
+	public AssetTag createAssetTag(long tagId) {
+		System.out.println("createAssetTag");
+		return super.createAssetTag(tagId);
 	}
 }

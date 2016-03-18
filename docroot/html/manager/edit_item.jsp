@@ -1,10 +1,8 @@
-<%@page import="java.nio.charset.StandardCharsets"%>
 <%@page import="org.apache.commons.io.IOUtils"%>
 <%@page import="java.io.StringWriter"%>
 <%@page import="net.indaba.lostandfound.model.LFImage"%>
 <%@page import="net.indaba.lostandfound.service.LFImageLocalServiceUtil"%>
 <%@page import="net.indaba.lostandfound.service.ItemLocalServiceUtil"%>
-<%@page import="net.indaba.lostandfound.model.Item"%>
 <%@ include file="/html/init.jsp" %>
 
 <%
@@ -36,18 +34,30 @@ else{
 	</liferay-ui:panel>
 
 
-<%
-List<LFImage> lfImages = LFImageLocalServiceUtil.findByItemId(itemId);
-for(LFImage lfImage : lfImages){
-	StringWriter writer = new StringWriter();
-	IOUtils.copy(lfImage.getImage().getBinaryStream(), writer);
-%>
-
-<liferay-frontend:image-card imageUrl="<%="data:image/png;base64," + writer.toString()%>" cssClass="LFImage"></liferay-frontend:image-card>
-
-<%
-}
-%>
+	<ul class="list-unstyled row">
+	<%
+	List<LFImage> lfImages = LFImageLocalServiceUtil.findByItemId(itemId);
+	for(LFImage lfImage : lfImages){
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(lfImage.getImage().getBinaryStream(), writer);
+		request.setAttribute("lfImageId-tmp", String.valueOf(lfImage.getLfImageId()));
+		
+	%>
+		<li class="col-md-2 col-sm-4 col-xs-6 yui3-dd-draggable" data-draggable="true" data-selectable="true">
+				
+				<liferay-frontend:vertical-card
+					actionJsp="/html/manager/image_action.jsp"
+					actionJspServletContext="<%= application %>"
+					cssClass="entry-display-style"
+					imageUrl="<%="data:image/png;base64," + writer.toString()%>"
+				>
+					<%@ include file="/html/manager/image_vertical_card.jspf" %>
+				</liferay-frontend:vertical-card>
+		</li>
+	<%
+	}
+	%>
+	</ul>
 
 	<aui:button-row>
 		<aui:button type="submit" value='<%=item.getItemId()==0?"add":"save"%>'></aui:button>

@@ -93,6 +93,13 @@ public class ItemManagerPortlet extends MVCPortlet {
 		sendRedirect(actionRequest, actionResponse);
 	}
 	
+	public void deleteLfImage(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws IOException, PortletException, PortalException {
+		long lfImageId = ParamUtil.get(actionRequest, "lfImageId", 0);
+		LFImageLocalServiceUtil.deleteLFImage(lfImageId);
+		sendRedirect(actionRequest, actionResponse);
+	}
+	
 	public void moveItemToTrash(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		_log.debug("moveItemToTrash " + ParamUtil.get(actionRequest, "itemId", 0));
