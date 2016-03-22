@@ -67,9 +67,4 @@ public class LFAssetTagLocalService extends AssetTagLocalServiceWrapper {
 		super.deleteTag(tag);
 	}
 	
-	@Override
-	public AssetTag createAssetTag(long tagId) {
-		System.out.println("createAssetTag");
-		return super.createAssetTag(tagId);
-	}
 }

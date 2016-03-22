@@ -35,7 +35,8 @@ public class FirebaseSyncUtil {
 
 	static private long lastSyncDate = 0;
 
-	static private final String FB_URI = "https://brilliant-torch-8285.firebaseio.com";
+	static private final String FB_BASE_URI = "https://brilliant-torch-8285.firebaseio.com";
+	static private final String FB_URI = FB_BASE_URI + "/items";
 
 	public static boolean isSyncEnabled() {
 		String firebaseSyncEnabled = PortletProps.get("firebase.sync.enabled");
@@ -59,7 +60,7 @@ public class FirebaseSyncUtil {
 			throws FirebaseException, UnsupportedEncodingException {
 		Map<String, Item> items = new LinkedHashMap<String, Item>();
 
-		Firebase firebase = new Firebase(FB_URI + "/items");
+		Firebase firebase = new Firebase(FB_URI);
 		/* Get lost alerts */
 		firebase.addQuery("orderBy", "\"modifiedAt\"");
 		firebase.addQuery("startAt", String.valueOf(firebaseTS));
@@ -80,7 +81,7 @@ public class FirebaseSyncUtil {
 			}
 		}
 		/* Get found alerts */
-		firebase = new Firebase(FB_URI + "/items");
+		firebase = new Firebase(FB_URI);
 		firebase.addQuery("orderBy", "\"modifiedAt\"");
 		firebase.addQuery("startAt", String.valueOf(firebaseTS));
 		response = firebase.get("/alert/found");
@@ -99,7 +100,7 @@ public class FirebaseSyncUtil {
 			}
 		}
 		/* Get office items */
-		firebase = new Firebase(FB_URI + "/items");
+		firebase = new Firebase(FB_URI);
 		firebase.addQuery("orderBy", "\"modifiedAt\"");
 		firebase.addQuery("startAt", String.valueOf(firebaseTS));
 		response = firebase.get("/office");
@@ -122,7 +123,7 @@ public class FirebaseSyncUtil {
 
 	public static void updateUnsyncedItems() throws FirebaseException, UnsupportedEncodingException {
 		/* Get last update dates in Firebase */
-		Firebase firebase = new Firebase(FB_URI + "/_TIMESTAMP");
+		Firebase firebase = new Firebase(FB_BASE_URI + "/_TIMESTAMP");
 		FirebaseResponse response = firebase.get("");
 
 		Map<String, Object> responseMap = response.getBody();
@@ -137,7 +138,7 @@ public class FirebaseSyncUtil {
 
 	public static void updateUnsyncedItemsExh() throws UnsupportedEncodingException, FirebaseException {
 		/* Get last exhaustive sync date in Firebase */
-		Firebase firebase = new Firebase(FB_URI + "/_TIMESTAMP");
+		Firebase firebase = new Firebase(FB_BASE_URI + "/_TIMESTAMP");
 		FirebaseResponse response = firebase.get("");
 
 		Map<String, Object> responseMap = response.getBody();
@@ -242,7 +243,7 @@ public class FirebaseSyncUtil {
 
 	private static void updateModifiedAt(Map<String, Object> dateMap)
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
-		Firebase firebase = new Firebase(FB_URI);
+		Firebase firebase = new Firebase(FB_BASE_URI);
 		firebase.patch("/_TIMESTAMP", dateMap);
 	}
 
@@ -303,7 +304,7 @@ public class FirebaseSyncUtil {
 	 * @throws FirebaseException
 	 * @throws UnsupportedEncodingException
 	 */
-	private static String getFirebaseKey(Item item) throws FirebaseException, UnsupportedEncodingException {
+	public static String getFirebaseKey(Item item) throws FirebaseException, UnsupportedEncodingException {
 		String itemTypePath = getItemPath(item);
 
 		Firebase firebase = new Firebase(FB_URI + itemTypePath);
@@ -325,18 +326,18 @@ public class FirebaseSyncUtil {
 		return null;
 	}
 
-	private static String getItemPath(Item item) {
-		String itemTypePath = "/items";
+	public static String getItemPath(Item item) {
+		String itemTypePath;
 
 		switch (item.getType()) {
 		case "lost":
-			itemTypePath += "/alert/lost";
+			itemTypePath = "/alert/lost";
 			break;
 		case "found":
-			itemTypePath += "/alert/found";
+			itemTypePath = "/alert/found";
 			break;
 		default:
-			itemTypePath += "/office";
+			itemTypePath = "/office";
 		}
 		return itemTypePath;
 	}
@@ -354,6 +355,7 @@ public class FirebaseSyncUtil {
 		location.put("latitude", item.getLat());
 		location.put("longitude", item.getLng());
 		itemMap.put("location", location);
+		//Map<Long, Boolean> categories = new HashMap<Long, Boolean>();
 		itemMap.put("liferay", true);
 		return itemMap;
 	}

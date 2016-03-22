@@ -14,11 +14,17 @@
 
 package net.indaba.lostandfound.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import com.liferay.portal.kernel.exception.PortalException;
+
 import aQute.bnd.annotation.ProviderType;
+import net.indaba.lostandfound.firebase.FirebaseLFImageSyncUtil;
 import net.indaba.lostandfound.model.LFImage;
 import net.indaba.lostandfound.service.base.LFImageLocalServiceBaseImpl;
+import net.thegreshams.firebase4j.error.FirebaseException;
+import net.thegreshams.firebase4j.error.JacksonUtilityException;
 
 /**
  * The implementation of the l f image local service.
@@ -42,8 +48,49 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 	 * Never reference this class directly. Always use {@link net.indaba.lostandfound.service.LFImageLocalServiceUtil} to access the l f image local service.
 	 */
 	
+	FirebaseLFImageSyncUtil firebaseUtil = FirebaseLFImageSyncUtil.getInstance();
+	
 	public List<LFImage> findByItemId(long itemId){
 		return lfImagePersistence.findByItemId(itemId);
+	}
+	
+	@Override
+	public LFImage addLFImage(LFImage lfImage) {
+		if (firebaseUtil.isSyncEnabled()) {
+			try {
+				firebaseUtil.add(lfImage);
+			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException | PortalException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return super.addLFImage(lfImage);
+	}
+	
+	@Override
+	public LFImage deleteLFImage(LFImage lfImage) {
+		if (firebaseUtil.isSyncEnabled()) {
+			try {
+				firebaseUtil.delete(lfImage);
+			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException | PortalException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return super.deleteLFImage(lfImage);
+	}
+	
+	@Override
+	public LFImage deleteLFImage(long lfImageId) throws PortalException {
+		if (firebaseUtil.isSyncEnabled()) {
+			try {
+				firebaseUtil.delete(fetchLFImage(lfImageId));
+			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException | PortalException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}		
+		return super.deleteLFImage(lfImageId);
 	}
 	
 }
