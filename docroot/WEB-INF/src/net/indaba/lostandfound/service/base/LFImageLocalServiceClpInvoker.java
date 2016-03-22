@@ -134,6 +134,26 @@ public class LFImageLocalServiceClpInvoker {
 		_methodName48 = "findByItemId";
 
 		_methodParameterTypes48 = new String[] { "long" };
+
+		_methodName49 = "addLFImage";
+
+		_methodParameterTypes49 = new String[] {
+				"net.indaba.lostandfound.model.LFImage"
+			};
+
+		_methodName50 = "deleteLFImage";
+
+		_methodParameterTypes50 = new String[] {
+				"net.indaba.lostandfound.model.LFImage"
+			};
+
+		_methodName51 = "deleteLFImage";
+
+		_methodParameterTypes51 = new String[] { "long" };
+
+		_methodName52 = "deleteByItemId";
+
+		_methodParameterTypes52 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -255,6 +275,28 @@ public class LFImageLocalServiceClpInvoker {
 			return LFImageLocalServiceUtil.findByItemId(((Long)arguments[0]).longValue());
 		}
 
+		if (_methodName49.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes49, parameterTypes)) {
+			return LFImageLocalServiceUtil.addLFImage((net.indaba.lostandfound.model.LFImage)arguments[0]);
+		}
+
+		if (_methodName50.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes50, parameterTypes)) {
+			return LFImageLocalServiceUtil.deleteLFImage((net.indaba.lostandfound.model.LFImage)arguments[0]);
+		}
+
+		if (_methodName51.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes51, parameterTypes)) {
+			return LFImageLocalServiceUtil.deleteLFImage(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName52.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes52, parameterTypes)) {
+			LFImageLocalServiceUtil.deleteByItemId(((Long)arguments[0]).longValue());
+
+			return null;
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -302,4 +344,12 @@ public class LFImageLocalServiceClpInvoker {
 	private String[] _methodParameterTypes43;
 	private String _methodName48;
 	private String[] _methodParameterTypes48;
+	private String _methodName49;
+	private String[] _methodParameterTypes49;
+	private String _methodName50;
+	private String[] _methodParameterTypes50;
+	private String _methodName51;
+	private String[] _methodParameterTypes51;
+	private String _methodName52;
+	private String[] _methodParameterTypes52;
 }
