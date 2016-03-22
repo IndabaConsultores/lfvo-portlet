@@ -81,4 +81,15 @@ else{
 	</aui:button-row>
 </aui:form>
 
+<portlet:actionURL name="invokeTaglibDiscussion" var="addMessageURL">
+</portlet:actionURL>
+
+
+<liferay-ui:discussion 
+		classPK="<%=item.getItemId()%>" 
+		userId="<%=themeDisplay.getUserId() %>" 
+		className="net.indaba.lostandfound.model.Item" 
+		formAction="<%=addMessageURL %>" 
+		redirect="<%=redirect%>" 
+		formName="fm3"></liferay-ui:discussion>
 

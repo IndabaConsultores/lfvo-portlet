@@ -152,7 +152,6 @@ public class ItemManagerPortlet extends MVCPortlet {
 		
 		File file = uploadRequest.getFile("itemImage");
 		
-		System.out.println(itemId + " " + file.getName() );
 		String imageBase63String = Base64.encode(IOUtils.toByteArray(new FileInputStream(file)));
 		ByteArrayInputStream imageBase64 = new ByteArrayInputStream(imageBase63String.getBytes(StandardCharsets.UTF_8));
 		OutputBlob dataOutputBlob = new OutputBlob(imageBase64, imageBase63String.length());
@@ -161,6 +160,11 @@ public class ItemManagerPortlet extends MVCPortlet {
 		lfImage.setItemId(itemId);
 		lfImage.setImage(dataOutputBlob);
 		LFImageLocalServiceUtil.addLFImage(lfImage);
+	}
+	
+	public void addMessage(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws IOException, PortletException, PortalException {
+		_log.debug("addMessage to item ");
 	}
 
 	Log _log = LogFactoryUtil.getLog(this.getClass());
