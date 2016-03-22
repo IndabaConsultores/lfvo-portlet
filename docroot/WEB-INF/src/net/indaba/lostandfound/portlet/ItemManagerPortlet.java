@@ -75,6 +75,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		
 		item.setName(name);
 		item.setGroupId(serviceContext.getScopeGroupId());
+		item.setUserId(serviceContext.getUserId());
 		item.setPublishDate(new Date());
 		
 		//ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
@@ -89,6 +90,11 @@ public class ItemManagerPortlet extends MVCPortlet {
 		long itemId = ParamUtil.get(actionRequest, "itemId", 0);
 		_log.debug("deleteItem " + itemId);
 		//ItemLocalServiceUtil.deleteItem(itemId);
+		try {
+			LFImageLocalServiceUtil.deleteByItemId(itemId);
+		} catch (Exception e) {
+			_log.error("Error deleting item images", e);
+		}
 		ItemServiceUtil.deleteItem(itemId, true);
 		sendRedirect(actionRequest, actionResponse);
 	}

@@ -46,4 +46,8 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 		return lfImagePersistence.findByItemId(itemId);
 	}
 	
+	public void deleteByItemId(long itemId){
+		lfImagePersistence.removeByItemId(itemId);
+	}
+	
 }

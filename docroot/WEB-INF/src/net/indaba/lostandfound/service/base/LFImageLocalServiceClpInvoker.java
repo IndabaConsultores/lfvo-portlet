@@ -134,6 +134,10 @@ public class LFImageLocalServiceClpInvoker {
 		_methodName48 = "findByItemId";
 
 		_methodParameterTypes48 = new String[] { "long" };
+
+		_methodName49 = "deleteByItemId";
+
+		_methodParameterTypes49 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -255,6 +259,13 @@ public class LFImageLocalServiceClpInvoker {
 			return LFImageLocalServiceUtil.findByItemId(((Long)arguments[0]).longValue());
 		}
 
+		if (_methodName49.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes49, parameterTypes)) {
+			LFImageLocalServiceUtil.deleteByItemId(((Long)arguments[0]).longValue());
+
+			return null;
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -302,4 +313,6 @@ public class LFImageLocalServiceClpInvoker {
 	private String[] _methodParameterTypes43;
 	private String _methodName48;
 	private String[] _methodParameterTypes48;
+	private String _methodName49;
+	private String[] _methodParameterTypes49;
 }
