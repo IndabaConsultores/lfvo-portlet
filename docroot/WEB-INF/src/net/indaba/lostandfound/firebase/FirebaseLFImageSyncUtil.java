@@ -29,6 +29,8 @@ import net.thegreshams.firebase4j.service.Firebase;
 public class FirebaseLFImageSyncUtil {
 
 	private static FirebaseLFImageSyncUtil instance;
+	
+	FirebaseItemSyncUtil itemUtil = FirebaseItemSyncUtil.getInstance();
 
 	private String FB_URI = "https://brilliant-torch-8285.firebaseio.com/images";
 	private String FB_Item_URI = "https://brilliant-torch-8285.firebaseio.com/items";
@@ -66,15 +68,15 @@ public class FirebaseLFImageSyncUtil {
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException, PortalException {
 		Firebase firebase = new Firebase(FB_Item_URI);
 		Item item = ItemLocalServiceUtil.getItem(itemId);
-		String fbItemKey = FirebaseSyncUtil.getFirebaseKey(item);
+		String fbItemKey = itemUtil.getFirebaseKey(item);
 
 		FirebaseResponse response;
 		if (add) {
 			Map<String, Object> imagesMap = new HashMap<String, Object>();
 			imagesMap.put(fbImageKey, true);
-			response = firebase.patch("/" + FirebaseSyncUtil.getItemPath(item) + "/" + fbItemKey + "/images", imagesMap);
+			response = firebase.patch("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/images", imagesMap);
 		} else {
-			response = firebase.delete("/" + FirebaseSyncUtil.getItemPath(item) + "/" + fbItemKey + "/images/" + fbImageKey);
+			response = firebase.delete("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/images/" + fbImageKey);
 		}
 		if (response.getCode() == 200) {
 			_log.debug("Firebase relation modified");

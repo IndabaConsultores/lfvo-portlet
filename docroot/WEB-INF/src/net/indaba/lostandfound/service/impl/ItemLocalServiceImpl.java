@@ -27,7 +27,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 
 import aQute.bnd.annotation.ProviderType;
-import net.indaba.lostandfound.firebase.FirebaseSyncUtil;
+import net.indaba.lostandfound.firebase.FirebaseItemSyncUtil;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.base.ItemLocalServiceBaseImpl;
 import net.thegreshams.firebase4j.error.FirebaseException;
@@ -55,6 +55,8 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	 * Never reference this class directly. Always use {@link net.indaba.lostandfound.service.ItemLocalServiceUtil} to access the item local service.
 	 */
 	
+	FirebaseItemSyncUtil firebaseUtil = FirebaseItemSyncUtil.getInstance();
+	
 	public List<Item> getItems(long groupId, int start, int end) throws PortalException {
 		return itemPersistence.findByGroupId(groupId, start, end);
 	}
@@ -75,10 +77,10 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			item = super.updateItem(item);
 		}
 
-		if (updateFirebase && FirebaseSyncUtil.isSyncEnabled()) {
+		if (updateFirebase && firebaseUtil.isSyncEnabled()) {
 			try {
 				_log.debug("Updating item in Firebase");
-				FirebaseSyncUtil.addOrUpdateItem(item);
+				firebaseUtil.addOrUpdateItem(item);
 			} catch (Exception | FirebaseException | JacksonUtilityException e) {
 				_log.error("Error updating item " + item.getItemId(), e);
 			}
@@ -104,10 +106,10 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 	public Item deleteItem(Item item, boolean updateFirebase) throws PortalException {
 
-		if (updateFirebase && FirebaseSyncUtil.isSyncEnabled()) {
+		if (updateFirebase && firebaseUtil.isSyncEnabled()) {
 			try {
 				_log.debug("Deleting item in Firebase");
-				FirebaseSyncUtil.deleteItem(item);
+				firebaseUtil.deleteItem(item);
 			} catch (FirebaseException | Exception | JacksonUtilityException e) {
 				_log.error("Error deleting item " + item.getItemId(), e);
 				e.printStackTrace();

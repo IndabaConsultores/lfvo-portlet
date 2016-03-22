@@ -28,24 +28,36 @@ import net.thegreshams.firebase4j.error.JacksonUtilityException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
 import net.thegreshams.firebase4j.service.Firebase;
 
-public class FirebaseSyncUtil {
+public class FirebaseItemSyncUtil {
+	
+	static private FirebaseItemSyncUtil instance;
 
-	static private List<Item> liferayUnsyncedItems;
-	static private Map<String, Item> firebaseUnsyncedItems;
+	private final String FB_BASE_URI = "https://brilliant-torch-8285.firebaseio.com";
+	private final String FB_URI = FB_BASE_URI + "/items";
+	
+	private List<Item> liferayUnsyncedItems;
+	private Map<String, Item> firebaseUnsyncedItems;
 
-	static private long lastSyncDate = 0;
+	private long lastSyncDate = 0;
+	
+	private FirebaseItemSyncUtil() {
+		super();
+	}
+	
+	public static FirebaseItemSyncUtil getInstance() {
+		if (instance == null) {
+			instance = new FirebaseItemSyncUtil();
+		}
+		return instance;
+	}
 
-	static private final String FB_BASE_URI = "https://brilliant-torch-8285.firebaseio.com";
-	static private final String FB_URI = FB_BASE_URI + "/items";
-
-	public static boolean isSyncEnabled() {
+	public boolean isSyncEnabled() {
 		String firebaseSyncEnabled = PortletProps.get("firebase.sync.enabled");
 		return Boolean.parseBoolean(firebaseSyncEnabled);
 	}
 
-	private static List<Item> getLiferayItemsAfter(long liferayTS) {
+	private List<Item> getLiferayItemsAfter(long liferayTS) {
 		List<Item> items = new ArrayList<Item>();
-
 		/*
 		 * Get Liferay office items that were added/updated after last update
 		 * time
@@ -56,7 +68,7 @@ public class FirebaseSyncUtil {
 		return items;
 	}
 
-	private static Map<String, Item> getFirebaseItemsAfter(long firebaseTS)
+	private Map<String, Item> getFirebaseItemsAfter(long firebaseTS)
 			throws FirebaseException, UnsupportedEncodingException {
 		Map<String, Item> items = new LinkedHashMap<String, Item>();
 
@@ -121,7 +133,7 @@ public class FirebaseSyncUtil {
 		return items;
 	}
 
-	public static void updateUnsyncedItems() throws FirebaseException, UnsupportedEncodingException {
+	public void updateUnsyncedItems() throws FirebaseException, UnsupportedEncodingException {
 		/* Get last update dates in Firebase */
 		Firebase firebase = new Firebase(FB_BASE_URI + "/_TIMESTAMP");
 		FirebaseResponse response = firebase.get("");
@@ -136,7 +148,7 @@ public class FirebaseSyncUtil {
 		firebaseUnsyncedItems = getFirebaseItemsAfter(nodejsTS);
 	}
 
-	public static void updateUnsyncedItemsExh() throws UnsupportedEncodingException, FirebaseException {
+	public void updateUnsyncedItemsExh() throws UnsupportedEncodingException, FirebaseException {
 		/* Get last exhaustive sync date in Firebase */
 		Firebase firebase = new Firebase(FB_BASE_URI + "/_TIMESTAMP");
 		FirebaseResponse response = firebase.get("");
@@ -183,15 +195,15 @@ public class FirebaseSyncUtil {
 		lastSyncDate = System.currentTimeMillis();
 	}
 
-	public static List<Item> getLiferayUnsyncedItems() {
+	public List<Item> getLiferayUnsyncedItems() {
 		return liferayUnsyncedItems;
 	}
 
-	public static List<Item> getFirebaseUnsyncedItems() {
+	public List<Item> getFirebaseUnsyncedItems() {
 		return new ArrayList<Item>(firebaseUnsyncedItems.values());
 	}
 
-	public static void resyncItems()
+	public void resyncItems()
 			throws UnsupportedEncodingException, FirebaseException, JacksonUtilityException, PortalException {
 		/* Push items to Firebase */
 		for (Item i : liferayUnsyncedItems) {
@@ -234,20 +246,20 @@ public class FirebaseSyncUtil {
 		updateModifiedAt(dateMap);
 	}
 
-	private static void updateModifiedAt(Date date)
+	private void updateModifiedAt(Date date)
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
 		Map<String, Object> dateMap = new HashMap<String, Object>();
 		dateMap.put("Liferay", date);
 		updateModifiedAt(dateMap);
 	}
 
-	private static void updateModifiedAt(Map<String, Object> dateMap)
+	private void updateModifiedAt(Map<String, Object> dateMap)
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
 		Firebase firebase = new Firebase(FB_BASE_URI);
 		firebase.patch("/_TIMESTAMP", dateMap);
 	}
 
-	public static void addOrUpdateItem(Item item)
+	public void addOrUpdateItem(Item item)
 			throws FirebaseException, JacksonUtilityException, UnsupportedEncodingException {
 		String itemTypePath = getItemPath(item);
 
@@ -275,7 +287,7 @@ public class FirebaseSyncUtil {
 		}
 	}
 
-	public static void deleteItem(Item item)
+	public void deleteItem(Item item)
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
 		String itemTypePath = getItemPath(item);
 
@@ -304,7 +316,7 @@ public class FirebaseSyncUtil {
 	 * @throws FirebaseException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static String getFirebaseKey(Item item) throws FirebaseException, UnsupportedEncodingException {
+	public String getFirebaseKey(Item item) throws FirebaseException, UnsupportedEncodingException {
 		String itemTypePath = getItemPath(item);
 
 		Firebase firebase = new Firebase(FB_URI + itemTypePath);
@@ -326,7 +338,7 @@ public class FirebaseSyncUtil {
 		return null;
 	}
 
-	public static String getItemPath(Item item) {
+	public String getItemPath(Item item) {
 		String itemTypePath;
 
 		switch (item.getType()) {
@@ -342,7 +354,7 @@ public class FirebaseSyncUtil {
 		return itemTypePath;
 	}
 
-	private static Map<String, Object> itemToMap(Item item) {
+	private Map<String, Object> itemToMap(Item item) {
 		HashMap<String, Object> itemMap = new HashMap<String, Object>();
 		itemMap.put("id", item.getItemId());
 		itemMap.put("name", item.getName());
@@ -360,7 +372,7 @@ public class FirebaseSyncUtil {
 		return itemMap;
 	}
 
-	private static Item mapToItem(Map<String, Object> map) {
+	private Item mapToItem(Map<String, Object> map) {
 		Item item = new ItemImpl();
 		Object o;
 		o = map.get("id");
@@ -388,6 +400,6 @@ public class FirebaseSyncUtil {
 		return item;
 	}
 
-	private final static Log _log = LogFactoryUtil.getLog(FirebaseSyncUtil.class);
+	private final Log _log = LogFactoryUtil.getLog(FirebaseItemSyncUtil.class);
 
 }
