@@ -32,8 +32,8 @@ public class FirebaseLFImageSyncUtil {
 	
 	FirebaseItemSyncUtil itemUtil = FirebaseItemSyncUtil.getInstance();
 
-	private String FB_URI = "https://brilliant-torch-8285.firebaseio.com/images";
-	private String FB_Item_URI = "https://brilliant-torch-8285.firebaseio.com/items";
+	private String FB_URI = PortletProps.get("firebase.url") + "/images";
+	private String FB_Item_URI = PortletProps.get("firebase.url") + "/items";
 
 	private FirebaseLFImageSyncUtil() {
 		super();

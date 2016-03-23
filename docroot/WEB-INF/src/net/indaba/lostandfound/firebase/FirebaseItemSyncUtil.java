@@ -32,8 +32,8 @@ public class FirebaseItemSyncUtil {
 	
 	static private FirebaseItemSyncUtil instance;
 
-	private final String FB_BASE_URI = "https://brilliant-torch-8285.firebaseio.com";
-	private final String FB_URI = FB_BASE_URI + "/items";
+	private final String FB_BASE_URI = PortletProps.get("firebase.url");
+	private final String FB_URI = PortletProps.get("firebase.url") + "/items";
 	
 	private List<Item> liferayUnsyncedItems;
 	private Map<String, Item> firebaseUnsyncedItems;

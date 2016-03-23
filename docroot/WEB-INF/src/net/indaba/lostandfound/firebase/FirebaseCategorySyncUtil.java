@@ -25,7 +25,7 @@ public class FirebaseCategorySyncUtil {
 
 	private static FirebaseCategorySyncUtil instance;
 
-	private String FB_URI = "https://brilliant-torch-8285.firebaseio.com/categories";
+	private String FB_URI = PortletProps.get("firebase.url") + "/categories";
 	
 	private FirebaseCategorySyncUtil() {
 		super();

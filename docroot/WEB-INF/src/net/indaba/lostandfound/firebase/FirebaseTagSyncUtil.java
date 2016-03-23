@@ -25,7 +25,7 @@ public class FirebaseTagSyncUtil {
 
 	private static FirebaseTagSyncUtil instance;
 
-	private String FB_URI = "https://brilliant-torch-8285.firebaseio.com/tags";
+	private String FB_URI = PortletProps.get("firebase.url") + "/tags";
 	
 	private FirebaseTagSyncUtil() {
 		super();
