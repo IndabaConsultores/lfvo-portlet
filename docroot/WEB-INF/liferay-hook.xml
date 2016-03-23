@@ -21,4 +21,10 @@
 		</service-impl>
 	</service>
 
+	<service>
+		<service-type>
+			com.liferay.message.boards.kernel.service.MBMessageLocalService
+		</service-type>
+		<service-impl>net.indaba.lostandfound.hook.LRMBMessageLocalService</service-impl>
+	</service>
 </hook>
