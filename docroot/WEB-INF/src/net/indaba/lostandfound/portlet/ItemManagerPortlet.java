@@ -119,7 +119,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		_log.debug("doDataDiagnosis ");
 		FirebaseItemSyncUtil firebaseUtil = FirebaseItemSyncUtil.getInstance();
 		try {
-			firebaseUtil.updateUnsyncedItemsExh();
+			firebaseUtil.updateUnsyncedItems();
 			System.out.println(firebaseUtil.getFirebaseUnsyncedItems());
 		} catch (FirebaseException e) {
 			// TODO Auto-generated catch block
