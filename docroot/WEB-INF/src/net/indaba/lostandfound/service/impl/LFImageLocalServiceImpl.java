@@ -56,15 +56,18 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 	
 	@Override
 	public LFImage addLFImage(LFImage lfImage) {
+		/* supermethod needs to be called first, otherwise it somehow
+		 * does not store the image blob into the database */
+		LFImage image = super.addLFImage(lfImage);
 		if (firebaseUtil.isSyncEnabled()) {
 			try {
-				firebaseUtil.add(lfImage);
+				firebaseUtil.add(image);
 			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException | PortalException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return super.addLFImage(lfImage);
+		return image;
 	}
 	
 	@Override
