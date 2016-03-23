@@ -39,7 +39,8 @@ public class FirebaseCategorySyncUtil {
 	}
 	
 	public boolean isSyncEnabled() {
-		return true;
+		String firebaseSyncEnabled = PortletProps.get("firebase.sync.enabled");
+		return Boolean.parseBoolean(firebaseSyncEnabled);
 	}
 	
 	public void add(AssetCategory category) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {

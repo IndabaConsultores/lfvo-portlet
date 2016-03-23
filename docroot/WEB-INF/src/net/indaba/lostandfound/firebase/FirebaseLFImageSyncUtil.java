@@ -47,7 +47,8 @@ public class FirebaseLFImageSyncUtil {
 	}
 
 	public boolean isSyncEnabled() {
-		return true;
+		String firebaseSyncEnabled = PortletProps.get("firebase.sync.enabled");
+		return Boolean.parseBoolean(firebaseSyncEnabled);
 	}
 
 	public void add(LFImage image)
