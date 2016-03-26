@@ -6,13 +6,13 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.model.Item;
-import net.indaba.lostandfound.model.LFImage;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
@@ -33,7 +33,7 @@ public class FirebaseMBMessageSyncUtil {
 	FirebaseItemSyncUtil itemUtil = FirebaseItemSyncUtil.getInstance();
 
 	private String FB_URI = PortletProps.get("firebase.url") + "/messages";
-	private String FB_Item_URI = "https://brilliant-torch-8285.firebaseio.com/items";
+	private String FB_Item_URI = PortletProps.get("firebase.url") + "/items";
 
 	private FirebaseMBMessageSyncUtil() {
 		super();
@@ -51,15 +51,15 @@ public class FirebaseMBMessageSyncUtil {
 		return Boolean.parseBoolean(firebaseSyncEnabled);
 	}
 
-	public void add(LFImage image)
+	public void add(MBMessage message)
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException, PortalException {
 		Firebase firebase = new Firebase(FB_URI);
-		Map<String, Object> objectMap = toMap(image);
+		Map<String, Object> objectMap = toMap(message);
 		FirebaseResponse response = firebase.post(objectMap);
 		if (response.getCode() == 200) {
 			_log.debug("Firebase create sucessful");
-			String fbImageKey = (String) response.getBody().get("name");
-			setRelation(image.getItemId(), fbImageKey, true);
+			//String fbImageKey = (String) response.getBody().get("name");
+			//setRelation(message.getItemId(), fbImageKey, true);
 		} else {
 			_log.debug("Firebase create unsuccessful. Response code: " + response.getCode());
 		}
@@ -73,11 +73,11 @@ public class FirebaseMBMessageSyncUtil {
 
 		FirebaseResponse response;
 		if (add) {
-			Map<String, Object> imagesMap = new HashMap<String, Object>();
-			imagesMap.put(fbImageKey, true);
-			response = firebase.patch("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/images", imagesMap);
+			Map<String, Object> messagesMap = new HashMap<String, Object>();
+			messagesMap.put(fbImageKey, true);
+			response = firebase.patch("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/messages", messagesMap);
 		} else {
-			response = firebase.delete("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/images/" + fbImageKey);
+			response = firebase.delete("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/messages/" + fbImageKey);
 		}
 		if (response.getCode() == 200) {
 			_log.debug("Firebase relation modified");
@@ -86,14 +86,14 @@ public class FirebaseMBMessageSyncUtil {
 		}
 	}
 
-	public void update(LFImage image) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
-		update(image, getFirebaseKey(image));
+	public void update(MBMessage message) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
+		update(message, getFirebaseKey(message));
 	}
 
-	public void update(LFImage image, String key)
+	public void update(MBMessage message, String key)
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
 		Firebase firebase = new Firebase(FB_URI);
-		Map<String, Object> map = toMap(image);
+		Map<String, Object> map = toMap(message);
 		FirebaseResponse response = firebase.patch("/" + key, map);
 		if (response.getCode() == 200) {
 			_log.debug("Firebase update sucessful");
@@ -102,39 +102,39 @@ public class FirebaseMBMessageSyncUtil {
 		}
 	}
 
-	public void addOrUpdate(LFImage image)
+	public void addOrUpdate(MBMessage message)
 			throws FirebaseException, JacksonUtilityException, UnsupportedEncodingException, PortalException {
-		String key = getFirebaseKey(image);
-		if (key != null) { /* Category exists already in Firebase: update */
-			update(image, key);
-		} else { /* Category does not exist in Firebase: create */
-			add(image);
+		String key = getFirebaseKey(message);
+		if (key != null) { /* Message exists already in Firebase: update */
+			update(message, key);
+		} else { /* Message does not exist in Firebase: create */
+			add(message);
 		}
 	}
 
-	public void delete(LFImage image)
+	public void delete(MBMessage message)
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException, PortalException {
 		Firebase firebase = new Firebase(FB_URI);
 
-		String key = getFirebaseKey(image);
+		String key = getFirebaseKey(message);
 		FirebaseResponse response;
 		if (key != null) {
 			response = firebase.delete("/" + key);
 			if (response.getCode() == 200) {
 				_log.debug("Firebase delete sucessful");
-				setRelation(image.getItemId(), key, false);
+				//setRelation(message.getItemId(), key, false);
 			} else {
 				_log.debug("Firebase delete unsuccessful. Response code: " + response.getCode());
 			}
 		} else {
-			_log.debug("Could not find image with id " + image.getPrimaryKeyObj());
+			_log.debug("Could not find message with id " + message.getPrimaryKeyObj());
 		}
 	}
 
-	private String getFirebaseKey(LFImage image) throws FirebaseException, UnsupportedEncodingException {
+	private String getFirebaseKey(MBMessage message) throws FirebaseException, UnsupportedEncodingException {
 		Firebase firebase = new Firebase(FB_URI);
 		firebase.addQuery("orderBy", "\"id\"");
-		firebase.addQuery("equalTo", String.valueOf(image.getPrimaryKey()));
+		firebase.addQuery("equalTo", String.valueOf(message.getPrimaryKey()));
 		FirebaseResponse response = firebase.get();
 		if (response.getCode() == 200) {
 			Map<String, Object> responseMap = response.getBody();
@@ -150,26 +150,15 @@ public class FirebaseMBMessageSyncUtil {
 		return null;
 	}
 
-	private Map<String, Object> toMap(LFImage image) {
+	private Map<String, Object> toMap(MBMessage message) {
 		// TODO parse description and title maps
-		Map<String, Object> imageMap = image.getModelAttributes();
-		imageMap.remove("lfImageId");
-		imageMap.put("id", image.getPrimaryKey());
-		try {
-			Blob imageBlob = image.getImage();
-			byte[] b = imageBlob.getBytes(1, (int) imageBlob.length());
-			String imageString = "data:image/jpeg;base64,";
-			imageString += new String(b);
-			imageMap.replace("image", imageString);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return imageMap;
+		Map<String, Object> messageMap = message.getModelAttributes();
+		messageMap.remove("messageId");
+		messageMap.put("id", message.getMessageId());
+		return messageMap;
 	};
 
-	private LFImage parseMap(Map<String, Object> map) {
+	private MBMessage parseMap(Map<String, Object> map) {
 		// TODO implement method body
 		return null;
 	};
