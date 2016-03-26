@@ -1,8 +1,6 @@
 package net.indaba.lostandfound.firebase;
 
 import java.io.UnsupportedEncodingException;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,14 +56,14 @@ public class FirebaseMBMessageSyncUtil {
 		FirebaseResponse response = firebase.post(objectMap);
 		if (response.getCode() == 200) {
 			_log.debug("Firebase create sucessful");
-			//String fbImageKey = (String) response.getBody().get("name");
-			//setRelation(message.getItemId(), fbImageKey, true);
+			String fbMessageKey = (String) response.getBody().get("name");
+			setRelation(message.getClassPK(), fbMessageKey, true);
 		} else {
 			_log.debug("Firebase create unsuccessful. Response code: " + response.getCode());
 		}
 	}
 
-	private void setRelation(long itemId, String fbImageKey, boolean add)
+	private void setRelation(long itemId, String fbMessageKey, boolean add)
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException, PortalException {
 		Firebase firebase = new Firebase(FB_Item_URI);
 		Item item = ItemLocalServiceUtil.getItem(itemId);
@@ -74,10 +72,10 @@ public class FirebaseMBMessageSyncUtil {
 		FirebaseResponse response;
 		if (add) {
 			Map<String, Object> messagesMap = new HashMap<String, Object>();
-			messagesMap.put(fbImageKey, true);
+			messagesMap.put(fbMessageKey, true);
 			response = firebase.patch("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/messages", messagesMap);
 		} else {
-			response = firebase.delete("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/messages/" + fbImageKey);
+			response = firebase.delete("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/messages/" + fbMessageKey);
 		}
 		if (response.getCode() == 200) {
 			_log.debug("Firebase relation modified");
@@ -122,7 +120,7 @@ public class FirebaseMBMessageSyncUtil {
 			response = firebase.delete("/" + key);
 			if (response.getCode() == 200) {
 				_log.debug("Firebase delete sucessful");
-				//setRelation(message.getItemId(), key, false);
+				setRelation(message.getClassPK(), key, false);
 			} else {
 				_log.debug("Firebase delete unsuccessful. Response code: " + response.getCode());
 			}
