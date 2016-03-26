@@ -16,9 +16,16 @@ package net.indaba.lostandfound.service.http;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+
+import net.indaba.lostandfound.service.LFImageServiceUtil;
+
+import java.rmi.RemoteException;
+
 /**
  * Provides the SOAP utility for the
- * {@link net.indaba.lostandfound.service.LFImageServiceUtil} service utility. The
+ * {@link LFImageServiceUtil} service utility. The
  * static methods of this class calls the same methods of the service utility.
  * However, the signatures are different because it is difficult for SOAP to
  * support certain types.
@@ -53,9 +60,113 @@ import aQute.bnd.annotation.ProviderType;
  * @author aritz
  * @see LFImageServiceHttp
  * @see net.indaba.lostandfound.model.LFImageSoap
- * @see net.indaba.lostandfound.service.LFImageServiceUtil
+ * @see LFImageServiceUtil
  * @generated
  */
 @ProviderType
 public class LFImageServiceSoap {
+	public static net.indaba.lostandfound.model.LFImageSoap[] findByItemId(
+		long itemId) throws RemoteException {
+		try {
+			java.util.List<net.indaba.lostandfound.model.LFImage> returnValue = LFImageServiceUtil.findByItemId(itemId);
+
+			return net.indaba.lostandfound.model.LFImageSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.LFImageSoap addLFImage(
+		net.indaba.lostandfound.model.LFImageSoap lfImage,
+		boolean updateFirebase) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.LFImage returnValue = LFImageServiceUtil.addLFImage(net.indaba.lostandfound.model.impl.LFImageModelImpl.toModel(
+						lfImage), updateFirebase);
+
+			return net.indaba.lostandfound.model.LFImageSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.LFImageSoap deleteLFImage(
+		net.indaba.lostandfound.model.LFImageSoap lfImage,
+		boolean updateFirebase) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.LFImage returnValue = LFImageServiceUtil.deleteLFImage(net.indaba.lostandfound.model.impl.LFImageModelImpl.toModel(
+						lfImage), updateFirebase);
+
+			return net.indaba.lostandfound.model.LFImageSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.LFImageSoap addLFImage(
+		net.indaba.lostandfound.model.LFImageSoap lfImage)
+		throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.LFImage returnValue = LFImageServiceUtil.addLFImage(net.indaba.lostandfound.model.impl.LFImageModelImpl.toModel(
+						lfImage));
+
+			return net.indaba.lostandfound.model.LFImageSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.LFImageSoap deleteLFImage(
+		net.indaba.lostandfound.model.LFImageSoap lfImage)
+		throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.LFImage returnValue = LFImageServiceUtil.deleteLFImage(net.indaba.lostandfound.model.impl.LFImageModelImpl.toModel(
+						lfImage));
+
+			return net.indaba.lostandfound.model.LFImageSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.LFImageSoap deleteLFImage(
+		long lfImageId) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.LFImage returnValue = LFImageServiceUtil.deleteLFImage(lfImageId);
+
+			return net.indaba.lostandfound.model.LFImageSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void deleteByItemId(long itemId) throws RemoteException {
+		try {
+			LFImageServiceUtil.deleteByItemId(itemId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(LFImageServiceSoap.class);
 }

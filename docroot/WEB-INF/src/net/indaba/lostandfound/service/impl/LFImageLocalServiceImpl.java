@@ -54,12 +54,11 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 		return lfImagePersistence.findByItemId(itemId);
 	}
 	
-	@Override
-	public LFImage addLFImage(LFImage lfImage) {
+	public LFImage addLFImage(LFImage lfImage, boolean updateFirebase) {
 		/* supermethod needs to be called first, otherwise it somehow
 		 * does not store the image blob into the database */
 		LFImage image = super.addLFImage(lfImage);
-		if (firebaseUtil.isSyncEnabled()) {
+		if (firebaseUtil.isSyncEnabled() && updateFirebase) {
 			try {
 				firebaseUtil.add(image);
 			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException | PortalException e) {
@@ -70,9 +69,8 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 		return image;
 	}
 	
-	@Override
-	public LFImage deleteLFImage(LFImage lfImage) {
-		if (firebaseUtil.isSyncEnabled()) {
+	public LFImage deleteLFImage(LFImage lfImage, boolean updateFirebase) {
+		if (firebaseUtil.isSyncEnabled() && updateFirebase) {
 			try {
 				firebaseUtil.delete(lfImage);
 			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException | PortalException e) {
@@ -84,16 +82,18 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 	}
 	
 	@Override
+	public LFImage addLFImage(LFImage lfImage) {
+		return addLFImage(lfImage, true);
+	}
+	
+	@Override
+	public LFImage deleteLFImage(LFImage lfImage) {
+		return deleteLFImage(lfImage, true);
+	}
+	
+	@Override
 	public LFImage deleteLFImage(long lfImageId) throws PortalException {
-		if (firebaseUtil.isSyncEnabled()) {
-			try {
-				firebaseUtil.delete(fetchLFImage(lfImageId));
-			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException | PortalException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}		
-		return super.deleteLFImage(lfImageId);
+		return deleteLFImage(fetchLFImage(lfImageId), true);
 	}
 	
 	public void deleteByItemId(long itemId){

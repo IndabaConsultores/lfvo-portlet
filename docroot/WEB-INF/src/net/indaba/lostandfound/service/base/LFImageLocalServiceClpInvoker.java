@@ -138,22 +138,34 @@ public class LFImageLocalServiceClpInvoker {
 		_methodName49 = "addLFImage";
 
 		_methodParameterTypes49 = new String[] {
-				"net.indaba.lostandfound.model.LFImage"
+				"net.indaba.lostandfound.model.LFImage", "boolean"
 			};
 
 		_methodName50 = "deleteLFImage";
 
 		_methodParameterTypes50 = new String[] {
+				"net.indaba.lostandfound.model.LFImage", "boolean"
+			};
+
+		_methodName51 = "addLFImage";
+
+		_methodParameterTypes51 = new String[] {
 				"net.indaba.lostandfound.model.LFImage"
 			};
 
-		_methodName51 = "deleteLFImage";
+		_methodName52 = "deleteLFImage";
 
-		_methodParameterTypes51 = new String[] { "long" };
+		_methodParameterTypes52 = new String[] {
+				"net.indaba.lostandfound.model.LFImage"
+			};
 
-		_methodName52 = "deleteByItemId";
+		_methodName53 = "deleteLFImage";
 
-		_methodParameterTypes52 = new String[] { "long" };
+		_methodParameterTypes53 = new String[] { "long" };
+
+		_methodName54 = "deleteByItemId";
+
+		_methodParameterTypes54 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -277,21 +289,33 @@ public class LFImageLocalServiceClpInvoker {
 
 		if (_methodName49.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes49, parameterTypes)) {
-			return LFImageLocalServiceUtil.addLFImage((net.indaba.lostandfound.model.LFImage)arguments[0]);
+			return LFImageLocalServiceUtil.addLFImage((net.indaba.lostandfound.model.LFImage)arguments[0],
+				((Boolean)arguments[1]).booleanValue());
 		}
 
 		if (_methodName50.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes50, parameterTypes)) {
-			return LFImageLocalServiceUtil.deleteLFImage((net.indaba.lostandfound.model.LFImage)arguments[0]);
+			return LFImageLocalServiceUtil.deleteLFImage((net.indaba.lostandfound.model.LFImage)arguments[0],
+				((Boolean)arguments[1]).booleanValue());
 		}
 
 		if (_methodName51.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes51, parameterTypes)) {
-			return LFImageLocalServiceUtil.deleteLFImage(((Long)arguments[0]).longValue());
+			return LFImageLocalServiceUtil.addLFImage((net.indaba.lostandfound.model.LFImage)arguments[0]);
 		}
 
 		if (_methodName52.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes52, parameterTypes)) {
+			return LFImageLocalServiceUtil.deleteLFImage((net.indaba.lostandfound.model.LFImage)arguments[0]);
+		}
+
+		if (_methodName53.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes53, parameterTypes)) {
+			return LFImageLocalServiceUtil.deleteLFImage(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName54.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes54, parameterTypes)) {
 			LFImageLocalServiceUtil.deleteByItemId(((Long)arguments[0]).longValue());
 
 			return null;
@@ -352,4 +376,8 @@ public class LFImageLocalServiceClpInvoker {
 	private String[] _methodParameterTypes51;
 	private String _methodName52;
 	private String[] _methodParameterTypes52;
+	private String _methodName53;
+	private String[] _methodParameterTypes53;
+	private String _methodName54;
+	private String[] _methodParameterTypes54;
 }
