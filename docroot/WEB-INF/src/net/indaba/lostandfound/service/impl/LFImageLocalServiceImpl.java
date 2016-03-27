@@ -81,6 +81,10 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 		return super.deleteLFImage(lfImage);
 	}
 	
+	public LFImage deleteLFImage(long lfImageId, boolean updateFirebase) throws PortalException {
+		return deleteLFImage(getLFImage(lfImageId), updateFirebase);
+	}
+
 	@Override
 	public LFImage addLFImage(LFImage lfImage) {
 		return addLFImage(lfImage, true);
@@ -93,7 +97,7 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 	
 	@Override
 	public LFImage deleteLFImage(long lfImageId) throws PortalException {
-		return deleteLFImage(fetchLFImage(lfImageId), true);
+		return deleteLFImage(lfImageId, true);
 	}
 	
 	public void deleteByItemId(long itemId){

@@ -243,6 +243,61 @@ public class LFImageServiceHttp {
 		}
 	}
 
+	public static net.indaba.lostandfound.model.LFImage addLFImage(
+		HttpPrincipal httpPrincipal, java.lang.String imageBase64String,
+		long itemId) {
+		try {
+			MethodKey methodKey = new MethodKey(LFImageServiceUtil.class,
+					"addLFImage", _addLFImageParameterTypes7);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey,
+					imageBase64String, itemId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (net.indaba.lostandfound.model.LFImage)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static net.indaba.lostandfound.model.LFImage deleteLFImage(
+		HttpPrincipal httpPrincipal, long lfImageId, boolean updateFirebase) {
+		try {
+			MethodKey methodKey = new MethodKey(LFImageServiceUtil.class,
+					"deleteLFImage", _deleteLFImageParameterTypes8);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey,
+					lfImageId, updateFirebase);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (net.indaba.lostandfound.model.LFImage)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(LFImageServiceHttp.class);
 	private static final Class<?>[] _findByItemIdParameterTypes0 = new Class[] {
 			long.class
@@ -264,5 +319,11 @@ public class LFImageServiceHttp {
 		};
 	private static final Class<?>[] _deleteByItemIdParameterTypes6 = new Class[] {
 			long.class
+		};
+	private static final Class<?>[] _addLFImageParameterTypes7 = new Class[] {
+			java.lang.String.class, long.class
+		};
+	private static final Class<?>[] _deleteLFImageParameterTypes8 = new Class[] {
+			long.class, boolean.class
 		};
 }

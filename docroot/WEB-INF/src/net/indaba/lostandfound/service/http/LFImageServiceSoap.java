@@ -168,5 +168,36 @@ public class LFImageServiceSoap {
 		}
 	}
 
+	public static net.indaba.lostandfound.model.LFImageSoap addLFImage(
+		java.lang.String imageBase64String, long itemId)
+		throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.LFImage returnValue = LFImageServiceUtil.addLFImage(imageBase64String,
+					itemId);
+
+			return net.indaba.lostandfound.model.LFImageSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static net.indaba.lostandfound.model.LFImageSoap deleteLFImage(
+		long lfImageId, boolean updateFirebase) throws RemoteException {
+		try {
+			net.indaba.lostandfound.model.LFImage returnValue = LFImageServiceUtil.deleteLFImage(lfImageId,
+					updateFirebase);
+
+			return net.indaba.lostandfound.model.LFImageSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(LFImageServiceSoap.class);
 }

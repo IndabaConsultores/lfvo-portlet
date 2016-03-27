@@ -66,6 +66,14 @@ public class LFImageServiceClpInvoker {
 		_methodName41 = "deleteByItemId";
 
 		_methodParameterTypes41 = new String[] { "long" };
+
+		_methodName42 = "addLFImage";
+
+		_methodParameterTypes42 = new String[] { "java.lang.String", "long" };
+
+		_methodName43 = "deleteLFImage";
+
+		_methodParameterTypes43 = new String[] { "long", "boolean" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -114,6 +122,18 @@ public class LFImageServiceClpInvoker {
 			return null;
 		}
 
+		if (_methodName42.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes42, parameterTypes)) {
+			return LFImageServiceUtil.addLFImage((java.lang.String)arguments[0],
+				((Long)arguments[1]).longValue());
+		}
+
+		if (_methodName43.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes43, parameterTypes)) {
+			return LFImageServiceUtil.deleteLFImage(((Long)arguments[0]).longValue(),
+				((Boolean)arguments[1]).booleanValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -133,4 +153,8 @@ public class LFImageServiceClpInvoker {
 	private String[] _methodParameterTypes40;
 	private String _methodName41;
 	private String[] _methodParameterTypes41;
+	private String _methodName42;
+	private String[] _methodParameterTypes42;
+	private String _methodName43;
+	private String[] _methodParameterTypes43;
 }

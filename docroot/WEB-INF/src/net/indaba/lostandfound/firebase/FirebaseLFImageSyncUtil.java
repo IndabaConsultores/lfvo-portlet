@@ -75,9 +75,9 @@ public class FirebaseLFImageSyncUtil {
 		if (add) {
 			Map<String, Object> imagesMap = new HashMap<String, Object>();
 			imagesMap.put(fbImageKey, true);
-			response = firebase.patch("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/images", imagesMap);
+			response = firebase.patch(itemUtil.getItemPath(item) + "/" + fbItemKey + "/images", imagesMap);
 		} else {
-			response = firebase.delete("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/images/" + fbImageKey);
+			response = firebase.delete(itemUtil.getItemPath(item) + "/" + fbItemKey + "/images/" + fbImageKey);
 		}
 		if (response.getCode() == 200) {
 			_log.debug("Firebase relation modified");

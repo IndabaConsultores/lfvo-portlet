@@ -14,9 +14,17 @@
 
 package net.indaba.lostandfound.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+
+import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
+import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.util.Base64;
 
 import aQute.bnd.annotation.ProviderType;
 import net.indaba.lostandfound.model.LFImage;
@@ -71,6 +79,30 @@ public class LFImageServiceImpl extends LFImageServiceBaseImpl {
 	
 	public void deleteByItemId(long itemId){
 		LFImageLocalServiceUtil.deleteByItemId(itemId);
+	}
+	
+	public LFImage addLFImage(String imageBase64String, long itemId) {
+		ByteArrayInputStream imageBase64 = new ByteArrayInputStream(imageBase64String.getBytes(StandardCharsets.UTF_8));
+		OutputBlob dataOutputBlob = new OutputBlob(imageBase64, imageBase64String.length());
+		
+		LFImage lfImage = LFImageLocalServiceUtil.createLFImage(CounterLocalServiceUtil.increment());
+		lfImage.setItemId(itemId);
+		lfImage.setImage(dataOutputBlob);
+		return LFImageLocalServiceUtil.addLFImage(lfImage, false);
+	}
+	
+	public LFImage deleteLFImage(long lfImageId, boolean updateFirebase) {
+		// TODO solve HibernateException
+		/* When calling this method it somehow throws an exception 
+		 * LocalService does not throw said exception, so the problem must lie 
+		 * in this service layer. Might have something to do with the Blob field */
+		try {
+			return LFImageLocalServiceUtil.deleteLFImage(lfImageId, updateFirebase);
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+		}
+		return null;
 	}
 	
 }
