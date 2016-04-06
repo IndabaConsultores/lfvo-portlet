@@ -16,8 +16,13 @@ package net.indaba.lostandfound.service.impl;
 
 import java.util.List;
 
+import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.kernel.service.AssetCategoryLocalService;
+import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -143,8 +148,23 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 					item.getItemId(), assetCategoryIds, assetTagNames);
 			assetLinkLocalService.updateLinks(userId, assetEntry.getEntryId(), assetLinkEntryIds,
 					AssetLinkConstants.TYPE_RELATED);
+			if (firebaseUtil.isSyncEnabled()) {
+				List<AssetCategory> categories = AssetCategoryLocalServiceUtil
+						.getAssetEntryAssetCategories(assetEntry.getEntryId());
+				firebaseUtil.addRelations(item, categories);
+				
+//				List<AssetTag> tags = AssetTagLocalServiceUtil
+//						.getAssetEntryAssetTags(assetEntry.getEntryId());
+//				firebaseUtil.addRelations(item, tags);
+			}
 		} catch (Exception e) {
 			_log.error("Error updating Items asset", e);
+		} catch (FirebaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JacksonUtilityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}

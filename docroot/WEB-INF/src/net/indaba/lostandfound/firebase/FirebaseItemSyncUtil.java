@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
@@ -30,10 +32,13 @@ import net.thegreshams.firebase4j.service.Firebase;
 
 public class FirebaseItemSyncUtil {
 	
+
 	static private FirebaseItemSyncUtil instance;
 
 	private final String FB_BASE_URI = PortletProps.get("firebase.url");
 	private final String FB_URI = PortletProps.get("firebase.url") + "/items";
+	private final String FB_Cat_URI = FB_BASE_URI + "/categories";
+
 	
 	private List<Item> liferayUnsyncedItems;
 	private Map<String, Item> firebaseUnsyncedItems;
@@ -120,7 +125,70 @@ public class FirebaseItemSyncUtil {
 			_log.debug("Could not find item with id " + item.getItemId());
 		}
 	}
-
+	
+	public void addRelations(Item item, List<AssetCategory> acs) 
+			throws FirebaseException, UnsupportedEncodingException, 
+			JacksonUtilityException {
+		
+		String itemTypePath = getItemPath(item);
+		String itemKey = getFirebaseKey(item);
+		if (itemKey != null) {
+			Firebase firebase;
+			FirebaseResponse response;
+			
+			/* Obtain previous categories */
+			firebase = new Firebase(FB_URI);
+			response = firebase.get(itemTypePath + "/" + itemKey);
+			/* oldCatsMap contains the categories from which to remove the item reference */
+			Map<Long, Boolean> oldCatsMap = new HashMap<Long, Boolean>();
+			if (response.getCode() == 200) {
+				Object o = response.getBody().get("categories");
+				oldCatsMap = o != null ? (Map<Long, Boolean>) o : oldCatsMap;
+			}		
+			
+			/* Add item reference to new categories */
+			Map<Long, Boolean> catKeysMap = new HashMap<Long, Boolean>();
+			for (AssetCategory ac : acs) {
+				/* Compare previous categories to current categories */
+				if (oldCatsMap.containsKey(ac.getCategoryId())) {
+					/* Item already had the category; do not remove item reference */
+					oldCatsMap.remove(ac.getCategoryId());
+				} else {
+					/* New category */
+					Map<String, Object> categoryMap = new HashMap<String, Object>();
+					categoryMap.put(itemKey, true);
+					firebase = new Firebase(FB_Cat_URI);
+					response = firebase.patch("/" + ac.getCategoryId() + "/items", categoryMap);
+					if (response.getCode() == 200) {
+						_log.debug("Firebase category add sucessful");
+					} else {
+						_log.debug("Firebase category add unsuccessful. Response code: " + response.getCode());
+					}
+				}
+				/* Collect the categoryId into the map */
+				catKeysMap.put(ac.getCategoryId(), true);
+			}
+			
+			/* Delete item reference from remaining old categories */
+			for (Entry<Long, Boolean> e : oldCatsMap.entrySet()) {
+				firebase = new Firebase(FB_Cat_URI);
+				response = firebase.delete("/" + e.getKey() + "/items/" + itemKey);
+			}
+	
+			/* Update categories reference to the item */
+			Map<String, Object> itemMap = new HashMap<String, Object>();
+			itemMap.put("categories", catKeysMap);
+			
+			firebase = new Firebase(FB_URI + itemTypePath);
+			response = firebase.patch(itemKey, itemMap);
+			if (response.getCode() == 200) {
+				_log.debug("Firebase category add sucessful");
+			} else {
+				_log.debug("Firebase category add unsuccessful. Response code: " + response.getCode());
+			}
+		}
+	}
+	
 	/**
 	 * Gets the Firebase object key for the pertinent item.
 	 * 
