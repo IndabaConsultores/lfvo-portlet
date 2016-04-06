@@ -92,11 +92,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
 		indexer.reindex(item);
-		/*
-		resourceLocalService.addResources(serviceContext.getCompanyId(), 
-				serviceContext.getScopeGroupId(), serviceContext.getUserId(), 
-				Item.class.getName(), item.getPrimaryKey(), false, true, true);
-		 */
+
 		return item;
 	}
 
