@@ -31,7 +31,6 @@ import net.thegreshams.firebase4j.model.FirebaseResponse;
 import net.thegreshams.firebase4j.service.Firebase;
 
 public class FirebaseItemSyncUtil {
-	
 
 	static private FirebaseItemSyncUtil instance;
 
@@ -39,16 +38,15 @@ public class FirebaseItemSyncUtil {
 	private final String FB_URI = PortletProps.get("firebase.url") + "/items";
 	private final String FB_Cat_URI = FB_BASE_URI + "/categories";
 
-	
 	private List<Item> liferayUnsyncedItems;
 	private Map<String, Item> firebaseUnsyncedItems;
 
 	private long lastSyncDate = 0;
-	
+
 	private FirebaseItemSyncUtil() {
 		super();
 	}
-	
+
 	public static FirebaseItemSyncUtil getInstance() {
 		if (instance == null) {
 			instance = new FirebaseItemSyncUtil();
@@ -74,13 +72,14 @@ public class FirebaseItemSyncUtil {
 			return null;
 		}
 	}
-	
+
 	public void update(Item item) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
 		String firebaseKey = getFirebaseKey(item);
-		update (item, firebaseKey);
+		update(item, firebaseKey);
 	}
-	
-	public void update(Item item, String firebaseKey) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
+
+	public void update(Item item, String firebaseKey)
+			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
 		String itemTypePath = getItemPath(item);
 
 		Firebase firebase = new Firebase(FB_URI + itemTypePath);
@@ -94,11 +93,11 @@ public class FirebaseItemSyncUtil {
 			_log.debug("Firebase update unsuccessful. Response code: " + response.getCode());
 		}
 	}
-	
+
 	public void addOrUpdateItem(Item item)
 			throws FirebaseException, JacksonUtilityException, UnsupportedEncodingException {
 		String itemKey = getFirebaseKey(item);
-		
+
 		if (itemKey != null) { /* Item exists already in Firebase: update */
 			update(item, itemKey);
 		} else { /* Item does not exist in Firebase: create */
@@ -106,8 +105,7 @@ public class FirebaseItemSyncUtil {
 		}
 	}
 
-	public void deleteItem(Item item)
-			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
+	public void deleteItem(Item item) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
 		String itemTypePath = getItemPath(item);
 
 		Firebase firebase = new Firebase(FB_URI + itemTypePath);
@@ -125,33 +123,38 @@ public class FirebaseItemSyncUtil {
 			_log.debug("Could not find item with id " + item.getItemId());
 		}
 	}
-	
-	public void addRelations(Item item, List<AssetCategory> acs) 
-			throws FirebaseException, UnsupportedEncodingException, 
-			JacksonUtilityException {
-		
+
+	public void addRelations(Item item, List<AssetCategory> acs)
+			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
+
 		String itemTypePath = getItemPath(item);
 		String itemKey = getFirebaseKey(item);
 		if (itemKey != null) {
 			Firebase firebase;
 			FirebaseResponse response;
-			
+
 			/* Obtain previous categories */
 			firebase = new Firebase(FB_URI);
 			response = firebase.get(itemTypePath + "/" + itemKey);
-			/* oldCatsMap contains the categories from which to remove the item reference */
+			/*
+			 * oldCatsMap contains the categories from which to remove the item
+			 * reference
+			 */
 			Map<Long, Boolean> oldCatsMap = new HashMap<Long, Boolean>();
 			if (response.getCode() == 200) {
 				Object o = response.getBody().get("categories");
 				oldCatsMap = o != null ? (Map<Long, Boolean>) o : oldCatsMap;
-			}		
-			
+			}
+
 			/* Add item reference to new categories */
 			Map<Long, Boolean> catKeysMap = new HashMap<Long, Boolean>();
 			for (AssetCategory ac : acs) {
 				/* Compare previous categories to current categories */
 				if (oldCatsMap.containsKey(ac.getCategoryId())) {
-					/* Item already had the category; do not remove item reference */
+					/*
+					 * Item already had the category; do not remove item
+					 * reference
+					 */
 					oldCatsMap.remove(ac.getCategoryId());
 				} else {
 					/* New category */
@@ -168,17 +171,17 @@ public class FirebaseItemSyncUtil {
 				/* Collect the categoryId into the map */
 				catKeysMap.put(ac.getCategoryId(), true);
 			}
-			
+
 			/* Delete item reference from remaining old categories */
 			for (Entry<Long, Boolean> e : oldCatsMap.entrySet()) {
 				firebase = new Firebase(FB_Cat_URI);
 				response = firebase.delete("/" + e.getKey() + "/items/" + itemKey);
 			}
-	
+
 			/* Update categories reference to the item */
 			Map<String, Object> itemMap = new HashMap<String, Object>();
 			itemMap.put("categories", catKeysMap);
-			
+
 			firebase = new Firebase(FB_URI + itemTypePath);
 			response = firebase.patch(itemKey, itemMap);
 			if (response.getCode() == 200) {
@@ -188,7 +191,7 @@ public class FirebaseItemSyncUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets the Firebase object key for the pertinent item.
 	 * 
@@ -248,7 +251,7 @@ public class FirebaseItemSyncUtil {
 		location.put("latitude", item.getLat());
 		location.put("longitude", item.getLng());
 		itemMap.put("location", location);
-		//Map<Long, Boolean> categories = new HashMap<Long, Boolean>();
+		// Map<Long, Boolean> categories = new HashMap<Long, Boolean>();
 		itemMap.put("liferay", true);
 		return itemMap;
 	}
@@ -296,7 +299,7 @@ public class FirebaseItemSyncUtil {
 	private Map<String, Item> getFirebaseItemsAfter(long firebaseTS)
 			throws FirebaseException, UnsupportedEncodingException {
 		Map<String, Item> items = new LinkedHashMap<String, Item>();
-	
+
 		Firebase firebase = new Firebase(FB_URI);
 		/* Get lost alerts */
 		firebase.addQuery("orderBy", "\"modifiedAt\"");
@@ -358,101 +361,48 @@ public class FirebaseItemSyncUtil {
 		return items;
 	}
 
-	public void updateUnsyncedItems() throws UnsupportedEncodingException, FirebaseException {
-		/* Get last exhaustive sync date in Firebase */
-		Firebase firebase = new Firebase(FB_BASE_URI + "/_TIMESTAMP");
-		FirebaseResponse response = firebase.get("");
-	
-		Map<String, Object> responseMap = response.getBody();
-		Object o = responseMap.get("Sync");
-		long syncTS = (o == null) ? 0 : new Long(o.toString());
-	
+	public Map<Item, String> getUnsyncedItemsSince(long date) throws UnsupportedEncodingException, FirebaseException {
+		Map<Item, String> unsyncedItems = new HashMap<Item, String>();
+
 		/* Get Liferay items that were added/updated after last sync time */
-		List<Item> lrItemList = getLiferayItemsAfter(syncTS);
+		List<Item> lrItemList = getLiferayItemsAfter(date);
 		/* Get Firebase items that were added/updated after last sync time */
-		Map<String, Item> fbItemsAux = getFirebaseItemsAfter(syncTS);
-		Map<String, Item> fbItems = new LinkedHashMap<String, Item>();
-	
-		Map<Long, Item> lrItems = new HashMap<Long, Item>();
-	
-		/* Convert list to map for faster access by itemId */
+		Map<String, Item> fbItemSet = getFirebaseItemsAfter(date);
+
+		Map<Long, Item> lrItemSet = new HashMap<Long, Item>();
+
+		/* Convert list to map for easier access by itemId */
 		for (Item i : lrItemList) {
-			lrItems.put(i.getItemId(), i);
+			lrItemSet.put(i.getItemId(), i);
 		}
+		/* Add fbItem in fbItemSet */
 		Item lrItem, fbItem;
-		for (Entry<String, Item> e : fbItemsAux.entrySet()) {
+		for (Entry<String, Item> e : fbItemSet.entrySet()) {
 			fbItem = e.getValue();
-			lrItem = lrItems.get(fbItem.getItemId());
+			lrItem = lrItemSet.get(fbItem.getItemId());
 			if (lrItem != null) {
+				/* item exists in FB and LR; compare modified date */
 				int dateComp = lrItem.getModifiedDate().compareTo(fbItem.getModifiedDate());
 				if (dateComp == 0) {
-					/* both items are in sync; remove from both*/
-					lrItems.remove(lrItem.getItemId());
-				} else if (dateComp > 0) {
-					/* lrItem is more recent; remove from fbItems */
-				} else {
-					/* fbItem is more recent; remove from lrItems*/
-					lrItems.remove(lrItem.getItemId());
-					fbItems.put(e.getKey(), e.getValue());
+					/* item has not changed; remove from lrItemSet */
+					lrItemSet.remove(lrItem.getItemId());
+				} else if (dateComp < 0) {
+					/* fbItem is more recent; add to result */
+					unsyncedItems.put(fbItem, "firebase");
 				}
 			} else {
 				/* Item exists in FB but not in LR */
-				fbItems.put(e.getKey(), e.getValue());
+				unsyncedItems.put(fbItem, "firebase");
 			}
 		}
-		liferayUnsyncedItems = new ArrayList<Item>(lrItems.values());
-		firebaseUnsyncedItems = fbItems;
-		lastSyncDate = System.currentTimeMillis();
-	}
-
-	public List<Item> getLiferayUnsyncedItems() {
-		return liferayUnsyncedItems;
-	}
-
-	public List<Item> getFirebaseUnsyncedItems() {
-		return new ArrayList<Item>(firebaseUnsyncedItems.values());
-	}
-
-	public void resyncItems()
-		throws UnsupportedEncodingException, FirebaseException, JacksonUtilityException, PortalException {
-	/* Push items to Firebase */
-	for (Item i : liferayUnsyncedItems) {
-		addOrUpdateItem(i);
-	}
-	liferayUnsyncedItems = null;
-	
-	/* Add items to Database */
-	ServiceContext serviceContext = new ServiceContext();
-	serviceContext.setUserId(25602);
-	Item item;
-	boolean isNew;
-	for (Entry<String, Item> e : firebaseUnsyncedItems.entrySet()) {
-		item = e.getValue();
-		isNew = e.getValue().isNew();
-		item = ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
-		if (isNew) {
-			String itemTypePath = getItemPath(item);
-	
-			Firebase firebase = new Firebase(FB_URI + itemTypePath);
-			String itemKey = e.getKey();
-			Map<String, Object> itemMap = new HashMap<String, Object>();
-			itemMap.put("id", item.getItemId());
-			FirebaseResponse response;
-			response = firebase.patch("/" + itemKey, itemMap);
-			if (response.getCode() == 200) {
-				_log.debug("Firebase update sucessful");
-			} else {
-				_log.debug("Firebase update unsuccessful. Response code: " + response.getCode());
-			}
+		/* Add remaining LR items to result */
+		for (Entry<Long, Item> e : lrItemSet.entrySet()) {
+			unsyncedItems.put(e.getValue(), "liferay");
 		}
+		
+		return unsyncedItems;
 	}
-	firebaseUnsyncedItems = null;
-	Map<String, Object> dateMap = new HashMap<String, Object>();
-	if (lastSyncDate != 0)
-		dateMap.put("Sync", lastSyncDate);
-	Firebase firebase = new Firebase(FB_BASE_URI);
-	firebase.patch("/_TIMESTAMP", dateMap);	}
-
+	
 	private final Log _log = LogFactoryUtil.getLog(FirebaseItemSyncUtil.class);
 
 }

@@ -1,16 +1,26 @@
 package net.indaba.lostandfound.firebase;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.liferay.message.boards.kernel.model.MBMessage;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.model.Item;
+import net.indaba.lostandfound.model.impl.ItemImpl;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
@@ -160,6 +170,86 @@ public class FirebaseMBMessageSyncUtil {
 		// TODO implement method body
 		return null;
 	};
+	
+	private List<MBMessage> getLiferayItemsAfter(long liferayTS) {
+		List<MBMessage> items = new ArrayList<MBMessage>();
+		/*
+		 * Get Liferay office items that were added/updated after last update
+		 * time
+		 */
+		DynamicQuery query = DynamicQueryFactoryUtil.forClass(MBMessage.class)
+				.add(PropertyFactoryUtil.forName("modifiedDate").gt(new Date(liferayTS)));
+		items.addAll(ItemLocalServiceUtil.dynamicQuery(query));
+		return items;
+	}
+
+	private Map<String, MBMessage> getFirebaseItemsAfter(long firebaseTS)
+			throws FirebaseException, UnsupportedEncodingException {
+		Map<String, MBMessage> items = new LinkedHashMap<String, MBMessage>();
+
+		Firebase firebase = new Firebase(FB_URI);
+		firebase = new Firebase(FB_URI);
+		firebase.addQuery("orderBy", "\"modifiedDate\"");
+		firebase.addQuery("startAt", String.valueOf(firebaseTS));
+		FirebaseResponse response = firebase.get();
+		Map<String, Object> lostItems = response.getBody();
+		Iterator<Entry<String, Object>> it = lostItems.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, Object> e = it.next();
+			Map<String, Object> map = (Map<String, Object>) e.getValue();
+			MBMessage item = parseMap(map);
+			if (item.getMessageId() != 0) {
+				items.put(e.getKey(), item);
+			} else {
+				item.setNew(true);
+				items.put(e.getKey(), item);
+			}
+		}
+		return items;
+	}
+
+	public Map<MBMessage, String> getUnsyncedMsgsSince(long date) throws UnsupportedEncodingException, FirebaseException {
+		Map<MBMessage, String> unsyncedItems = new HashMap<MBMessage, String>();
+
+		/* Get Liferay items that were added/updated after last sync time */
+		List<MBMessage> lrItemList = getLiferayItemsAfter(date);
+		/* Get Firebase items that were added/updated after last sync time */
+		Map<String, MBMessage> fbItemSet = getFirebaseItemsAfter(date);
+
+		Map<Long, MBMessage> lrItemSet = new HashMap<Long, MBMessage>();
+
+		/* Convert list to map for easier access by itemId */
+		for (MBMessage i : lrItemList) {
+			lrItemSet.put(i.getMessageId(), i);
+		}
+		/* Add fbItem in fbItemSet */
+		MBMessage lrItem, fbItem;
+		for (Entry<String, MBMessage> e : fbItemSet.entrySet()) {
+			fbItem = e.getValue();
+			lrItem = lrItemSet.get(fbItem.getMessageId());
+			if (lrItem != null) {
+				/* item exists in FB and LR; compare modified date */
+				int dateComp = lrItem.getModifiedDate().compareTo(fbItem.getModifiedDate());
+				if (dateComp == 0) {
+					/* item has not changed; remove from lrItemSet */
+					lrItemSet.remove(lrItem.getMessageId());
+				} else if (dateComp < 0) {
+					/* fbItem is more recent; add to result */
+					unsyncedItems.put(fbItem, "firebase");
+				}
+			} else {
+				/* Item exists in FB but not in LR */
+				unsyncedItems.put(fbItem, "firebase");
+			}
+		}
+		/* Add remaining LR items to result */
+		for (Entry<Long, MBMessage> e : lrItemSet.entrySet()) {
+			unsyncedItems.put(e.getValue(), "liferay");
+		}
+		
+		return unsyncedItems;
+	}
+
 
 	private final Log _log = LogFactoryUtil.getLog(FirebaseMBMessageSyncUtil.class);
 

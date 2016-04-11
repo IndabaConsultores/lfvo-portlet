@@ -1,14 +1,28 @@
 package net.indaba.lostandfound.firebase;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.kernel.service.AssetCategoryLocalService;
+import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.util.portlet.PortletProps;
 
+import net.indaba.lostandfound.model.Item;
+import net.indaba.lostandfound.model.impl.ItemImpl;
+import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
@@ -128,6 +142,28 @@ public class FirebaseCategorySyncUtil {
 		//TODO implement method body
 		return null;
 	};
+	
+	private List<AssetCategory> getLiferayCatsAfter(long liferayTS) {
+		/* Get Liferay categories that were added/updated after last update time */
+		DynamicQuery query = DynamicQueryFactoryUtil.forClass(AssetCategory.class)
+				.add(PropertyFactoryUtil.forName("modifiedDate").gt(new Date(liferayTS)));
+		return AssetCategoryLocalServiceUtil.dynamicQuery(query);
+	}
+	
+	public Map<AssetCategory, String> getUnsyncedCatsSince(long date) throws UnsupportedEncodingException, FirebaseException {
+		Map<AssetCategory, String> unsynced = new HashMap<AssetCategory, String>();
+
+		/* Get Liferay categories that were added/updated after last sync time */
+		List<AssetCategory> assetCategories = getLiferayCatsAfter(date);
+		/* Firebase categories cannot be modified by Firebase app */
+		
+		for (AssetCategory ac : assetCategories) {
+			if (ac.getModifiedDate().compareTo(new Date(date)) > 0) {
+				unsynced.put(ac, "liferay");
+			}
+		}
+		return unsynced;
+	}
 
 	private final Log _log = LogFactoryUtil.getLog(FirebaseCategorySyncUtil.class);
 

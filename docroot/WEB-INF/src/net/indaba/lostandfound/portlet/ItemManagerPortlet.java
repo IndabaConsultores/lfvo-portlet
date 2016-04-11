@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import net.indaba.lostandfound.firebase.FirebaseItemSyncUtil;
+import net.indaba.lostandfound.firebase.FirebaseSyncUtil;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.model.LFImage;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
@@ -117,10 +118,10 @@ public class ItemManagerPortlet extends MVCPortlet {
 	public void doDataDiagnosis(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		_log.debug("doDataDiagnosis ");
-		FirebaseItemSyncUtil firebaseUtil = FirebaseItemSyncUtil.getInstance();
+		FirebaseSyncUtil firebaseUtil = FirebaseSyncUtil.getInstance();
 		try {
 			firebaseUtil.updateUnsyncedItems();
-			System.out.println(firebaseUtil.getFirebaseUnsyncedItems());
+			//System.out.println(firebaseUtil.getFirebaseUnsyncedItems());
 		} catch (FirebaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -130,10 +131,11 @@ public class ItemManagerPortlet extends MVCPortlet {
 	public void doDataSync(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		_log.debug("doDataDiagnosis ");
-		FirebaseItemSyncUtil firebaseUtil = FirebaseItemSyncUtil.getInstance();
+		FirebaseSyncUtil firebaseUtil = FirebaseSyncUtil.getInstance();
 		try {
-			if (true)
-				firebaseUtil.resyncItems();
+			if (true) {
+				firebaseUtil.resyncItems();				
+			}
 		} catch (FirebaseException | JacksonUtilityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

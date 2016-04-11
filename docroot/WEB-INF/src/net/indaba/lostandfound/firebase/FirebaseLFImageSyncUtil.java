@@ -3,9 +3,18 @@ package net.indaba.lostandfound.firebase;
 import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -13,7 +22,9 @@ import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.model.LFImage;
+import net.indaba.lostandfound.model.impl.ItemImpl;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
+import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
@@ -29,7 +40,7 @@ import net.thegreshams.firebase4j.service.Firebase;
 public class FirebaseLFImageSyncUtil {
 
 	private static FirebaseLFImageSyncUtil instance;
-	
+
 	FirebaseItemSyncUtil itemUtil = FirebaseItemSyncUtil.getInstance();
 
 	private String FB_URI = PortletProps.get("firebase.url") + "/images";
@@ -173,6 +184,26 @@ public class FirebaseLFImageSyncUtil {
 		// TODO implement method body
 		return null;
 	};
+
+	private List<LFImage> getLiferayImagesAfter(long liferayTS) {
+		List<LFImage> items = new ArrayList<LFImage>();
+		// Images do not have modifiedDate field
+		return items;
+	}
+
+	private Map<String, LFImage> getFirebaseImagesAfter(long firebaseTS)
+			throws FirebaseException, UnsupportedEncodingException {
+		Map<String, LFImage> images = new LinkedHashMap<String, LFImage>();
+		// Images do not have modifiedDate field
+		return images;
+	}
+
+	public Map<LFImage, String> getUnsyncedImagesSince(long date)
+			throws UnsupportedEncodingException, FirebaseException {
+		// Images do not have modifiedDate field
+		Map<LFImage, String> unsyncedItems = new HashMap<LFImage, String>();
+		return unsyncedItems;
+	}
 
 	private final Log _log = LogFactoryUtil.getLog(FirebaseLFImageSyncUtil.class);
 
