@@ -113,6 +113,7 @@ public class FirebaseItemSyncUtil {
 		String itemKey = getFirebaseKey(item);
 		FirebaseResponse response;
 		if (itemKey != null) {
+			addRelations(item, new ArrayList<AssetCategory>());
 			response = firebase.delete("/" + itemKey);
 			if (response.getCode() == 200) {
 				_log.debug("Firebase delete sucessful");
@@ -146,7 +147,7 @@ public class FirebaseItemSyncUtil {
 				oldCatsMap = o != null ? (Map<Long, Boolean>) o : oldCatsMap;
 			}
 
-			/* Add item reference to new categories */
+			/* Update "item" field on categories */
 			Map<Long, Boolean> catKeysMap = new HashMap<Long, Boolean>();
 			for (AssetCategory ac : acs) {
 				/* Compare previous categories to current categories */
@@ -178,8 +179,9 @@ public class FirebaseItemSyncUtil {
 				response = firebase.delete("/" + e.getKey() + "/items/" + itemKey);
 			}
 
-			/* Update categories reference to the item */
+			/* Update item's "categories" field */
 			Map<String, Object> itemMap = new HashMap<String, Object>();
+			itemMap.put("liferay", true);
 			itemMap.put("categories", catKeysMap);
 
 			firebase = new Firebase(FB_URI + itemTypePath);

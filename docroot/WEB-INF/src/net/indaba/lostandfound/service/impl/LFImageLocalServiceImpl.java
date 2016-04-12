@@ -101,6 +101,12 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 	}
 	
 	public void deleteByItemId(long itemId){
+		if (firebaseUtil.isSyncEnabled()) {
+			List<LFImage> images = lfImageLocalService.findByItemId(itemId);
+			for (LFImage i : images) {
+				deleteLFImage(i);
+			}
+		}
 		lfImagePersistence.removeByItemId(itemId);
 	}
 	
