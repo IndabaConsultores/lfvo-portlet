@@ -87,7 +87,6 @@ public class FirebaseSyncUtil {
 			Item item = e.getKey();
 			String origin = e.getValue();
 			if (origin.equals("liferay")) {
-				/* If item type is NOT office, it will create it on branch office */
 				itemUtil.addOrUpdateItem(item);
 			} else if (origin.equals("firebase")) {
 				boolean isNew = item.isNew();

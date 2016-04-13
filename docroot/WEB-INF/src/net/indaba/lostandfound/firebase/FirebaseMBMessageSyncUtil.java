@@ -185,6 +185,7 @@ public class FirebaseMBMessageSyncUtil {
 
 	private Map<String, MBMessage> getFirebaseItemsAfter(long firebaseTS)
 			throws FirebaseException, UnsupportedEncodingException {
+		//TODO no funciona
 		Map<String, MBMessage> items = new LinkedHashMap<String, MBMessage>();
 
 		Firebase firebase = new Firebase(FB_URI);
@@ -197,12 +198,12 @@ public class FirebaseMBMessageSyncUtil {
 		while (it.hasNext()) {
 			Entry<String, Object> e = it.next();
 			Map<String, Object> map = (Map<String, Object>) e.getValue();
-			MBMessage item = parseMap(map);
-			if (item.getMessageId() != 0) {
-				items.put(e.getKey(), item);
+			MBMessage message = parseMap(map);
+			if (message.getMessageId() != 0) {
+				items.put(e.getKey(), message);
 			} else {
-				item.setNew(true);
-				items.put(e.getKey(), item);
+				message.setNew(true);
+				items.put(e.getKey(), message);
 			}
 		}
 		return items;

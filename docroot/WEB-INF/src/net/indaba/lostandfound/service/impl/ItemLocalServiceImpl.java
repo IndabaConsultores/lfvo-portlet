@@ -144,6 +144,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			long[] assetLinkEntryIds) throws PortalException {
 
 		try {
+			assetCategoryIds = assetCategoryIds == null ? new long[0] : assetCategoryIds;
 			AssetEntry assetEntry = assetEntryLocalService.updateEntry(userId, item.getGroupId(), Item.class.getName(),
 					item.getItemId(), assetCategoryIds, assetTagNames);
 			assetLinkLocalService.updateLinks(userId, assetEntry.getEntryId(), assetLinkEntryIds,

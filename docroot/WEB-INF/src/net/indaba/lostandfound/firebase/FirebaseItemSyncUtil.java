@@ -141,22 +141,23 @@ public class FirebaseItemSyncUtil {
 			 * oldCatsMap contains the categories from which to remove the item
 			 * reference
 			 */
-			Map<Long, Boolean> oldCatsMap = new HashMap<Long, Boolean>();
+			Map<String, Boolean> oldCatsMap = new HashMap<String, Boolean>();
 			if (response.getCode() == 200) {
 				Object o = response.getBody().get("categories");
-				oldCatsMap = o != null ? (Map<Long, Boolean>) o : oldCatsMap;
+				oldCatsMap = o != null ? (Map<String, Boolean>) o : oldCatsMap;
 			}
 
 			/* Update "item" field on categories */
 			Map<Long, Boolean> catKeysMap = new HashMap<Long, Boolean>();
 			for (AssetCategory ac : acs) {
 				/* Compare previous categories to current categories */
-				if (oldCatsMap.containsKey(ac.getCategoryId())) {
+				long cid = ac.getCategoryId();
+				if (oldCatsMap.containsKey(String.valueOf(cid))) {
 					/*
 					 * Item already had the category; do not remove item
 					 * reference
 					 */
-					oldCatsMap.remove(ac.getCategoryId());
+					oldCatsMap.remove(String.valueOf(cid));
 				} else {
 					/* New category */
 					Map<String, Object> categoryMap = new HashMap<String, Object>();
@@ -174,7 +175,7 @@ public class FirebaseItemSyncUtil {
 			}
 
 			/* Delete item reference from remaining old categories */
-			for (Entry<Long, Boolean> e : oldCatsMap.entrySet()) {
+			for (Entry<String, Boolean> e : oldCatsMap.entrySet()) {
 				firebase = new Firebase(FB_Cat_URI);
 				response = firebase.delete("/" + e.getKey() + "/items/" + itemKey);
 			}
