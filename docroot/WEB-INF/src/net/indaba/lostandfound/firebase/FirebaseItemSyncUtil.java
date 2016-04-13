@@ -9,17 +9,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.model.Item;
@@ -37,11 +33,6 @@ public class FirebaseItemSyncUtil {
 	private final String FB_BASE_URI = PortletProps.get("firebase.url");
 	private final String FB_URI = PortletProps.get("firebase.url") + "/items";
 	private final String FB_Cat_URI = FB_BASE_URI + "/categories";
-
-	private List<Item> liferayUnsyncedItems;
-	private Map<String, Item> firebaseUnsyncedItems;
-
-	private long lastSyncDate = 0;
 
 	private FirebaseItemSyncUtil() {
 		super();
@@ -230,10 +221,10 @@ public class FirebaseItemSyncUtil {
 
 		switch (item.getType()) {
 		case "lost":
-			itemTypePath = "/alert/lost";
+			itemTypePath = "/alert/";
 			break;
 		case "found":
-			itemTypePath = "/alert/found";
+			itemTypePath = "/alert/";
 			break;
 		default:
 			itemTypePath = "/office";
@@ -250,6 +241,7 @@ public class FirebaseItemSyncUtil {
 		itemMap.put("modifiedAt", item.getModifiedDate());
 		itemMap.put("groupId", item.getGroupId());
 		itemMap.put("companyId", item.getCompanyId());
+		itemMap.put("type", item.getType());
 		Map<String, Object> location = new HashMap<String, Object>();
 		location.put("latitude", item.getLat());
 		location.put("longitude", item.getLng());
@@ -276,6 +268,8 @@ public class FirebaseItemSyncUtil {
 		item.setGroupId(o != null ? Long.valueOf(o.toString()) : 0);
 		o = map.get("companyId");
 		item.setCompanyId(o != null ? Long.valueOf(o.toString()) : 0);
+		o = map.get("type");
+		item.setType(o != null ? String.valueOf(o) : "office"); 
 		o = map.get("location");
 		if (o != null) {
 			Map<String, Object> locationMap = (Map<String, Object>) o;
@@ -304,18 +298,17 @@ public class FirebaseItemSyncUtil {
 		Map<String, Item> items = new LinkedHashMap<String, Item>();
 
 		Firebase firebase = new Firebase(FB_URI);
-		/* Get lost alerts */
+		/* Get alerts */
 		firebase.addQuery("orderBy", "\"modifiedAt\"");
 		firebase.addQuery("startAt", String.valueOf(firebaseTS));
-		FirebaseResponse response = firebase.get("/alert/lost");
+		FirebaseResponse response = firebase.get("/alert/");
 		Map<String, Object> lostItems = response.getBody();
-		Item item, itemLocal;
+		Item item;
 		Iterator<Entry<String, Object>> it = lostItems.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<String, Object> e = it.next();
 			Map<String, Object> map = (Map<String, Object>) e.getValue();
 			item = mapToItem(map);
-			item.setType("lost");
 			if (item.getItemId() != 0) {
 				items.put(e.getKey(), item);
 			} else {
@@ -323,25 +316,7 @@ public class FirebaseItemSyncUtil {
 				items.put(e.getKey(), item);
 			}
 		}
-		/* Get found alerts */
-		firebase = new Firebase(FB_URI);
-		firebase.addQuery("orderBy", "\"modifiedAt\"");
-		firebase.addQuery("startAt", String.valueOf(firebaseTS));
-		response = firebase.get("/alert/found");
-		lostItems = response.getBody();
-		it = lostItems.entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<String, Object> e = it.next();
-			Map<String, Object> map = (Map<String, Object>) e.getValue();
-			item = mapToItem(map);
-			item.setType("found");
-			if (item.getItemId() != 0) {
-				items.put(e.getKey(), item);
-			} else {
-				item.setNew(true);
-				items.put(e.getKey(), item);
-			}
-		}
+		
 		/* Get office items */
 		firebase = new Firebase(FB_URI);
 		firebase.addQuery("orderBy", "\"modifiedAt\"");
