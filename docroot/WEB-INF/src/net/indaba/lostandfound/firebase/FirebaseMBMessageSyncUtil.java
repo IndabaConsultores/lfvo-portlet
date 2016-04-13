@@ -40,7 +40,7 @@ public class FirebaseMBMessageSyncUtil {
 
 	private static FirebaseMBMessageSyncUtil instance;
 	
-	FirebaseItemSyncUtil itemUtil = FirebaseItemSyncUtil.getInstance();
+	private FirebaseItemSyncUtil itemUtil = FirebaseItemSyncUtil.getInstance();
 
 	private String FB_URI = PortletProps.get("firebase.url") + "/messages";
 	private String FB_Item_URI = PortletProps.get("firebase.url") + "/items";
@@ -65,11 +65,14 @@ public class FirebaseMBMessageSyncUtil {
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException, PortalException {
 		Firebase firebase = new Firebase(FB_URI);
 		Map<String, Object> objectMap = toMap(message);
+		Item item = ItemLocalServiceUtil.getItem(message.getClassPK());
+		String fbItemKey = itemUtil.getFirebaseKey(item);
+		objectMap.put("item", fbItemKey);
 		FirebaseResponse response = firebase.post(objectMap);
 		if (response.getCode() == 200) {
 			_log.debug("Firebase create sucessful");
 			String fbMessageKey = (String) response.getBody().get("name");
-			setRelation(message.getClassPK(), fbMessageKey, true);
+			setRelation(itemUtil.getItemPath(item) + "/" + fbItemKey, fbMessageKey, true);
 		} else {
 			_log.debug("Firebase create unsuccessful. Response code: " + response.getCode());
 		}
@@ -85,9 +88,28 @@ public class FirebaseMBMessageSyncUtil {
 		if (add) {
 			Map<String, Object> messagesMap = new HashMap<String, Object>();
 			messagesMap.put(fbMessageKey, true);
-			response = firebase.patch("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/messages", messagesMap);
+			response = firebase.patch(itemUtil.getItemPath(item) + "/" + fbItemKey + "/messages", messagesMap);
 		} else {
-			response = firebase.delete("/" + itemUtil.getItemPath(item) + "/" + fbItemKey + "/messages/" + fbMessageKey);
+			response = firebase.delete(itemUtil.getItemPath(item) + "/" + fbItemKey + "/messages/" + fbMessageKey);
+		}
+		if (response.getCode() == 200) {
+			_log.debug("Firebase relation modified");
+		} else {
+			_log.debug("Firebase relation not modified");
+		}
+	}
+	
+	private void setRelation(String fbItemPath, String fbMessageKey, boolean add) 
+			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
+		Firebase firebase = new Firebase(FB_Item_URI);
+
+		FirebaseResponse response;
+		if (add) {
+			Map<String, Object> messagesMap = new HashMap<String, Object>();
+			messagesMap.put(fbMessageKey, true);
+			response = firebase.patch(fbItemPath + "/messages", messagesMap);
+		} else {
+			response = firebase.delete(fbItemPath + "/messages/" + fbMessageKey);
 		}
 		if (response.getCode() == 200) {
 			_log.debug("Firebase relation modified");

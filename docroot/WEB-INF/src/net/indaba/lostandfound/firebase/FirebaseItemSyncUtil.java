@@ -221,10 +221,10 @@ public class FirebaseItemSyncUtil {
 
 		switch (item.getType()) {
 		case "lost":
-			itemTypePath = "/alert/";
+			itemTypePath = "/alert";
 			break;
 		case "found":
-			itemTypePath = "/alert/";
+			itemTypePath = "/alert";
 			break;
 		default:
 			itemTypePath = "/office";

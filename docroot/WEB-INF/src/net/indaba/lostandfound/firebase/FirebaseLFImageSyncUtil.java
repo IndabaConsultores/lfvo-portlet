@@ -66,11 +66,14 @@ public class FirebaseLFImageSyncUtil {
 			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException, PortalException {
 		Firebase firebase = new Firebase(FB_URI);
 		Map<String, Object> objectMap = toMap(image);
+		Item item = ItemLocalServiceUtil.getItem(image.getItemId());
+		String fbItemKey = itemUtil.getFirebaseKey(item);
+		objectMap.put("item", fbItemKey);
 		FirebaseResponse response = firebase.post(objectMap);
 		if (response.getCode() == 200) {
 			_log.debug("Firebase create sucessful");
 			String fbImageKey = (String) response.getBody().get("name");
-			setRelation(image.getItemId(), fbImageKey, true);
+			setRelation(itemUtil.getItemPath(item) + "/" + fbItemKey, fbImageKey, true);
 		} else {
 			_log.debug("Firebase create unsuccessful. Response code: " + response.getCode());
 		}
@@ -89,6 +92,25 @@ public class FirebaseLFImageSyncUtil {
 			response = firebase.patch(itemUtil.getItemPath(item) + "/" + fbItemKey + "/images", imagesMap);
 		} else {
 			response = firebase.delete(itemUtil.getItemPath(item) + "/" + fbItemKey + "/images/" + fbImageKey);
+		}
+		if (response.getCode() == 200) {
+			_log.debug("Firebase relation modified");
+		} else {
+			_log.debug("Firebase relation not modified");
+		}
+	}
+	
+	private void setRelation(String itemPath, String fbImageKey, boolean add) 
+			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
+		Firebase firebase = new Firebase(FB_Item_URI);
+
+		FirebaseResponse response;
+		if (add) {
+			Map<String, Object> imagesMap = new HashMap<String, Object>();
+			imagesMap.put(fbImageKey, true);
+			response = firebase.patch(itemPath + "/images", imagesMap);
+		} else {
+			response = firebase.delete(itemPath + "/images/" + fbImageKey);
 		}
 		if (response.getCode() == 200) {
 			_log.debug("Firebase relation modified");
