@@ -11,12 +11,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.liferay.message.boards.kernel.model.MBMessage;
+import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
 import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.model.Item;
@@ -172,88 +174,121 @@ public class FirebaseMBMessageSyncUtil {
 	};
 
 	private MBMessage parseMap(Map<String, Object> map) {
-		// TODO implement method body
-		return null;
+		MBMessage msg;
+		Object o = map.get("id");
+		if (o == null) {
+			msg = MBMessageLocalServiceUtil.createMBMessage(0);
+			msg.setNew(true);
+		} else {
+			msg = MBMessageLocalServiceUtil.createMBMessage(Long.valueOf(o.toString()));
+			msg.setNew(false);
+		}
+		o = map.get("groupId");
+		if (o != null) {
+			msg.setGroupId(Long.valueOf(o.toString()));
+		}
+		o = map.get("companyId");
+		if (o != null) {
+			msg.setCompanyId(Long.valueOf(o.toString()));
+		}
+		o = map.get("itemId");
+		if (o != null) {
+			msg.setClassPK(Long.valueOf(o.toString()));
+		}
+		o = map.get("subject");
+		if (o != null) {
+			msg.setSubject(o.toString());
+		}
+		o = map.get("body");
+		if (o != null) {
+			msg.setBody(o.toString());
+		}
+		o = map.get("createDate");
+		if (o != null) {
+			msg.setCreateDate(new Date(Long.valueOf(o.toString())));
+		}
+		o = map.get("modifiedDate");
+		if (o != null) {
+			msg.setModifiedDate(new Date(Long.valueOf(o.toString())));
+		}
+		msg.setClassName(Item.class.getName());
+		return msg;
 	};
 	
-	private List<MBMessage> getLiferayItemsAfter(long liferayTS) {
-		List<MBMessage> items = new ArrayList<MBMessage>();
+	private List<MBMessage> getLiferayMsgsAfter(long liferayTS) {
 		/*
 		 * Get Liferay office items that were added/updated after last update
 		 * time
 		 */
+		long classNameId = ClassNameLocalServiceUtil.getClassNameId(Item.class);
 		DynamicQuery query = DynamicQueryFactoryUtil.forClass(MBMessage.class)
-				.add(PropertyFactoryUtil.forName("modifiedDate").gt(new Date(liferayTS)));
-		items.addAll(ItemLocalServiceUtil.dynamicQuery(query));
-		return items;
+				.add(PropertyFactoryUtil.forName("modifiedDate").gt(new Date(liferayTS)))
+				.add(PropertyFactoryUtil.forName("classNameId").eq(classNameId))
+				.add(PropertyFactoryUtil.forName("classPK").ne(new Long(0)));
+		return MBMessageLocalServiceUtil.dynamicQuery(query);
 	}
 
-	private Map<String, MBMessage> getFirebaseItemsAfter(long firebaseTS)
+	private Map<String, MBMessage> getFirebaseMsgsAfter(long firebaseTS)
 			throws FirebaseException, UnsupportedEncodingException {
-		//TODO no funciona
-		Map<String, MBMessage> items = new LinkedHashMap<String, MBMessage>();
+		Map<String, MBMessage> messages = new LinkedHashMap<String, MBMessage>();
 
 		Firebase firebase = new Firebase(FB_URI);
 		firebase = new Firebase(FB_URI);
 		firebase.addQuery("orderBy", "\"modifiedDate\"");
 		firebase.addQuery("startAt", String.valueOf(firebaseTS));
 		FirebaseResponse response = firebase.get();
-		Map<String, Object> lostItems = response.getBody();
-		Iterator<Entry<String, Object>> it = lostItems.entrySet().iterator();
+		Map<String, Object> fbMsgs = response.getBody();
+		Iterator<Entry<String, Object>> it = fbMsgs.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<String, Object> e = it.next();
 			Map<String, Object> map = (Map<String, Object>) e.getValue();
 			MBMessage message = parseMap(map);
 			if (message.getMessageId() != 0) {
-				items.put(e.getKey(), message);
+				messages.put(e.getKey(), message);
 			} else {
 				message.setNew(true);
-				items.put(e.getKey(), message);
+				messages.put(e.getKey(), message);
 			}
 		}
-		return items;
+		return messages;
 	}
 
 	public Map<MBMessage, String> getUnsyncedMsgsSince(long date) throws UnsupportedEncodingException, FirebaseException {
-		Map<MBMessage, String> unsyncedItems = new HashMap<MBMessage, String>();
+		Map<MBMessage, String> unsyncedMsgs = new HashMap<MBMessage, String>();
 
 		/* Get Liferay items that were added/updated after last sync time */
-		List<MBMessage> lrItemList = getLiferayItemsAfter(date);
+		List<MBMessage> lrMsgList = getLiferayMsgsAfter(date);
 		/* Get Firebase items that were added/updated after last sync time */
-		Map<String, MBMessage> fbItemSet = getFirebaseItemsAfter(date);
+		Map<String, MBMessage> fbMsgs = getFirebaseMsgsAfter(date);
 
-		Map<Long, MBMessage> lrItemSet = new HashMap<Long, MBMessage>();
+		Map<Long, MBMessage> lrMsgs = new HashMap<Long, MBMessage>();
 
 		/* Convert list to map for easier access by itemId */
-		for (MBMessage i : lrItemList) {
-			lrItemSet.put(i.getMessageId(), i);
+		for (MBMessage i : lrMsgList) {
+			lrMsgs.put(i.getMessageId(), i);
 		}
 		/* Add fbItem in fbItemSet */
-		MBMessage lrItem, fbItem;
-		for (Entry<String, MBMessage> e : fbItemSet.entrySet()) {
-			fbItem = e.getValue();
-			lrItem = lrItemSet.get(fbItem.getMessageId());
-			if (lrItem != null) {
+		MBMessage lrMsg, fbMsg;
+		for (Entry<String, MBMessage> e : fbMsgs.entrySet()) {
+			fbMsg = e.getValue();
+			lrMsg = lrMsgs.get(fbMsg.getMessageId());
+			if (lrMsg != null) {
 				/* item exists in FB and LR; compare modified date */
-				int dateComp = lrItem.getModifiedDate().compareTo(fbItem.getModifiedDate());
+				int dateComp = lrMsg.getModifiedDate().compareTo(fbMsg.getModifiedDate());
 				if (dateComp == 0) {
-					/* item has not changed; remove from lrItemSet */
-					lrItemSet.remove(lrItem.getMessageId());
+					lrMsgs.remove(lrMsg.getMessageId());
 				} else if (dateComp < 0) {
-					/* fbItem is more recent; add to result */
-					unsyncedItems.put(fbItem, "firebase");
+					unsyncedMsgs.put(fbMsg, e.getKey());
 				}
 			} else {
-				/* Item exists in FB but not in LR */
-				unsyncedItems.put(fbItem, "firebase");
+				unsyncedMsgs.put(fbMsg, e.getKey());
 			}
 		}
-		/* Add remaining LR items to result */
-		for (Entry<Long, MBMessage> e : lrItemSet.entrySet()) {
-			unsyncedItems.put(e.getValue(), "liferay");
+		for (Entry<Long, MBMessage> e : lrMsgs.entrySet()) {
+			unsyncedMsgs.put(e.getValue(), "liferay");
 		}
 		
-		return unsyncedItems;
+		return unsyncedMsgs;
 	}
 
 

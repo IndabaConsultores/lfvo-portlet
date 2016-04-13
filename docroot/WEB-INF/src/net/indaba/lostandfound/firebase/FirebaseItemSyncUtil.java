@@ -289,8 +289,7 @@ public class FirebaseItemSyncUtil {
 		 */
 		DynamicQuery query = DynamicQueryFactoryUtil.forClass(ItemImpl.class)
 				.add(PropertyFactoryUtil.forName("modifiedDate").gt(new Date(liferayTS)));
-		items.addAll(ItemLocalServiceUtil.dynamicQuery(query));
-		return items;
+		return ItemLocalServiceUtil.dynamicQuery(query);
 	}
 
 	private Map<String, Item> getFirebaseItemsAfter(long firebaseTS)
@@ -301,7 +300,7 @@ public class FirebaseItemSyncUtil {
 		/* Get alerts */
 		firebase.addQuery("orderBy", "\"modifiedAt\"");
 		firebase.addQuery("startAt", String.valueOf(firebaseTS));
-		FirebaseResponse response = firebase.get("/alert/");
+		FirebaseResponse response = firebase.get("/alert");
 		Map<String, Object> lostItems = response.getBody();
 		Item item;
 		Iterator<Entry<String, Object>> it = lostItems.entrySet().iterator();
@@ -366,11 +365,11 @@ public class FirebaseItemSyncUtil {
 					lrItemSet.remove(lrItem.getItemId());
 				} else if (dateComp < 0) {
 					/* fbItem is more recent; add to result */
-					unsyncedItems.put(fbItem, "firebase");
+					unsyncedItems.put(fbItem, e.getKey());
 				}
 			} else {
 				/* Item exists in FB but not in LR */
-				unsyncedItems.put(fbItem, "firebase");
+				unsyncedItems.put(fbItem, e.getKey());
 			}
 		}
 		/* Add remaining LR items to result */
