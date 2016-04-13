@@ -159,10 +159,15 @@ public class FirebaseMBMessageSyncUtil {
 	}
 
 	private Map<String, Object> toMap(MBMessage message) {
-		// TODO parse description and title maps
-		Map<String, Object> messageMap = message.getModelAttributes();
-		messageMap.remove("messageId");
+		Map<String, Object> messageMap = new HashMap<String, Object>();
 		messageMap.put("id", message.getMessageId());
+		messageMap.put("createDate", message.getCreateDate());
+		messageMap.put("modifiedDate", message.getModifiedDate());
+		messageMap.put("companyId", message.getCompanyId());
+		messageMap.put("groupId", message.getGroupId());
+		messageMap.put("itemId", message.getClassPK());
+		messageMap.put("subject", message.getSubject());
+		messageMap.put("body", message.getBody());
 		return messageMap;
 	};
 

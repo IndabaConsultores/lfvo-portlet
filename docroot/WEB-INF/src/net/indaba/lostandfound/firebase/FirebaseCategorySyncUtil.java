@@ -131,10 +131,14 @@ public class FirebaseCategorySyncUtil {
 
 	private Map<String, Object> toMap(AssetCategory category) {
 		//TODO parse description and title maps
-		Map<String, Object> categoryMap = category.getModelAttributes();
-		categoryMap.remove("categoryId");
-		//Map<String, Object> objectMap = new HashMap<String, Object>();
-		//objectMap.put(String.valueOf(category.getCategoryId()), categoryMap);
+		Map<String, Object> categoryMap = new HashMap<String, Object>();
+		categoryMap.put("title", category.getTitleMap());
+		categoryMap.put("name", category.getName());
+		categoryMap.put("description", category.getDescriptionMap());
+		categoryMap.put("groupId", category.getGroupId());
+		categoryMap.put("companyId", category.getCompanyId());
+		categoryMap.put("createDate", category.getCreateDate());
+		categoryMap.put("modifiedDate", category.getModifiedDate());
 		return categoryMap;
 	};
 
