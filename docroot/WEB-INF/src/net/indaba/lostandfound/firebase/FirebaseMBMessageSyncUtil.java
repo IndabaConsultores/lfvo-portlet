@@ -246,7 +246,7 @@ public class FirebaseMBMessageSyncUtil {
 		DynamicQuery query = DynamicQueryFactoryUtil.forClass(MBMessage.class)
 				.add(PropertyFactoryUtil.forName("modifiedDate").gt(new Date(liferayTS)))
 				.add(PropertyFactoryUtil.forName("classNameId").eq(classNameId))
-				.add(PropertyFactoryUtil.forName("classPK").ne(new Long(0)));
+				.add(PropertyFactoryUtil.forName("parentMessageId").ne(new Long(0)));
 		return MBMessageLocalServiceUtil.dynamicQuery(query);
 	}
 
