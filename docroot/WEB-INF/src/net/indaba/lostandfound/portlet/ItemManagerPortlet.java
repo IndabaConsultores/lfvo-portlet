@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
-import net.indaba.lostandfound.firebase.FirebaseItemSyncUtil;
 import net.indaba.lostandfound.firebase.FirebaseSyncUtil;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.model.LFImage;

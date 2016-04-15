@@ -1,5 +1,9 @@
 package net.indaba.lostandfound.hook;
 
+import java.io.UnsupportedEncodingException;
+
+import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceWrapper;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -7,12 +11,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import net.indaba.lostandfound.firebase.FirebaseTagSyncUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
-
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
 
 public class LFAssetTagLocalService extends AssetTagLocalServiceWrapper {
 	

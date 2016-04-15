@@ -1,7 +1,6 @@
 package net.indaba.lostandfound.firebase;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,7 +21,6 @@ import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
 import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.model.Item;
-import net.indaba.lostandfound.model.impl.ItemImpl;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;

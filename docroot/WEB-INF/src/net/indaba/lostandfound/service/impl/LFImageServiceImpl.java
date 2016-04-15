@@ -15,16 +15,12 @@
 package net.indaba.lostandfound.service.impl;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
-import org.apache.commons.io.IOUtils;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.util.Base64;
 
 import aQute.bnd.annotation.ProviderType;
 import net.indaba.lostandfound.model.LFImage;

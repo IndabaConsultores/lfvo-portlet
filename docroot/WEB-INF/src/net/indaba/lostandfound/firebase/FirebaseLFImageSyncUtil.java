@@ -4,17 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -22,9 +16,7 @@ import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.model.LFImage;
-import net.indaba.lostandfound.model.impl.ItemImpl;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
-import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
@@ -138,9 +130,9 @@ public class FirebaseLFImageSyncUtil {
 	public void addOrUpdate(LFImage image)
 			throws FirebaseException, JacksonUtilityException, UnsupportedEncodingException, PortalException {
 		String key = getFirebaseKey(image);
-		if (key != null) { /* Category exists already in Firebase: update */
+		if (key != null) { /* Image exists already in Firebase: update */
 			update(image, key);
-		} else { /* Category does not exist in Firebase: create */
+		} else { /* Image does not exist in Firebase: create */
 			add(image);
 		}
 	}
@@ -184,7 +176,6 @@ public class FirebaseLFImageSyncUtil {
 	}
 
 	private Map<String, Object> toMap(LFImage image) {
-		// TODO parse description and title maps
 		Map<String, Object> imageMap = image.getModelAttributes();
 		imageMap.remove("lfImageId");
 		imageMap.put("id", image.getPrimaryKey());

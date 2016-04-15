@@ -151,6 +151,6 @@ public class FirebaseSyncUtil {
 
 	}
 
-	private final Log _log = LogFactoryUtil.getLog(FirebaseItemSyncUtil.class);
+	private final Log _log = LogFactoryUtil.getLog(FirebaseSyncUtil.class);
 
 }

@@ -128,10 +128,7 @@ public class FirebaseItemSyncUtil {
 			/* Obtain previous categories */
 			firebase = new Firebase(FB_URI);
 			response = firebase.get(itemTypePath + "/" + itemKey);
-			/*
-			 * oldCatsMap contains the categories from which to remove the item
-			 * reference
-			 */
+			/* oldCatsMap will gather the categories to be removed */
 			Map<String, Boolean> oldCatsMap = new HashMap<String, Boolean>();
 			if (response.getCode() == 200) {
 				Object o = response.getBody().get("categories");
@@ -141,13 +138,10 @@ public class FirebaseItemSyncUtil {
 			/* Update "item" field on categories */
 			Map<Long, Boolean> catKeysMap = new HashMap<Long, Boolean>();
 			for (AssetCategory ac : acs) {
-				/* Compare previous categories to current categories */
+				/* Compare previous categories with current categories */
 				long cid = ac.getCategoryId();
 				if (oldCatsMap.containsKey(String.valueOf(cid))) {
-					/*
-					 * Item already had the category; do not remove item
-					 * reference
-					 */
+					/* Item has the category; don't remove */
 					oldCatsMap.remove(String.valueOf(cid));
 				} else {
 					/* New category */
@@ -282,11 +276,7 @@ public class FirebaseItemSyncUtil {
 	}
 
 	private List<Item> getLiferayItemsAfter(long liferayTS) {
-		List<Item> items = new ArrayList<Item>();
-		/*
-		 * Get Liferay office items that were added/updated after last update
-		 * time
-		 */
+		/* Get Liferay items that were added/updated after liferayTS */
 		DynamicQuery query = DynamicQueryFactoryUtil.forClass(ItemImpl.class)
 				.add(PropertyFactoryUtil.forName("modifiedDate").gt(new Date(liferayTS)));
 		return ItemLocalServiceUtil.dynamicQuery(query);
@@ -317,6 +307,7 @@ public class FirebaseItemSyncUtil {
 		}
 		
 		/* Get office items */
+		//TODO is this necessary?
 		firebase = new Firebase(FB_URI);
 		firebase.addQuery("orderBy", "\"modifiedAt\"");
 		firebase.addQuery("startAt", String.valueOf(firebaseTS));

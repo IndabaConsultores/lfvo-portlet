@@ -1,17 +1,12 @@
 package net.indaba.lostandfound.firebase;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -20,9 +15,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.util.portlet.PortletProps;
 
-import net.indaba.lostandfound.model.Item;
-import net.indaba.lostandfound.model.impl.ItemImpl;
-import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
@@ -130,7 +122,6 @@ public class FirebaseCategorySyncUtil {
 	}
 
 	private Map<String, Object> toMap(AssetCategory category) {
-		//TODO parse description and title maps
 		Map<String, Object> categoryMap = new HashMap<String, Object>();
 		categoryMap.put("title", category.getTitleMap());
 		categoryMap.put("name", category.getName());
