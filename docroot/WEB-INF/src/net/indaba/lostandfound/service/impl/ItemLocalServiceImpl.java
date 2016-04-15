@@ -19,21 +19,22 @@ import java.util.List;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLinkConstants;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
+import com.liferay.message.boards.kernel.model.MBMessage;
+import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import aQute.bnd.annotation.ProviderType;
 import net.indaba.lostandfound.firebase.FirebaseItemSyncUtil;
 import net.indaba.lostandfound.model.Item;
+import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
 import net.indaba.lostandfound.service.base.ItemLocalServiceBaseImpl;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
@@ -132,6 +133,16 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
 		indexer.delete(item);
+		
+		/* Delete related messages */
+		List<MBMessage> msgs = MBMessageLocalServiceUtil
+				.getMessages(Item.class.getName(), item.getItemId(), WorkflowConstants.STATUS_ANY);
+		for (MBMessage m : msgs) {
+			MBMessageLocalServiceUtil.deleteMBMessage(m);
+		}
+		
+		/* Delete related LFImages*/
+		LFImageLocalServiceUtil.deleteByItemId(item.getItemId(), updateFirebase);
 		
 		return super.deleteItem(item);
 	}
