@@ -233,7 +233,7 @@ public class FirebaseItemSyncUtil {
 		itemMap.put("description", item.getDescription());
 		itemMap.put("createdAt", item.getCreateDate());
 		itemMap.put("modifiedAt", item.getModifiedDate());
-		itemMap.put("groupId", item.getGroupId());
+		itemMap.put("office", item.getGroupId());
 		itemMap.put("companyId", item.getCompanyId());
 		itemMap.put("type", item.getType());
 		Map<String, Object> location = new HashMap<String, Object>();
@@ -258,7 +258,7 @@ public class FirebaseItemSyncUtil {
 		item.setCreateDate(new Date(o != null ? Long.valueOf(o.toString()) : 0));
 		o = map.get("modifiedAt");
 		item.setModifiedDate(new Date(o != null ? Long.valueOf(o.toString()) : 0));
-		o = map.get("groupId");
+		o = map.get("office");
 		item.setGroupId(o != null ? Long.valueOf(o.toString()) : 0);
 		o = map.get("companyId");
 		item.setCompanyId(o != null ? Long.valueOf(o.toString()) : 0);

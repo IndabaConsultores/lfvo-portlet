@@ -186,7 +186,7 @@ public class FirebaseMBMessageSyncUtil {
 		messageMap.put("createDate", message.getCreateDate());
 		messageMap.put("modifiedDate", message.getModifiedDate());
 		messageMap.put("companyId", message.getCompanyId());
-		messageMap.put("groupId", message.getGroupId());
+		messageMap.put("office", message.getGroupId());
 		messageMap.put("itemId", message.getClassPK());
 		messageMap.put("subject", message.getSubject());
 		messageMap.put("body", message.getBody());

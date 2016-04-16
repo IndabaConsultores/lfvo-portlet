@@ -126,7 +126,7 @@ public class FirebaseCategorySyncUtil {
 		categoryMap.put("title", category.getTitleMap());
 		categoryMap.put("name", category.getName());
 		categoryMap.put("description", category.getDescriptionMap());
-		categoryMap.put("groupId", category.getGroupId());
+		categoryMap.put("office", category.getGroupId());
 		categoryMap.put("companyId", category.getCompanyId());
 		categoryMap.put("createDate", category.getCreateDate());
 		categoryMap.put("modifiedDate", category.getModifiedDate());
