@@ -13,7 +13,7 @@ import net.indaba.lostandfound.model.Item;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
 
-public class LRMBMessageLocalService extends MBMessageLocalServiceWrapper {
+public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 
 	FirebaseMBMessageSyncUtil firebaseUtil = FirebaseMBMessageSyncUtil.getInstance();
 
@@ -24,7 +24,7 @@ public class LRMBMessageLocalService extends MBMessageLocalServiceWrapper {
 	 * com.liferay.message.boards.kernel.service.MBMessageLocalServiceWrapper#
 	 * MBMessageLocalServiceWrapper(MBMessageLocalService mbMessageLocalService)
 	 */
-	public LRMBMessageLocalService(MBMessageLocalService mbMessageLocalService) {
+	public LFMBMessageLocalService(MBMessageLocalService mbMessageLocalService) {
 		super(mbMessageLocalService);
 	}
 
