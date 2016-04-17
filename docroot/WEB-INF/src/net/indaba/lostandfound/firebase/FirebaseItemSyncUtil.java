@@ -240,6 +240,7 @@ public class FirebaseItemSyncUtil {
 		location.put("longitude", item.getLng());
 		itemMap.put("location", location);
 		// Map<Long, Boolean> categories = new HashMap<Long, Boolean>();
+		itemMap.put("createdBy", PortletProps.get("firebase.user.id"));
 		itemMap.put("liferay", true);
 		return itemMap;
 	}
