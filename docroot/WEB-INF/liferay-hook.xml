@@ -2,7 +2,8 @@
 <!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 7.0.0//EN" "http://www.liferay.com/dtd/liferay-hook_7_0_0.dtd">
 
 <hook>
-
+	<portal-properties>portal.properties</portal-properties>
+	
 	<service>
 		<service-type>
 			com.liferay.asset.kernel.service.AssetTagLocalService
@@ -21,4 +22,11 @@
 		</service-impl>
 	</service>
 
+	<service>
+		<service-type>
+			com.liferay.message.boards.kernel.service.MBMessageLocalService
+		</service-type>
+		<service-impl>net.indaba.lostandfound.hook.LFMBMessageLocalService</service-impl>
+	</service>
+	
 </hook>

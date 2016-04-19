@@ -1,10 +1,16 @@
 package net.indaba.lostandfound.firebase;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.util.portlet.PortletProps;
@@ -25,7 +31,7 @@ public class FirebaseCategorySyncUtil {
 
 	private static FirebaseCategorySyncUtil instance;
 
-	private String FB_URI = "https://brilliant-torch-8285.firebaseio.com/categories";
+	private String FB_URI = PortletProps.get("firebase.url") + "/categories";
 	
 	private FirebaseCategorySyncUtil() {
 		super();
@@ -39,7 +45,8 @@ public class FirebaseCategorySyncUtil {
 	}
 	
 	public boolean isSyncEnabled() {
-		return true;
+		String firebaseSyncEnabled = PortletProps.get("firebase.sync.enabled");
+		return Boolean.parseBoolean(firebaseSyncEnabled);
 	}
 	
 	public void add(AssetCategory category) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
@@ -115,11 +122,14 @@ public class FirebaseCategorySyncUtil {
 	}
 
 	private Map<String, Object> toMap(AssetCategory category) {
-		//TODO parse description and title maps
-		Map<String, Object> categoryMap = category.getModelAttributes();
-		categoryMap.remove("categoryId");
-		//Map<String, Object> objectMap = new HashMap<String, Object>();
-		//objectMap.put(String.valueOf(category.getCategoryId()), categoryMap);
+		Map<String, Object> categoryMap = new HashMap<String, Object>();
+		categoryMap.put("title", category.getTitleMap());
+		categoryMap.put("name", category.getName());
+		categoryMap.put("description", category.getDescriptionMap());
+		categoryMap.put("office", category.getGroupId());
+		categoryMap.put("companyId", category.getCompanyId());
+		categoryMap.put("createDate", category.getCreateDate());
+		categoryMap.put("modifiedDate", category.getModifiedDate());
 		return categoryMap;
 	};
 
@@ -127,6 +137,28 @@ public class FirebaseCategorySyncUtil {
 		//TODO implement method body
 		return null;
 	};
+	
+	private List<AssetCategory> getLiferayCatsAfter(long liferayTS) {
+		/* Get Liferay categories that were added/updated after last update time */
+		DynamicQuery query = DynamicQueryFactoryUtil.forClass(AssetCategory.class)
+				.add(PropertyFactoryUtil.forName("modifiedDate").gt(new Date(liferayTS)));
+		return AssetCategoryLocalServiceUtil.dynamicQuery(query);
+	}
+	
+	public Map<AssetCategory, String> getUnsyncedCatsSince(long date) throws UnsupportedEncodingException, FirebaseException {
+		Map<AssetCategory, String> unsynced = new HashMap<AssetCategory, String>();
+
+		/* Get Liferay categories that were added/updated after last sync time */
+		List<AssetCategory> assetCategories = getLiferayCatsAfter(date);
+		/* Firebase categories cannot be modified by Firebase app */
+		
+		for (AssetCategory ac : assetCategories) {
+			if (ac.getModifiedDate().compareTo(new Date(date)) > 0) {
+				unsynced.put(ac, "liferay");
+			}
+		}
+		return unsynced;
+	}
 
 	private final Log _log = LogFactoryUtil.getLog(FirebaseCategorySyncUtil.class);
 

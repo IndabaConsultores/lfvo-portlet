@@ -16,19 +16,25 @@ package net.indaba.lostandfound.service.impl;
 
 import java.util.List;
 
+import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
+import com.liferay.message.boards.kernel.model.MBMessage;
+import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import aQute.bnd.annotation.ProviderType;
-import net.indaba.lostandfound.firebase.FirebaseSyncUtil;
+import net.indaba.lostandfound.firebase.FirebaseItemSyncUtil;
 import net.indaba.lostandfound.model.Item;
+import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
 import net.indaba.lostandfound.service.base.ItemLocalServiceBaseImpl;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
@@ -55,6 +61,8 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	 * Never reference this class directly. Always use {@link net.indaba.lostandfound.service.ItemLocalServiceUtil} to access the item local service.
 	 */
 	
+	FirebaseItemSyncUtil firebaseUtil = FirebaseItemSyncUtil.getInstance();
+	
 	public List<Item> getItems(long groupId, int start, int end) throws PortalException {
 		return itemPersistence.findByGroupId(groupId, start, end);
 	}
@@ -75,10 +83,10 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			item = super.updateItem(item);
 		}
 
-		if (updateFirebase && FirebaseSyncUtil.isSyncEnabled()) {
+		if (updateFirebase && firebaseUtil.isSyncEnabled()) {
 			try {
 				_log.debug("Updating item in Firebase");
-				FirebaseSyncUtil.addOrUpdateItem(item);
+				firebaseUtil.addOrUpdateItem(item);
 			} catch (Exception | FirebaseException | JacksonUtilityException e) {
 				_log.error("Error updating item " + item.getItemId(), e);
 			}
@@ -104,10 +112,10 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 	public Item deleteItem(Item item, boolean updateFirebase) throws PortalException {
 
-		if (updateFirebase && FirebaseSyncUtil.isSyncEnabled()) {
+		if (updateFirebase && firebaseUtil.isSyncEnabled()) {
 			try {
 				_log.debug("Deleting item in Firebase");
-				FirebaseSyncUtil.deleteItem(item);
+				firebaseUtil.deleteItem(item);
 			} catch (FirebaseException | Exception | JacksonUtilityException e) {
 				_log.error("Error deleting item " + item.getItemId(), e);
 				e.printStackTrace();
@@ -126,6 +134,16 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
 		indexer.delete(item);
 		
+		/* Delete related messages */
+		List<MBMessage> msgs = MBMessageLocalServiceUtil
+				.getMessages(Item.class.getName(), item.getItemId(), WorkflowConstants.STATUS_ANY);
+		for (MBMessage m : msgs) {
+			MBMessageLocalServiceUtil.deleteMBMessage(m);
+		}
+		
+		/* Delete related LFImages*/
+		LFImageLocalServiceUtil.deleteByItemId(item.getItemId(), updateFirebase);
+		
 		return super.deleteItem(item);
 	}
 
@@ -137,12 +155,28 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			long[] assetLinkEntryIds) throws PortalException {
 
 		try {
+			assetCategoryIds = assetCategoryIds == null ? new long[0] : assetCategoryIds;
 			AssetEntry assetEntry = assetEntryLocalService.updateEntry(userId, item.getGroupId(), Item.class.getName(),
 					item.getItemId(), assetCategoryIds, assetTagNames);
 			assetLinkLocalService.updateLinks(userId, assetEntry.getEntryId(), assetLinkEntryIds,
 					AssetLinkConstants.TYPE_RELATED);
+			if (firebaseUtil.isSyncEnabled()) {
+				List<AssetCategory> categories = AssetCategoryLocalServiceUtil
+						.getAssetEntryAssetCategories(assetEntry.getEntryId());
+				firebaseUtil.addRelations(item, categories);
+				
+//				List<AssetTag> tags = AssetTagLocalServiceUtil
+//						.getAssetEntryAssetTags(assetEntry.getEntryId());
+//				firebaseUtil.addRelations(item, tags);
+			}
 		} catch (Exception e) {
 			_log.error("Error updating Items asset", e);
+		} catch (FirebaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JacksonUtilityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}

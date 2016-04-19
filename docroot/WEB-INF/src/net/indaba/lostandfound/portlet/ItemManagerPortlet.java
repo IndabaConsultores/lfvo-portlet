@@ -90,11 +90,6 @@ public class ItemManagerPortlet extends MVCPortlet {
 		long itemId = ParamUtil.get(actionRequest, "itemId", 0);
 		_log.debug("deleteItem " + itemId);
 		//ItemLocalServiceUtil.deleteItem(itemId);
-		try {
-			LFImageLocalServiceUtil.deleteByItemId(itemId);
-		} catch (Exception e) {
-			_log.error("Error deleting item images", e);
-		}
 		ItemServiceUtil.deleteItem(itemId, true);
 		sendRedirect(actionRequest, actionResponse);
 	}
@@ -102,7 +97,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 	public void deleteLfImage(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		long lfImageId = ParamUtil.get(actionRequest, "lfImageId", 0);
-		LFImageLocalServiceUtil.deleteLFImage(lfImageId);
+		net.indaba.lostandfound.service.LFImageServiceUtil.deleteLFImage(lfImageId);
 		sendRedirect(actionRequest, actionResponse);
 	}
 	
@@ -117,11 +112,10 @@ public class ItemManagerPortlet extends MVCPortlet {
 	public void doDataDiagnosis(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		_log.debug("doDataDiagnosis ");
-		
-		//TODO: implement data diagnosis
+		FirebaseSyncUtil firebaseUtil = FirebaseSyncUtil.getInstance();
 		try {
-			FirebaseSyncUtil.updateUnsyncedItemsExh();
-			System.out.println(FirebaseSyncUtil.getFirebaseUnsyncedItems());
+			firebaseUtil.updateUnsyncedItems();
+			//System.out.println(firebaseUtil.getFirebaseUnsyncedItems());
 		} catch (FirebaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -131,11 +125,11 @@ public class ItemManagerPortlet extends MVCPortlet {
 	public void doDataSync(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		_log.debug("doDataDiagnosis ");
-		
-		//TODO: implement data sync
+		FirebaseSyncUtil firebaseUtil = FirebaseSyncUtil.getInstance();
 		try {
-			if (true)
-				FirebaseSyncUtil.resyncItems();
+			if (true) {
+				firebaseUtil.resyncItems();				
+			}
 		} catch (FirebaseException | JacksonUtilityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
