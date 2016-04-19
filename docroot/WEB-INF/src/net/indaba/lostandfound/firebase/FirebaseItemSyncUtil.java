@@ -129,10 +129,14 @@ public class FirebaseItemSyncUtil {
 			firebase = new Firebase(FB_URI);
 			response = firebase.get(itemTypePath + "/" + itemKey);
 			/* oldCatsMap will gather the categories to be removed */
+			String oldCat;
 			Map<String, Boolean> oldCatsMap = new HashMap<String, Boolean>();
 			if (response.getCode() == 200) {
-				Object o = response.getBody().get("categories");
-				oldCatsMap = o != null ? (Map<String, Boolean>) o : oldCatsMap;
+				Object o = response.getBody().get("category");
+				if (o != null) {
+					oldCat = o.toString();
+					oldCatsMap.put(oldCat, true);
+				}
 			}
 
 			/* Update "item" field on categories */
@@ -168,7 +172,10 @@ public class FirebaseItemSyncUtil {
 			/* Update item's "categories" field */
 			Map<String, Object> itemMap = new HashMap<String, Object>();
 			itemMap.put("liferay", true);
-			itemMap.put("categories", catKeysMap);
+			if (acs.size() > 0) {
+				long catId = acs.get(0).getCategoryId();
+				itemMap.put("category", catId);
+			}
 
 			firebase = new Firebase(FB_URI + itemTypePath);
 			response = firebase.patch(itemKey, itemMap);
