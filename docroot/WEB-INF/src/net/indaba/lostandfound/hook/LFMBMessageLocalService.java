@@ -6,7 +6,13 @@ import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.message.boards.kernel.service.MBMessageLocalService;
 import com.liferay.message.boards.kernel.service.MBMessageLocalServiceWrapper;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import net.indaba.lostandfound.firebase.FirebaseMBMessageSyncUtil;
 import net.indaba.lostandfound.model.Item;
@@ -32,6 +38,22 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 	public MBMessage addDiscussionMessage(long userId, String userName, long groupId, String className, long classPK,
 			long threadId, long parentMessageId, String subject, String body, ServiceContext serviceContext)
 					throws PortalException {
+
+		User u = UserLocalServiceUtil.getUser(userId);
+		Company c = CompanyLocalServiceUtil.getCompany(u.getCompanyId());
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay)serviceContext.getRequest().getAttribute(
+				WebKeys.THEME_DISPLAY);
+		if(themeDisplay==null){
+			ThemeDisplay tt = new ThemeDisplay();
+			tt.setCompany(c);
+			tt.setScopeGroupId(groupId);
+			tt.setDoAsGroupId(groupId);
+			//serviceContext.setPlid(20236);
+			serviceContext.getRequest().setAttribute(WebKeys.THEME_DISPLAY, tt);
+		}
+		
+		
 		MBMessage message = super.addDiscussionMessage(userId, userName, groupId, className, classPK, threadId,
 				parentMessageId, subject, body, serviceContext);
 		
