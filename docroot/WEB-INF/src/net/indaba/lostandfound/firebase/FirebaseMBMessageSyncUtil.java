@@ -203,7 +203,7 @@ public class FirebaseMBMessageSyncUtil {
 			msg = MBMessageLocalServiceUtil.createMBMessage(Long.valueOf(o.toString()));
 			msg.setNew(false);
 		}
-		o = map.get("groupId");
+		o = map.get("office");
 		if (o != null) {
 			msg.setGroupId(Long.valueOf(o.toString()));
 		}

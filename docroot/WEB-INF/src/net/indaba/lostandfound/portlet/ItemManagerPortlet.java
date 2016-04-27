@@ -125,10 +125,11 @@ public class ItemManagerPortlet extends MVCPortlet {
 	public void doDataSync(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		_log.debug("doDataDiagnosis ");
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
 		FirebaseSyncUtil firebaseUtil = FirebaseSyncUtil.getInstance();
 		try {
 			if (true) {
-				firebaseUtil.resyncItems();				
+				firebaseUtil.resyncItems(serviceContext);				
 			}
 		} catch (FirebaseException | JacksonUtilityException e) {
 			// TODO Auto-generated catch block

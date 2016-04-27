@@ -3,6 +3,8 @@ package net.indaba.lostandfound.hook;
 import java.io.UnsupportedEncodingException;
 
 import com.liferay.message.boards.kernel.model.MBMessage;
+import com.liferay.message.boards.kernel.model.MBMessageDisplay;
+import com.liferay.message.boards.kernel.model.MBThread;
 import com.liferay.message.boards.kernel.service.MBMessageLocalService;
 import com.liferay.message.boards.kernel.service.MBMessageLocalServiceWrapper;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -13,6 +15,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import net.indaba.lostandfound.firebase.FirebaseMBMessageSyncUtil;
 import net.indaba.lostandfound.model.Item;
@@ -47,16 +50,26 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 		if(themeDisplay==null){
 			ThemeDisplay tt = new ThemeDisplay();
 			tt.setCompany(c);
+			tt.setSiteGroupId(groupId);
 			tt.setScopeGroupId(groupId);
 			tt.setDoAsGroupId(groupId);
 			//serviceContext.setPlid(20236);
 			serviceContext.getRequest().setAttribute(WebKeys.THEME_DISPLAY, tt);
 		}
 		
+		//Check existing thread for item classPK
+		if (threadId == 0 && parentMessageId == 0) {
+			MBMessageDisplay mbMessageDisplay = super.getDiscussionMessageDisplay(
+					userId, groupId, Item.class.getName(), 
+					classPK, WorkflowConstants.STATUS_APPROVED);
+			MBThread thread = mbMessageDisplay.getThread();
+			threadId = thread.getThreadId();
+			parentMessageId = thread.getRootMessageId();
+		}
 		
 		MBMessage message = super.addDiscussionMessage(userId, userName, groupId, className, classPK, threadId,
 				parentMessageId, subject, body, serviceContext);
-		
+
 		if (className.equals(Item.class.getName()) && firebaseUtil.isSyncEnabled()) {
 			/* Only replicate if message belongs to an Item */
 			try {
