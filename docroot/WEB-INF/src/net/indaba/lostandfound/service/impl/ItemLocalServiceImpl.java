@@ -22,7 +22,9 @@ import com.liferay.asset.kernel.model.AssetLinkConstants;
 import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.message.boards.kernel.model.MBMessage;
+import com.liferay.message.boards.kernel.service.MBDiscussionLocalServiceUtil;
 import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
+import com.liferay.portal.kernel.comment.CommentManagerUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -78,6 +80,8 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		if (item.isNew()) {
 			item.setItemId(CounterLocalServiceUtil.increment());
 			item = super.addItem(item);
+			CommentManagerUtil.addDiscussion(serviceContext.getUserId(), serviceContext.getScopeGroupId(), 
+					Item.class.getName(), item.getPrimaryKey(), null);
 		}
 		else{
 			item = super.updateItem(item);
