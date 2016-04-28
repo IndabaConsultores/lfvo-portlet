@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.firebase.FirebaseMBMessageSyncUtil;
 import net.indaba.lostandfound.model.Item;
@@ -35,6 +36,16 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 	 */
 	public LFMBMessageLocalService(MBMessageLocalService mbMessageLocalService) {
 		super(mbMessageLocalService);
+	}
+	
+	private boolean updateFirebase(MBMessage message, ServiceContext serviceContext) {
+		boolean firebaseUser = false;
+		if (serviceContext != null) {
+			firebaseUser = serviceContext.getUserId() == Long.valueOf(PortletProps.get("liferay.firebase.user.id"));
+		}
+		return (firebaseUtil.isSyncEnabled()
+				&& message.getClassName().equals(Item.class.getName())
+				&& !firebaseUser);
 	}
 
 	@Override
@@ -70,8 +81,7 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 		MBMessage message = super.addDiscussionMessage(userId, userName, groupId, className, classPK, threadId,
 				parentMessageId, subject, body, serviceContext);
 
-		if (className.equals(Item.class.getName()) && firebaseUtil.isSyncEnabled()) {
-			/* Only replicate if message belongs to an Item */
+		if (updateFirebase(message, serviceContext)) {
 			try {
 				firebaseUtil.add(message);
 			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
@@ -87,8 +97,7 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 			String subject, String body, ServiceContext serviceContext) throws PortalException {
 		MBMessage message = super.updateDiscussionMessage(userId, messageId, className, classPK, subject, body,
 				serviceContext);
-		if (className.equals(Item.class.getName()) && firebaseUtil.isSyncEnabled()) {
-			/* Only replicate if message belongs to an Item */
+		if (updateFirebase(message, serviceContext)) {
 			try {
 				firebaseUtil.update(message);
 			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
@@ -98,26 +107,10 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 		}
 		return message;
 	}
-
-	@Override
-	public MBMessage deleteDiscussionMessage(long messageId) throws PortalException {
-//		MBMessage message = fetchMBMessage(messageId);
-//		if (message.getClassName().equals(Item.class.getName()) && firebaseUtil.isSyncEnabled()) {
-//			/* Only replicate if message belongs to an Item */
-//			try {
-//				firebaseUtil.delete(message);
-//			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-		return super.deleteDiscussionMessage(messageId);
-	}
 	
 	@Override
 	public MBMessage deleteMessage(MBMessage message) throws PortalException {
-		if (message.getClassName().equals(Item.class.getName()) && firebaseUtil.isSyncEnabled()) {
-			/* Only replicate if message belongs to an Item */
+		if (updateFirebase(message, null)) {
 			try {
 				firebaseUtil.delete(message);
 			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {

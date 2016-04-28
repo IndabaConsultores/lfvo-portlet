@@ -47,24 +47,12 @@ public class ItemServiceImpl extends ItemServiceBaseImpl {
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) throws PortalException {
 		return ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
 	}
-	
-	public Item addOrUpdateItem(Item item, ServiceContext serviceContext, boolean updateFirebase) throws PortalException {
-		return ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext, updateFirebase);
-	}
-	
-	public Item deleteItem(long itemId, boolean updateFirebase) throws PortalException {
-		return ItemLocalServiceUtil.deleteItem(itemId, updateFirebase);
+
+	public Item deleteItem(long itemId, ServiceContext serviceContext) throws PortalException {
+		return ItemLocalServiceUtil.deleteItem(itemId, serviceContext);
 	}
 
-	public Item deleteItem(long itemId) throws PortalException {
-		return ItemLocalServiceUtil.deleteItem(itemId);
-	}
-
-	public Item deleteItem(Item item, boolean updateFirebase) throws PortalException {
-		return ItemLocalServiceUtil.deleteItem(item, updateFirebase);
-	}
-
-	public Item deleteItem(Item item) throws PortalException {
-		return ItemLocalServiceUtil.deleteItem(item);
+	public Item deleteItem(Item item, ServiceContext serviceContext) throws PortalException {
+		return ItemLocalServiceUtil.deleteItem(item, serviceContext);
 	}
 }

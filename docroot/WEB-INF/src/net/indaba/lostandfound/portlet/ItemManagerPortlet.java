@@ -37,6 +37,7 @@ import net.indaba.lostandfound.model.LFImage;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.indaba.lostandfound.service.ItemServiceUtil;
 import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
+import net.indaba.lostandfound.service.LFImageServiceUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
 
@@ -78,8 +79,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		item.setUserId(serviceContext.getUserId());
 		item.setPublishDate(new Date());
 		
-		//ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
-		ItemServiceUtil.addOrUpdateItem(item, serviceContext, true);
+		ItemServiceUtil.addOrUpdateItem(item, serviceContext);
 		
 		sendRedirect(actionRequest, actionResponse);
 		
@@ -87,17 +87,18 @@ public class ItemManagerPortlet extends MVCPortlet {
 	
 	public void deleteItem(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
 		long itemId = ParamUtil.get(actionRequest, "itemId", 0);
 		_log.debug("deleteItem " + itemId);
-		//ItemLocalServiceUtil.deleteItem(itemId);
-		ItemServiceUtil.deleteItem(itemId, true);
+		ItemServiceUtil.deleteItem(itemId, serviceContext);
 		sendRedirect(actionRequest, actionResponse);
 	}
 	
 	public void deleteLfImage(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
 		long lfImageId = ParamUtil.get(actionRequest, "lfImageId", 0);
-		net.indaba.lostandfound.service.LFImageServiceUtil.deleteLFImage(lfImageId);
+		net.indaba.lostandfound.service.LFImageServiceUtil.deleteLFImage(lfImageId, serviceContext);
 		sendRedirect(actionRequest, actionResponse);
 	}
 	
@@ -140,6 +141,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 	
 	public void addItemImage(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
 		
 		UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
 		long itemId = ParamUtil.getLong(uploadRequest,"itemId");
@@ -154,7 +156,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		LFImage lfImage = LFImageLocalServiceUtil.createLFImage(CounterLocalServiceUtil.increment());
 		lfImage.setItemId(itemId);
 		lfImage.setImage(dataOutputBlob);
-		LFImageLocalServiceUtil.addLFImage(lfImage);
+		LFImageServiceUtil.addLFImage(lfImage, serviceContext);
 	}
 	
 	public void addMessage(ActionRequest actionRequest, ActionResponse actionResponse)

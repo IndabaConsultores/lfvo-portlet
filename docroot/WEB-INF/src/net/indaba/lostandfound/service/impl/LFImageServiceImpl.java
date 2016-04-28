@@ -21,6 +21,7 @@ import java.util.List;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.dao.jdbc.OutputBlob;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.service.ServiceContext;
 
 import aQute.bnd.annotation.ProviderType;
 import net.indaba.lostandfound.model.LFImage;
@@ -52,53 +53,30 @@ public class LFImageServiceImpl extends LFImageServiceBaseImpl {
 		return lfImagePersistence.findByItemId(itemId);
 	}
 	
-	public LFImage addLFImage(LFImage lfImage, boolean updateFirebase) {
-		return LFImageLocalServiceUtil.addLFImage(lfImage, updateFirebase);
+	public LFImage addLFImage(LFImage lfImage, ServiceContext serviceContext) {
+		return LFImageLocalServiceUtil.addLFImage(lfImage, serviceContext);
 	}
 	
-	public LFImage deleteLFImage(LFImage lfImage, boolean updateFirebase) {
-		return LFImageLocalServiceUtil.deleteLFImage(lfImage, updateFirebase);
-
+	public LFImage deleteLFImage(LFImage lfImage, ServiceContext serviceContext) {
+		return LFImageLocalServiceUtil.deleteLFImage(lfImage, serviceContext);
 	}
 	
-	public LFImage addLFImage(LFImage lfImage) {
-		return LFImageLocalServiceUtil.addLFImage(lfImage);
+	public LFImage deleteLFImage(long lfImageId, ServiceContext serviceContext) throws PortalException {
+		return LFImageLocalServiceUtil.deleteLFImage(lfImageId, serviceContext);
 	}
 	
-	public LFImage deleteLFImage(LFImage lfImage) {
-		return LFImageLocalServiceUtil.deleteLFImage(lfImage);
+	public void deleteByItemId(long itemId, ServiceContext serviceContext){
+		LFImageLocalServiceUtil.deleteByItemId(itemId, serviceContext);
 	}
 	
-	public LFImage deleteLFImage(long lfImageId) throws PortalException {
-		return LFImageLocalServiceUtil.deleteLFImage(lfImageId);
-	}
-	
-	public void deleteByItemId(long itemId){
-		LFImageLocalServiceUtil.deleteByItemId(itemId);
-	}
-	
-	public LFImage addLFImage(String imageBase64String, long itemId) {
+	public LFImage addLFImage(String imageBase64String, long itemId, ServiceContext serviceContext) {
 		ByteArrayInputStream imageBase64 = new ByteArrayInputStream(imageBase64String.getBytes(StandardCharsets.UTF_8));
 		OutputBlob dataOutputBlob = new OutputBlob(imageBase64, imageBase64String.length());
 		
 		LFImage lfImage = LFImageLocalServiceUtil.createLFImage(CounterLocalServiceUtil.increment());
 		lfImage.setItemId(itemId);
 		lfImage.setImage(dataOutputBlob);
-		return LFImageLocalServiceUtil.addLFImage(lfImage, false);
-	}
-	
-	public LFImage deleteLFImage(long lfImageId, boolean updateFirebase) {
-		// TODO solve HibernateException
-		/* When calling this method it somehow throws an exception 
-		 * LocalService does not throw said exception, so the problem must lie 
-		 * in this service layer. Might have something to do with the Blob field */
-		try {
-			return LFImageLocalServiceUtil.deleteLFImage(lfImageId, updateFirebase);
-		} catch (PortalException e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-		}
-		return null;
+		return LFImageLocalServiceUtil.addLFImage(lfImage, serviceContext);
 	}
 	
 }

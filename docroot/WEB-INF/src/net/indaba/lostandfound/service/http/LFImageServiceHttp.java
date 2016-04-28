@@ -83,13 +83,14 @@ public class LFImageServiceHttp {
 
 	public static net.indaba.lostandfound.model.LFImage addLFImage(
 		HttpPrincipal httpPrincipal,
-		net.indaba.lostandfound.model.LFImage lfImage, boolean updateFirebase) {
+		net.indaba.lostandfound.model.LFImage lfImage,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext) {
 		try {
 			MethodKey methodKey = new MethodKey(LFImageServiceUtil.class,
 					"addLFImage", _addLFImageParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, lfImage,
-					updateFirebase);
+					serviceContext);
 
 			Object returnObj = null;
 
@@ -111,40 +112,14 @@ public class LFImageServiceHttp {
 
 	public static net.indaba.lostandfound.model.LFImage deleteLFImage(
 		HttpPrincipal httpPrincipal,
-		net.indaba.lostandfound.model.LFImage lfImage, boolean updateFirebase) {
+		net.indaba.lostandfound.model.LFImage lfImage,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext) {
 		try {
 			MethodKey methodKey = new MethodKey(LFImageServiceUtil.class,
 					"deleteLFImage", _deleteLFImageParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, lfImage,
-					updateFirebase);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception e) {
-				throw new com.liferay.portal.kernel.exception.SystemException(e);
-			}
-
-			return (net.indaba.lostandfound.model.LFImage)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException se) {
-			_log.error(se, se);
-
-			throw se;
-		}
-	}
-
-	public static net.indaba.lostandfound.model.LFImage addLFImage(
-		HttpPrincipal httpPrincipal,
-		net.indaba.lostandfound.model.LFImage lfImage) {
-		try {
-			MethodKey methodKey = new MethodKey(LFImageServiceUtil.class,
-					"addLFImage", _addLFImageParameterTypes3);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, lfImage);
+					serviceContext);
 
 			Object returnObj = null;
 
@@ -165,40 +140,15 @@ public class LFImageServiceHttp {
 	}
 
 	public static net.indaba.lostandfound.model.LFImage deleteLFImage(
-		HttpPrincipal httpPrincipal,
-		net.indaba.lostandfound.model.LFImage lfImage) {
-		try {
-			MethodKey methodKey = new MethodKey(LFImageServiceUtil.class,
-					"deleteLFImage", _deleteLFImageParameterTypes4);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, lfImage);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception e) {
-				throw new com.liferay.portal.kernel.exception.SystemException(e);
-			}
-
-			return (net.indaba.lostandfound.model.LFImage)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException se) {
-			_log.error(se, se);
-
-			throw se;
-		}
-	}
-
-	public static net.indaba.lostandfound.model.LFImage deleteLFImage(
-		HttpPrincipal httpPrincipal, long lfImageId)
+		HttpPrincipal httpPrincipal, long lfImageId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(LFImageServiceUtil.class,
-					"deleteLFImage", _deleteLFImageParameterTypes5);
+					"deleteLFImage", _deleteLFImageParameterTypes3);
 
-			MethodHandler methodHandler = new MethodHandler(methodKey, lfImageId);
+			MethodHandler methodHandler = new MethodHandler(methodKey,
+					lfImageId, serviceContext);
 
 			Object returnObj = null;
 
@@ -222,12 +172,14 @@ public class LFImageServiceHttp {
 		}
 	}
 
-	public static void deleteByItemId(HttpPrincipal httpPrincipal, long itemId) {
+	public static void deleteByItemId(HttpPrincipal httpPrincipal, long itemId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext) {
 		try {
 			MethodKey methodKey = new MethodKey(LFImageServiceUtil.class,
-					"deleteByItemId", _deleteByItemIdParameterTypes6);
+					"deleteByItemId", _deleteByItemIdParameterTypes4);
 
-			MethodHandler methodHandler = new MethodHandler(methodKey, itemId);
+			MethodHandler methodHandler = new MethodHandler(methodKey, itemId,
+					serviceContext);
 
 			try {
 				TunnelUtil.invoke(httpPrincipal, methodHandler);
@@ -245,40 +197,14 @@ public class LFImageServiceHttp {
 
 	public static net.indaba.lostandfound.model.LFImage addLFImage(
 		HttpPrincipal httpPrincipal, java.lang.String imageBase64String,
-		long itemId) {
+		long itemId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext) {
 		try {
 			MethodKey methodKey = new MethodKey(LFImageServiceUtil.class,
-					"addLFImage", _addLFImageParameterTypes7);
+					"addLFImage", _addLFImageParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
-					imageBase64String, itemId);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception e) {
-				throw new com.liferay.portal.kernel.exception.SystemException(e);
-			}
-
-			return (net.indaba.lostandfound.model.LFImage)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException se) {
-			_log.error(se, se);
-
-			throw se;
-		}
-	}
-
-	public static net.indaba.lostandfound.model.LFImage deleteLFImage(
-		HttpPrincipal httpPrincipal, long lfImageId, boolean updateFirebase) {
-		try {
-			MethodKey methodKey = new MethodKey(LFImageServiceUtil.class,
-					"deleteLFImage", _deleteLFImageParameterTypes8);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey,
-					lfImageId, updateFirebase);
+					imageBase64String, itemId, serviceContext);
 
 			Object returnObj = null;
 
@@ -303,27 +229,21 @@ public class LFImageServiceHttp {
 			long.class
 		};
 	private static final Class<?>[] _addLFImageParameterTypes1 = new Class[] {
-			net.indaba.lostandfound.model.LFImage.class, boolean.class
+			net.indaba.lostandfound.model.LFImage.class,
+			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _deleteLFImageParameterTypes2 = new Class[] {
-			net.indaba.lostandfound.model.LFImage.class, boolean.class
+			net.indaba.lostandfound.model.LFImage.class,
+			com.liferay.portal.kernel.service.ServiceContext.class
 		};
-	private static final Class<?>[] _addLFImageParameterTypes3 = new Class[] {
-			net.indaba.lostandfound.model.LFImage.class
+	private static final Class<?>[] _deleteLFImageParameterTypes3 = new Class[] {
+			long.class, com.liferay.portal.kernel.service.ServiceContext.class
 		};
-	private static final Class<?>[] _deleteLFImageParameterTypes4 = new Class[] {
-			net.indaba.lostandfound.model.LFImage.class
+	private static final Class<?>[] _deleteByItemIdParameterTypes4 = new Class[] {
+			long.class, com.liferay.portal.kernel.service.ServiceContext.class
 		};
-	private static final Class<?>[] _deleteLFImageParameterTypes5 = new Class[] {
-			long.class
-		};
-	private static final Class<?>[] _deleteByItemIdParameterTypes6 = new Class[] {
-			long.class
-		};
-	private static final Class<?>[] _addLFImageParameterTypes7 = new Class[] {
-			java.lang.String.class, long.class
-		};
-	private static final Class<?>[] _deleteLFImageParameterTypes8 = new Class[] {
-			long.class, boolean.class
+	private static final Class<?>[] _addLFImageParameterTypes5 = new Class[] {
+			java.lang.String.class, long.class,
+			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 }

@@ -38,42 +38,35 @@ public class LFImageServiceClpInvoker {
 		_methodName36 = "addLFImage";
 
 		_methodParameterTypes36 = new String[] {
-				"net.indaba.lostandfound.model.LFImage", "boolean"
+				"net.indaba.lostandfound.model.LFImage",
+				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 
 		_methodName37 = "deleteLFImage";
 
 		_methodParameterTypes37 = new String[] {
-				"net.indaba.lostandfound.model.LFImage", "boolean"
+				"net.indaba.lostandfound.model.LFImage",
+				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 
-		_methodName38 = "addLFImage";
+		_methodName38 = "deleteLFImage";
 
 		_methodParameterTypes38 = new String[] {
-				"net.indaba.lostandfound.model.LFImage"
+				"long", "com.liferay.portal.kernel.service.ServiceContext"
 			};
 
-		_methodName39 = "deleteLFImage";
+		_methodName39 = "deleteByItemId";
 
 		_methodParameterTypes39 = new String[] {
-				"net.indaba.lostandfound.model.LFImage"
+				"long", "com.liferay.portal.kernel.service.ServiceContext"
 			};
 
-		_methodName40 = "deleteLFImage";
+		_methodName40 = "addLFImage";
 
-		_methodParameterTypes40 = new String[] { "long" };
-
-		_methodName41 = "deleteByItemId";
-
-		_methodParameterTypes41 = new String[] { "long" };
-
-		_methodName42 = "addLFImage";
-
-		_methodParameterTypes42 = new String[] { "java.lang.String", "long" };
-
-		_methodName43 = "deleteLFImage";
-
-		_methodParameterTypes43 = new String[] { "long", "boolean" };
+		_methodParameterTypes40 = new String[] {
+				"java.lang.String", "long",
+				"com.liferay.portal.kernel.service.ServiceContext"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -91,47 +84,34 @@ public class LFImageServiceClpInvoker {
 		if (_methodName36.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes36, parameterTypes)) {
 			return LFImageServiceUtil.addLFImage((net.indaba.lostandfound.model.LFImage)arguments[0],
-				((Boolean)arguments[1]).booleanValue());
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName37.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes37, parameterTypes)) {
 			return LFImageServiceUtil.deleteLFImage((net.indaba.lostandfound.model.LFImage)arguments[0],
-				((Boolean)arguments[1]).booleanValue());
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName38.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes38, parameterTypes)) {
-			return LFImageServiceUtil.addLFImage((net.indaba.lostandfound.model.LFImage)arguments[0]);
+			return LFImageServiceUtil.deleteLFImage(((Long)arguments[0]).longValue(),
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName39.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes39, parameterTypes)) {
-			return LFImageServiceUtil.deleteLFImage((net.indaba.lostandfound.model.LFImage)arguments[0]);
-		}
-
-		if (_methodName40.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes40, parameterTypes)) {
-			return LFImageServiceUtil.deleteLFImage(((Long)arguments[0]).longValue());
-		}
-
-		if (_methodName41.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes41, parameterTypes)) {
-			LFImageServiceUtil.deleteByItemId(((Long)arguments[0]).longValue());
+			LFImageServiceUtil.deleteByItemId(((Long)arguments[0]).longValue(),
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 
 			return null;
 		}
 
-		if (_methodName42.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes42, parameterTypes)) {
+		if (_methodName40.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes40, parameterTypes)) {
 			return LFImageServiceUtil.addLFImage((java.lang.String)arguments[0],
-				((Long)arguments[1]).longValue());
-		}
-
-		if (_methodName43.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes43, parameterTypes)) {
-			return LFImageServiceUtil.deleteLFImage(((Long)arguments[0]).longValue(),
-				((Boolean)arguments[1]).booleanValue());
+				((Long)arguments[1]).longValue(),
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[2]);
 		}
 
 		throw new UnsupportedOperationException();
@@ -151,10 +131,4 @@ public class LFImageServiceClpInvoker {
 	private String[] _methodParameterTypes39;
 	private String _methodName40;
 	private String[] _methodParameterTypes40;
-	private String _methodName41;
-	private String[] _methodParameterTypes41;
-	private String _methodName42;
-	private String[] _methodParameterTypes42;
-	private String _methodName43;
-	private String[] _methodParameterTypes43;
 }

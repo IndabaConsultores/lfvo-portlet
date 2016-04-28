@@ -82,42 +82,13 @@ public class ItemServiceSoap {
 		}
 	}
 
-	public static net.indaba.lostandfound.model.ItemSoap addOrUpdateItem(
-		net.indaba.lostandfound.model.ItemSoap item,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext,
-		boolean updateFirebase) throws RemoteException {
-		try {
-			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.addOrUpdateItem(net.indaba.lostandfound.model.impl.ItemModelImpl.toModel(
-						item), serviceContext, updateFirebase);
-
-			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
 	public static net.indaba.lostandfound.model.ItemSoap deleteItem(
-		long itemId, boolean updateFirebase) throws RemoteException {
+		long itemId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
 		try {
 			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.deleteItem(itemId,
-					updateFirebase);
-
-			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	public static net.indaba.lostandfound.model.ItemSoap deleteItem(long itemId)
-		throws RemoteException {
-		try {
-			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.deleteItem(itemId);
+					serviceContext);
 
 			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
 		}
@@ -129,26 +100,12 @@ public class ItemServiceSoap {
 	}
 
 	public static net.indaba.lostandfound.model.ItemSoap deleteItem(
-		net.indaba.lostandfound.model.ItemSoap item, boolean updateFirebase)
+		net.indaba.lostandfound.model.ItemSoap item,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
 			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.deleteItem(net.indaba.lostandfound.model.impl.ItemModelImpl.toModel(
-						item), updateFirebase);
-
-			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	public static net.indaba.lostandfound.model.ItemSoap deleteItem(
-		net.indaba.lostandfound.model.ItemSoap item) throws RemoteException {
-		try {
-			net.indaba.lostandfound.model.Item returnValue = ItemServiceUtil.deleteItem(net.indaba.lostandfound.model.impl.ItemModelImpl.toModel(
-						item));
+						item), serviceContext);
 
 			return net.indaba.lostandfound.model.ItemSoap.toSoapModel(returnValue);
 		}

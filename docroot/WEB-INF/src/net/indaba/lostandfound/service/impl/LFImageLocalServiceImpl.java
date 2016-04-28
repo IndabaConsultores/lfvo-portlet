@@ -18,9 +18,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.util.portlet.PortletProps;
 
 import aQute.bnd.annotation.ProviderType;
 import net.indaba.lostandfound.firebase.FirebaseLFImageSyncUtil;
+import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.model.LFImage;
 import net.indaba.lostandfound.service.base.LFImageLocalServiceBaseImpl;
 import net.thegreshams.firebase4j.error.FirebaseException;
@@ -50,15 +53,20 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 	
 	FirebaseLFImageSyncUtil firebaseUtil = FirebaseLFImageSyncUtil.getInstance();
 	
+	private boolean updateFirebase(LFImage image, ServiceContext serviceContext) {
+		return (firebaseUtil.isSyncEnabled() 
+				&& serviceContext.getUserId() != Long.valueOf(PortletProps.get("liferay.firebase.user.id")));
+	}
+	
 	public List<LFImage> findByItemId(long itemId){
 		return lfImagePersistence.findByItemId(itemId);
 	}
 	
-	public LFImage addLFImage(LFImage lfImage, boolean updateFirebase) {
+	public LFImage addLFImage(LFImage lfImage, ServiceContext serviceContext) {
 		/* supermethod needs to be called first, otherwise it somehow
 		 * does not store the image blob into the database */
 		LFImage image = super.addLFImage(lfImage);
-		if (firebaseUtil.isSyncEnabled() && updateFirebase) {
+		if (updateFirebase(lfImage, serviceContext)) {
 			try {
 				firebaseUtil.add(image);
 			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException | PortalException e) {
@@ -69,8 +77,8 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 		return image;
 	}
 	
-	public LFImage deleteLFImage(LFImage lfImage, boolean updateFirebase) {
-		if (firebaseUtil.isSyncEnabled() && updateFirebase) {
+	public LFImage deleteLFImage(LFImage lfImage, ServiceContext serviceContext) {
+		if (updateFirebase(lfImage, serviceContext)) {
 			try {
 				firebaseUtil.delete(lfImage);
 			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException | PortalException e) {
@@ -81,34 +89,15 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 		return super.deleteLFImage(lfImage);
 	}
 	
-	public LFImage deleteLFImage(long lfImageId, boolean updateFirebase) throws PortalException {
-		return deleteLFImage(getLFImage(lfImageId), updateFirebase);
-	}
-
-	@Override
-	public LFImage addLFImage(LFImage lfImage) {
-		return addLFImage(lfImage, true);
+	public LFImage deleteLFImage(long lfImageId, ServiceContext serviceContext) throws PortalException {
+		return deleteLFImage(getLFImage(lfImageId), serviceContext);
 	}
 	
-	@Override
-	public LFImage deleteLFImage(LFImage lfImage) {
-		return deleteLFImage(lfImage, true);
-	}
-	
-	@Override
-	public LFImage deleteLFImage(long lfImageId) throws PortalException {
-		return deleteLFImage(lfImageId, true);
-	}
-	
-	public void deleteByItemId(long itemId) {
-		deleteByItemId(itemId, true);
-	}
-	
-	public void deleteByItemId(long itemId, boolean updateFirebase){
-		if (firebaseUtil.isSyncEnabled() && updateFirebase) {
+	public void deleteByItemId(long itemId, ServiceContext serviceContext){
+		if (updateFirebase(null, serviceContext)) {
 			List<LFImage> images = lfImageLocalService.findByItemId(itemId);
 			for (LFImage i : images) {
-				deleteLFImage(i);
+				deleteLFImage(i, serviceContext);
 			}
 		} else {
 			lfImagePersistence.removeByItemId(itemId);
