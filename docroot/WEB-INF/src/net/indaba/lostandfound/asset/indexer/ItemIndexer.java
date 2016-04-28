@@ -70,6 +70,9 @@ public class ItemIndexer extends BaseIndexer<Item> {
 		document.addText(Field.TITLE, item.getName());
 
 		document.addKeyword("titleKeyword", item.getName(), true);
+		
+		document.addKeyword(Field.GROUP_ID, item.getGroupId());
+		document.addKeyword(Field.SCOPE_GROUP_ID, item.getGroupId());
 
 		return document;
 	}
@@ -84,7 +87,7 @@ public class ItemIndexer extends BaseIndexer<Item> {
 
 	@Override
 	protected void doReindex(String[] ids) throws Exception {
-		_log.error("This method is not implemented doReindex @ ItemIndexer " + ids);
+		_log.debug("This method is not implemented doReindex @ ItemIndexer " + ids);
 	}
 
 	@Override

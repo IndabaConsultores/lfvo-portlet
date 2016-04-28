@@ -15,6 +15,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
+import net.indaba.lostandfound.util.LFVOConstants;
 
 public class ItemAssetRendererFactory extends BaseAssetRendererFactory<Item> {
 
@@ -42,7 +43,7 @@ public class ItemAssetRendererFactory extends BaseAssetRendererFactory<Item> {
 	
 	@Override
 	public String getPortletId() {
-		return "lfvo";
+		return LFVOConstants.LFVO_PORTLET_ID;
 	}
 
 	@Override

@@ -10,8 +10,7 @@
 <%@taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme"%>
 <%@taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
 <%@taglib uri="http://liferay.com/tld/util" prefix="liferay-util"%>
-<%@taglib uri="http://liferay.com/tld/frontend"
-	prefix="liferay-frontend"%>
+<%@taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend"%>
 
 <%@page import="java.util.List"%>
 
@@ -22,6 +21,9 @@
 
 <%@page import="net.indaba.lostandfound.portlet.ItemManagerPortlet"%>
 <%@page import="net.indaba.lostandfound.model.Item"%>
+<%@page import="net.indaba.lostandfound.model.LFImage"%>
+<%@page import="net.indaba.lostandfound.service.LFImageLocalServiceUtil"%>
+
 
 <liferay-theme:defineObjects />
 <portlet:defineObjects />
