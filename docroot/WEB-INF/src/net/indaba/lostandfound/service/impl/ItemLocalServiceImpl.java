@@ -31,6 +31,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.util.portlet.PortletProps;
 
@@ -67,8 +69,13 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	private FirebaseItemSyncUtil firebaseUtil = FirebaseItemSyncUtil.getInstance();
 	
 	private boolean updateFirebase(Item item, ServiceContext serviceContext) {
+		ThemeDisplay themeDisplay = new ThemeDisplay();
+		if (serviceContext != null) {
+			themeDisplay = (ThemeDisplay) serviceContext.getRequest().getAttribute(
+					WebKeys.THEME_DISPLAY);
+		}
 		return (firebaseUtil.isSyncEnabled()
-				&& serviceContext.getUserId() != Long.valueOf(PortletProps.get("liferay.firebase.user.id")));
+				&& themeDisplay != null);
 	}
 	
 	public List<Item> getItems(long groupId, int start, int end) throws PortalException {

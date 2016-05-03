@@ -19,6 +19,8 @@ import java.util.List;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.util.portlet.PortletProps;
 
 import aQute.bnd.annotation.ProviderType;
@@ -54,8 +56,13 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 	FirebaseLFImageSyncUtil firebaseUtil = FirebaseLFImageSyncUtil.getInstance();
 	
 	private boolean updateFirebase(LFImage image, ServiceContext serviceContext) {
-		return (firebaseUtil.isSyncEnabled() 
-				&& serviceContext.getUserId() != Long.valueOf(PortletProps.get("liferay.firebase.user.id")));
+		ThemeDisplay themeDisplay = new ThemeDisplay();
+		if (serviceContext != null) {
+			themeDisplay = (ThemeDisplay) serviceContext.getRequest().getAttribute(
+					WebKeys.THEME_DISPLAY);
+		}
+		return (firebaseUtil.isSyncEnabled()
+				&& themeDisplay != null);
 	}
 	
 	public List<LFImage> findByItemId(long itemId){

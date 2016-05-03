@@ -39,13 +39,14 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 	}
 	
 	private boolean updateFirebase(MBMessage message, ServiceContext serviceContext) {
-		boolean firebaseUser = false;
+		ThemeDisplay themeDisplay = new ThemeDisplay();
 		if (serviceContext != null) {
-			firebaseUser = serviceContext.getUserId() == Long.valueOf(PortletProps.get("liferay.firebase.user.id"));
+			themeDisplay = (ThemeDisplay) serviceContext.getRequest().getAttribute(
+					WebKeys.THEME_DISPLAY);
 		}
 		return (firebaseUtil.isSyncEnabled()
 				&& message.getClassName().equals(Item.class.getName())
-				&& !firebaseUser);
+				&& themeDisplay != null);
 	}
 
 	@Override
@@ -58,7 +59,8 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay)serviceContext.getRequest().getAttribute(
 				WebKeys.THEME_DISPLAY);
-		if(themeDisplay==null){
+		boolean isThemeDisplayNull = (themeDisplay == null);
+		if(themeDisplay==null) {
 			ThemeDisplay tt = new ThemeDisplay();
 			tt.setCompany(c);
 			tt.setSiteGroupId(groupId);
@@ -81,7 +83,7 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 		MBMessage message = super.addDiscussionMessage(userId, userName, groupId, className, classPK, threadId,
 				parentMessageId, subject, body, serviceContext);
 
-		if (updateFirebase(message, serviceContext)) {
+		if (updateFirebase(message, serviceContext) && !isThemeDisplayNull) {
 			try {
 				firebaseUtil.add(message);
 			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
@@ -95,9 +97,28 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 	@Override
 	public MBMessage updateDiscussionMessage(long userId, long messageId, String className, long classPK,
 			String subject, String body, ServiceContext serviceContext) throws PortalException {
-		MBMessage message = super.updateDiscussionMessage(userId, messageId, className, classPK, subject, body,
+		User u = UserLocalServiceUtil.getUser(userId);
+		Company c = CompanyLocalServiceUtil.getCompany(u.getCompanyId());
+		
+		MBMessage message = getMBMessage(messageId);
+		long groupId = message.getGroupId();
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay)serviceContext.getRequest().getAttribute(
+				WebKeys.THEME_DISPLAY);
+		boolean isThemeDisplayNull = (themeDisplay == null);
+		if(themeDisplay==null) {
+			ThemeDisplay tt = new ThemeDisplay();
+			tt.setCompany(c);
+			tt.setSiteGroupId(groupId);
+			tt.setScopeGroupId(groupId);
+			tt.setDoAsGroupId(groupId);
+			//serviceContext.setPlid(20236);
+			serviceContext.getRequest().setAttribute(WebKeys.THEME_DISPLAY, tt);
+		}
+		
+		message = super.updateDiscussionMessage(userId, messageId, className, classPK, subject, body,
 				serviceContext);
-		if (updateFirebase(message, serviceContext)) {
+		if (updateFirebase(message, serviceContext) && !isThemeDisplayNull) {
 			try {
 				firebaseUtil.update(message);
 			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
