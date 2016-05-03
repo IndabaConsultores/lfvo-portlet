@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
+import com.liferay.portal.kernel.service.ResourceLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -82,6 +83,9 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 		
 		MBMessage message = super.addDiscussionMessage(userId, userName, groupId, className, classPK, threadId,
 				parentMessageId, subject, body, serviceContext);
+		
+		ResourceLocalServiceUtil.addResources(u.getCompanyId(), groupId, userId, MBMessage.class.getName(), 
+				message.getPrimaryKey(), false, true, true);
 
 		if (updateFirebase(message, serviceContext) && !isThemeDisplayNull) {
 			try {
