@@ -152,42 +152,28 @@ public class ItemLocalServiceClpInvoker {
 
 		_methodParameterTypes55 = new String[] {  };
 
-		_methodName60 = "getItems";
+		_methodName61 = "getItems";
 
-		_methodParameterTypes60 = new String[] { "long", "int", "int" };
-
-		_methodName61 = "addOrUpdateItem";
-
-		_methodParameterTypes61 = new String[] {
-				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.kernel.service.ServiceContext"
-			};
+		_methodParameterTypes61 = new String[] { "long", "int", "int" };
 
 		_methodName62 = "addOrUpdateItem";
 
 		_methodParameterTypes62 = new String[] {
 				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.kernel.service.ServiceContext", "boolean"
+				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 
 		_methodName63 = "deleteItem";
 
-		_methodParameterTypes63 = new String[] { "long", "boolean" };
+		_methodParameterTypes63 = new String[] {
+				"long", "com.liferay.portal.kernel.service.ServiceContext"
+			};
 
 		_methodName64 = "deleteItem";
 
-		_methodParameterTypes64 = new String[] { "long" };
-
-		_methodName65 = "deleteItem";
-
-		_methodParameterTypes65 = new String[] {
-				"net.indaba.lostandfound.model.Item", "boolean"
-			};
-
-		_methodName66 = "deleteItem";
-
-		_methodParameterTypes66 = new String[] {
-				"net.indaba.lostandfound.model.Item"
+		_methodParameterTypes64 = new String[] {
+				"net.indaba.lostandfound.model.Item",
+				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 	}
 
@@ -332,46 +318,29 @@ public class ItemLocalServiceClpInvoker {
 			return ItemLocalServiceUtil.getOSGiServiceIdentifier();
 		}
 
-		if (_methodName60.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes60, parameterTypes)) {
+		if (_methodName61.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes61, parameterTypes)) {
 			return ItemLocalServiceUtil.getItems(((Long)arguments[0]).longValue(),
 				((Integer)arguments[1]).intValue(),
 				((Integer)arguments[2]).intValue());
 		}
 
-		if (_methodName61.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes61, parameterTypes)) {
-			return ItemLocalServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
-				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
-		}
-
 		if (_methodName62.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes62, parameterTypes)) {
 			return ItemLocalServiceUtil.addOrUpdateItem((net.indaba.lostandfound.model.Item)arguments[0],
-				(com.liferay.portal.kernel.service.ServiceContext)arguments[1],
-				((Boolean)arguments[2]).booleanValue());
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName63.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes63, parameterTypes)) {
 			return ItemLocalServiceUtil.deleteItem(((Long)arguments[0]).longValue(),
-				((Boolean)arguments[1]).booleanValue());
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName64.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes64, parameterTypes)) {
-			return ItemLocalServiceUtil.deleteItem(((Long)arguments[0]).longValue());
-		}
-
-		if (_methodName65.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes65, parameterTypes)) {
 			return ItemLocalServiceUtil.deleteItem((net.indaba.lostandfound.model.Item)arguments[0],
-				((Boolean)arguments[1]).booleanValue());
-		}
-
-		if (_methodName66.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes66, parameterTypes)) {
-			return ItemLocalServiceUtil.deleteItem((net.indaba.lostandfound.model.Item)arguments[0]);
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		throw new UnsupportedOperationException();
@@ -427,8 +396,6 @@ public class ItemLocalServiceClpInvoker {
 	private String[] _methodParameterTypes24;
 	private String _methodName55;
 	private String[] _methodParameterTypes55;
-	private String _methodName60;
-	private String[] _methodParameterTypes60;
 	private String _methodName61;
 	private String[] _methodParameterTypes61;
 	private String _methodName62;
@@ -437,8 +404,4 @@ public class ItemLocalServiceClpInvoker {
 	private String[] _methodParameterTypes63;
 	private String _methodName64;
 	private String[] _methodParameterTypes64;
-	private String _methodName65;
-	private String[] _methodParameterTypes65;
-	private String _methodName66;
-	private String[] _methodParameterTypes66;
 }

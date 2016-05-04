@@ -88,17 +88,16 @@ public class ItemServiceHttp {
 		}
 	}
 
-	public static net.indaba.lostandfound.model.Item addOrUpdateItem(
-		HttpPrincipal httpPrincipal, net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext,
-		boolean updateFirebase)
+	public static net.indaba.lostandfound.model.Item deleteItem(
+		HttpPrincipal httpPrincipal, long itemId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
-					"addOrUpdateItem", _addOrUpdateItemParameterTypes1);
+					"deleteItem", _deleteItemParameterTypes1);
 
-			MethodHandler methodHandler = new MethodHandler(methodKey, item,
-					serviceContext, updateFirebase);
+			MethodHandler methodHandler = new MethodHandler(methodKey, itemId,
+					serviceContext);
 
 			Object returnObj = null;
 
@@ -123,109 +122,15 @@ public class ItemServiceHttp {
 	}
 
 	public static net.indaba.lostandfound.model.Item deleteItem(
-		HttpPrincipal httpPrincipal, long itemId, boolean updateFirebase)
+		HttpPrincipal httpPrincipal, net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
 					"deleteItem", _deleteItemParameterTypes2);
 
-			MethodHandler methodHandler = new MethodHandler(methodKey, itemId,
-					updateFirebase);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception e) {
-				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
-					throw (com.liferay.portal.kernel.exception.PortalException)e;
-				}
-
-				throw new com.liferay.portal.kernel.exception.SystemException(e);
-			}
-
-			return (net.indaba.lostandfound.model.Item)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException se) {
-			_log.error(se, se);
-
-			throw se;
-		}
-	}
-
-	public static net.indaba.lostandfound.model.Item deleteItem(
-		HttpPrincipal httpPrincipal, long itemId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		try {
-			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
-					"deleteItem", _deleteItemParameterTypes3);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, itemId);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception e) {
-				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
-					throw (com.liferay.portal.kernel.exception.PortalException)e;
-				}
-
-				throw new com.liferay.portal.kernel.exception.SystemException(e);
-			}
-
-			return (net.indaba.lostandfound.model.Item)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException se) {
-			_log.error(se, se);
-
-			throw se;
-		}
-	}
-
-	public static net.indaba.lostandfound.model.Item deleteItem(
-		HttpPrincipal httpPrincipal, net.indaba.lostandfound.model.Item item,
-		boolean updateFirebase)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		try {
-			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
-					"deleteItem", _deleteItemParameterTypes4);
-
 			MethodHandler methodHandler = new MethodHandler(methodKey, item,
-					updateFirebase);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception e) {
-				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
-					throw (com.liferay.portal.kernel.exception.PortalException)e;
-				}
-
-				throw new com.liferay.portal.kernel.exception.SystemException(e);
-			}
-
-			return (net.indaba.lostandfound.model.Item)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException se) {
-			_log.error(se, se);
-
-			throw se;
-		}
-	}
-
-	public static net.indaba.lostandfound.model.Item deleteItem(
-		HttpPrincipal httpPrincipal, net.indaba.lostandfound.model.Item item)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		try {
-			MethodKey methodKey = new MethodKey(ItemServiceUtil.class,
-					"deleteItem", _deleteItemParameterTypes5);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, item);
+					serviceContext);
 
 			Object returnObj = null;
 
@@ -254,21 +159,11 @@ public class ItemServiceHttp {
 			net.indaba.lostandfound.model.Item.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
-	private static final Class<?>[] _addOrUpdateItemParameterTypes1 = new Class[] {
-			net.indaba.lostandfound.model.Item.class,
-			com.liferay.portal.kernel.service.ServiceContext.class,
-			boolean.class
+	private static final Class<?>[] _deleteItemParameterTypes1 = new Class[] {
+			long.class, com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _deleteItemParameterTypes2 = new Class[] {
-			long.class, boolean.class
-		};
-	private static final Class<?>[] _deleteItemParameterTypes3 = new Class[] {
-			long.class
-		};
-	private static final Class<?>[] _deleteItemParameterTypes4 = new Class[] {
-			net.indaba.lostandfound.model.Item.class, boolean.class
-		};
-	private static final Class<?>[] _deleteItemParameterTypes5 = new Class[] {
-			net.indaba.lostandfound.model.Item.class
+			net.indaba.lostandfound.model.Item.class,
+			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 }

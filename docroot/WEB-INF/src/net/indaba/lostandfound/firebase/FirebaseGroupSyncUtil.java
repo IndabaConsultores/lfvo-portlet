@@ -5,9 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.util.portlet.PortletProps;
 
 import net.thegreshams.firebase4j.error.FirebaseException;
@@ -86,12 +91,19 @@ public class FirebaseGroupSyncUtil {
 
 	private List<Group> getLiferayGroupsAfter(long liferayTS) {
 		// TODO method
-		return null;
+		long groupClassId = ClassNameLocalServiceUtil.getClassNameId(Group.class);
+		DynamicQuery query = DynamicQueryFactoryUtil.forClass(Group.class)
+				.add(PropertyFactoryUtil.forName("site").eq(true))
+				.add(PropertyFactoryUtil.forName("classNameId").eq(groupClassId));
+		return GroupLocalServiceUtil.dynamicQuery(query);
 	}
 
 	public Map<Group, String> getUnsyncedGroups(long date) throws UnsupportedEncodingException, FirebaseException {
 		Map<Group, String> unsynced = new HashMap<Group, String>();
-		// TODO instead of unsynced, a single push may be better
+		List<Group> groups = getLiferayGroupsAfter(date);
+		for (Group g : groups) {
+			unsynced.put(g, "liferay");
+		}
 		return unsynced;
 	}
 

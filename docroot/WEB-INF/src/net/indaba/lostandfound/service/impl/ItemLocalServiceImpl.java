@@ -22,14 +22,19 @@ import com.liferay.asset.kernel.model.AssetLinkConstants;
 import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.message.boards.kernel.model.MBMessage;
+import com.liferay.message.boards.kernel.service.MBDiscussionLocalServiceUtil;
 import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
+import com.liferay.portal.kernel.comment.CommentManagerUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.util.portlet.PortletProps;
 
 import aQute.bnd.annotation.ProviderType;
 import net.indaba.lostandfound.firebase.FirebaseItemSyncUtil;
@@ -61,29 +66,37 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	 * Never reference this class directly. Always use {@link net.indaba.lostandfound.service.ItemLocalServiceUtil} to access the item local service.
 	 */
 	
-	FirebaseItemSyncUtil firebaseUtil = FirebaseItemSyncUtil.getInstance();
+	private FirebaseItemSyncUtil firebaseUtil = FirebaseItemSyncUtil.getInstance();
+	
+	private boolean updateFirebase(Item item, ServiceContext serviceContext) {
+		ThemeDisplay themeDisplay = new ThemeDisplay();
+		if (serviceContext != null) {
+			themeDisplay = (ThemeDisplay) serviceContext.getRequest().getAttribute(
+					WebKeys.THEME_DISPLAY);
+		}
+		return (firebaseUtil.isSyncEnabled()
+				&& themeDisplay != null);
+	}
 	
 	public List<Item> getItems(long groupId, int start, int end) throws PortalException {
 		return itemPersistence.findByGroupId(groupId, start, end);
 	}
-	
-	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) throws PortalException {
-		return addOrUpdateItem(item, serviceContext, false);
-	}
 
-	public Item addOrUpdateItem(Item item, ServiceContext serviceContext, boolean updateFirebase)
+	public Item addOrUpdateItem(Item item, ServiceContext serviceContext)
 			throws PortalException {
 		_log.debug("addOrUpdateItem");
 
 		if (item.isNew()) {
 			item.setItemId(CounterLocalServiceUtil.increment());
 			item = super.addItem(item);
+			CommentManagerUtil.addDiscussion(serviceContext.getUserId(), serviceContext.getScopeGroupId(), 
+					Item.class.getName(), item.getPrimaryKey(), null);
 		}
 		else{
 			item = super.updateItem(item);
 		}
 
-		if (updateFirebase && firebaseUtil.isSyncEnabled()) {
+		if (updateFirebase(item, serviceContext)) {
 			try {
 				_log.debug("Updating item in Firebase");
 				firebaseUtil.addOrUpdateItem(item);
@@ -94,7 +107,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 		/* UserId needs to be set on REST API calls */
 		updateAsset(serviceContext.getUserId(), item, serviceContext.getAssetCategoryIds(),
-				serviceContext.getAssetTagNames(), serviceContext.getAssetLinkEntryIds());
+				serviceContext.getAssetTagNames(), serviceContext.getAssetLinkEntryIds(), serviceContext);
 
 		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
 		indexer.reindex(item);
@@ -102,17 +115,13 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		return item;
 	}
 
-	public Item deleteItem(long itemId, boolean updateFirebase) throws PortalException {
-		return deleteItem(itemPersistence.fetchByPrimaryKey(itemId), updateFirebase);
+	public Item deleteItem(long itemId, ServiceContext serviceContext) throws PortalException {
+		return deleteItem(itemPersistence.fetchByPrimaryKey(itemId), serviceContext);
 	}
 
-	public Item deleteItem(long itemId) throws PortalException {
-		return deleteItem(itemPersistence.fetchByPrimaryKey(itemId));
-	}
+	public Item deleteItem(Item item, ServiceContext serviceContext) throws PortalException {
 
-	public Item deleteItem(Item item, boolean updateFirebase) throws PortalException {
-
-		if (updateFirebase && firebaseUtil.isSyncEnabled()) {
+		if (updateFirebase(item, serviceContext)) {
 			try {
 				_log.debug("Deleting item in Firebase");
 				firebaseUtil.deleteItem(item);
@@ -138,21 +147,17 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		List<MBMessage> msgs = MBMessageLocalServiceUtil
 				.getMessages(Item.class.getName(), item.getItemId(), WorkflowConstants.STATUS_ANY);
 		for (MBMessage m : msgs) {
-			MBMessageLocalServiceUtil.deleteMBMessage(m);
+			MBMessageLocalServiceUtil.deleteMessage(m);
 		}
 		
 		/* Delete related LFImages*/
-		LFImageLocalServiceUtil.deleteByItemId(item.getItemId(), updateFirebase);
+		LFImageLocalServiceUtil.deleteByItemId(item.getItemId(), serviceContext);
 		
 		return super.deleteItem(item);
 	}
 
-	public Item deleteItem(Item item) throws PortalException {
-		return deleteItem(item, false);
-	}
-
 	private void updateAsset(long userId, Item item, long[] assetCategoryIds, String[] assetTagNames,
-			long[] assetLinkEntryIds) throws PortalException {
+			long[] assetLinkEntryIds, ServiceContext serviceContext) throws PortalException {
 
 		try {
 			assetCategoryIds = assetCategoryIds == null ? new long[0] : assetCategoryIds;
@@ -160,7 +165,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 					item.getItemId(), assetCategoryIds, assetTagNames);
 			assetLinkLocalService.updateLinks(userId, assetEntry.getEntryId(), assetLinkEntryIds,
 					AssetLinkConstants.TYPE_RELATED);
-			if (firebaseUtil.isSyncEnabled()) {
+			if (updateFirebase(null, serviceContext)) {
 				List<AssetCategory> categories = AssetCategoryLocalServiceUtil
 						.getAssetEntryAssetCategories(assetEntry.getEntryId());
 				firebaseUtil.addRelations(item, categories);
@@ -178,7 +183,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 	}
 
 	private final Log _log = LogFactoryUtil.getLog(this.getClass());
