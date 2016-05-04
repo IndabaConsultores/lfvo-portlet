@@ -9,6 +9,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -50,141 +54,223 @@ public class FirebaseItemSyncUtil {
 		return Boolean.parseBoolean(firebaseSyncEnabled);
 	}
 
-	public String add(Item item) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
-		String itemTypePath = getItemPath(item);
-		Firebase firebase = new Firebase(FB_URI + itemTypePath);
-		Map<String, Object> itemMap = itemToMap(item);
-		FirebaseResponse response = firebase.post(itemMap);
-		if (response.getCode() == 200) {
-			_log.debug("Firebase create sucessful");
-			return (String) response.getBody().get("name");
-		} else {
-			_log.debug("Firebase create unsuccessful. Response code: " + response.getCode());
-			return null;
-		}
-	}
-
-	public void update(Item item) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
-		String firebaseKey = getFirebaseKey(item);
-		update(item, firebaseKey);
-	}
-
-	public void update(Item item, String firebaseKey)
-			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
-		String itemTypePath = getItemPath(item);
-
-		Firebase firebase = new Firebase(FB_URI + itemTypePath);
-
-		Map<String, Object> itemMap = itemToMap(item);
-		FirebaseResponse response;
-		response = firebase.patch("/" + firebaseKey, itemMap);
-		if (response.getCode() == 200) {
-			_log.debug("Firebase update sucessful");
-		} else {
-			_log.debug("Firebase update unsuccessful. Response code: " + response.getCode());
-		}
-	}
-
-	public void addOrUpdateItem(Item item)
-			throws FirebaseException, JacksonUtilityException, UnsupportedEncodingException {
-		String itemKey = getFirebaseKey(item);
-
-		if (itemKey != null) { /* Item exists already in Firebase: update */
-			update(item, itemKey);
-		} else { /* Item does not exist in Firebase: create */
-			add(item);
-		}
-	}
-
-	public void deleteItem(Item item) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
-		String itemTypePath = getItemPath(item);
-
-		Firebase firebase = new Firebase(FB_URI + itemTypePath);
-
-		String itemKey = getFirebaseKey(item);
-		FirebaseResponse response;
-		if (itemKey != null) {
-			addRelations(item, new ArrayList<AssetCategory>());
-			response = firebase.delete("/" + itemKey);
-			if (response.getCode() == 200) {
-				_log.debug("Firebase delete sucessful");
-			} else {
-				_log.debug("Firebase delete unsuccessful. Response code: " + response.getCode());
-			}
-		} else {
-			_log.debug("Could not find item with id " + item.getItemId());
-		}
-	}
-
-	public void addRelations(Item item, List<AssetCategory> acs)
-			throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
-
-		String itemTypePath = getItemPath(item);
-		String itemKey = getFirebaseKey(item);
-		if (itemKey != null) {
-			Firebase firebase;
-			FirebaseResponse response;
-
-			/* Obtain previous categories */
-			firebase = new Firebase(FB_URI);
-			response = firebase.get(itemTypePath + "/" + itemKey);
-			/* oldCatsMap will gather the categories to be removed */
-			String oldCat;
-			Map<String, Boolean> oldCatsMap = new HashMap<String, Boolean>();
-			if (response.getCode() == 200) {
-				Object o = response.getBody().get("category");
-				if (o != null) {
-					oldCat = o.toString();
-					oldCatsMap.put(oldCat, true);
-				}
-			}
-
-			/* Update "item" field on categories */
-			Map<Long, Boolean> catKeysMap = new HashMap<Long, Boolean>();
-			for (AssetCategory ac : acs) {
-				/* Compare previous categories with current categories */
-				long cid = ac.getCategoryId();
-				if (oldCatsMap.containsKey(String.valueOf(cid))) {
-					/* Item has the category; don't remove */
-					oldCatsMap.remove(String.valueOf(cid));
-				} else {
-					/* New category */
-					Map<String, Object> categoryMap = new HashMap<String, Object>();
-					categoryMap.put(itemKey, true);
-					firebase = new Firebase(FB_Cat_URI);
-					response = firebase.patch("/" + ac.getCategoryId() + "/items", categoryMap);
+	public Future<String> add(Item item) {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		return executor.submit(new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				String itemTypePath = getItemPath(item);
+				Firebase firebase;
+				try {
+					firebase = new Firebase(FB_URI + itemTypePath);
+					Map<String, Object> itemMap = itemToMap(item);
+					FirebaseResponse response = firebase.post(itemMap);
 					if (response.getCode() == 200) {
-						_log.debug("Firebase category add sucessful");
+						_log.debug("Firebase create sucessful");
+						return (String) response.getBody().get("name");
 					} else {
-						_log.debug("Firebase category add unsuccessful. Response code: " + response.getCode());
+						_log.debug("Firebase create unsuccessful. Response code: " + response.getCode());
+						return null;
 					}
+				} catch (FirebaseException | JacksonUtilityException | UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				/* Collect the categoryId into the map */
-				catKeysMap.put(ac.getCategoryId(), true);
+				return null;
 			}
+		});
+	}
 
-			/* Delete item reference from remaining old categories */
-			for (Entry<String, Boolean> e : oldCatsMap.entrySet()) {
-				firebase = new Firebase(FB_Cat_URI);
-				response = firebase.delete("/" + e.getKey() + "/items/" + itemKey);
-			}
+	public Future<String> update(Item item) {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		return executor.submit(new Callable<String>() {
 
-			/* Update item's "categories" field */
-			Map<String, Object> itemMap = new HashMap<String, Object>();
-			itemMap.put("liferay", true);
-			if (acs.size() > 0) {
-				long catId = acs.get(0).getCategoryId();
-				itemMap.put("category", catId);
+			@Override
+			public String call() throws Exception {
+				String firebaseKey;
+				try {
+					firebaseKey = getFirebaseKey(item);
+					return update(item, firebaseKey).get();
+				} catch (FirebaseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
 			}
+			
+		});
+	}
 
-			firebase = new Firebase(FB_URI + itemTypePath);
-			response = firebase.patch(itemKey, itemMap);
-			if (response.getCode() == 200) {
-				_log.debug("Firebase category add sucessful");
-			} else {
-				_log.debug("Firebase category add unsuccessful. Response code: " + response.getCode());
+	public Future<String> update(Item item, String firebaseKey) {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		return executor.submit(new Callable<String>() {
+			
+			@Override
+			public String call() throws Exception {
+				String itemTypePath = getItemPath(item);
+
+				Firebase firebase;
+				try {
+					firebase = new Firebase(FB_URI + itemTypePath);
+					Map<String, Object> itemMap = itemToMap(item);
+					FirebaseResponse response;
+					response = firebase.patch("/" + firebaseKey, itemMap);
+					if (response.getCode() == 200) {
+						_log.debug("Firebase update sucessful");
+						return (String) response.getBody().get("name");
+					} else {
+						_log.debug("Firebase update unsuccessful. Response code: " + response.getCode());
+					}
+				} catch (FirebaseException | JacksonUtilityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				return null;
 			}
-		}
+		});
+	}
+
+	public Future<String> addOrUpdateItem(Item item) {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		return executor.submit(new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				String itemKey;
+				try {
+					itemKey = getFirebaseKey(item);
+					if (itemKey != null) { /* Item exists already in Firebase: update */
+						update(item, itemKey);
+					} else { /* Item does not exist in Firebase: create */
+						add(item);
+					}
+					
+				} catch (FirebaseException | UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
+			}
+		});
+	}
+
+	public Future<Object> deleteItem(Item item) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		return executor.submit(new Callable<Object>() {
+			@Override
+			public Object call() throws Exception {
+				String itemTypePath = getItemPath(item);
+
+				Firebase firebase;
+				try {
+					firebase = new Firebase(FB_URI + itemTypePath);
+					String itemKey = getFirebaseKey(item);
+					FirebaseResponse response;
+					if (itemKey != null) {
+						addRelations(item, new ArrayList<AssetCategory>()).get();
+						response = firebase.delete("/" + itemKey);
+						if (response.getCode() == 200) {
+							_log.debug("Firebase delete sucessful");
+						} else {
+							_log.debug("Firebase delete unsuccessful. Response code: " + response.getCode());
+						}
+					} else {
+						_log.debug("Could not find item with id " + item.getItemId());
+					}
+				} catch (FirebaseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				
+				return null;
+			}
+		});
+	}
+
+	public Future<Object> addRelations(Item item, List<AssetCategory> acs) {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		return executor.submit(new Callable<Object>() {
+			@Override
+			public Object call() throws Exception {
+				String itemTypePath = getItemPath(item);
+				String itemKey;
+				try {
+					itemKey = getFirebaseKey(item);
+					if (itemKey != null) {
+						Firebase firebase;
+						FirebaseResponse response;
+
+						/* Obtain previous categories */
+						firebase = new Firebase(FB_URI);
+						response = firebase.get(itemTypePath + "/" + itemKey);
+						/* oldCatsMap will gather the categories to be removed */
+						String oldCat;
+						Map<String, Boolean> oldCatsMap = new HashMap<String, Boolean>();
+						if (response.getCode() == 200) {
+							Object o = response.getBody().get("category");
+							if (o != null) {
+								oldCat = o.toString();
+								oldCatsMap.put(oldCat, true);
+							}
+						}
+
+						/* Update "item" field on categories */
+						Map<Long, Boolean> catKeysMap = new HashMap<Long, Boolean>();
+						for (AssetCategory ac : acs) {
+							/* Compare previous categories with current categories */
+							long cid = ac.getCategoryId();
+							if (oldCatsMap.containsKey(String.valueOf(cid))) {
+								/* Item has the category; don't remove */
+								oldCatsMap.remove(String.valueOf(cid));
+							} else {
+								/* New category */
+								Map<String, Object> categoryMap = new HashMap<String, Object>();
+								categoryMap.put(itemKey, true);
+								firebase = new Firebase(FB_Cat_URI);
+								response = firebase.patch("/" + ac.getCategoryId() + "/items", categoryMap);
+								if (response.getCode() == 200) {
+									_log.debug("Firebase category add sucessful");
+								} else {
+									_log.debug("Firebase category add unsuccessful. Response code: " + response.getCode());
+								}
+							}
+							/* Collect the categoryId into the map */
+							catKeysMap.put(ac.getCategoryId(), true);
+						}
+
+						/* Delete item reference from remaining old categories */
+						for (Entry<String, Boolean> e : oldCatsMap.entrySet()) {
+							firebase = new Firebase(FB_Cat_URI);
+							response = firebase.delete("/" + e.getKey() + "/items/" + itemKey);
+						}
+
+						/* Update item's "categories" field */
+						Map<String, Object> itemMap = new HashMap<String, Object>();
+						itemMap.put("liferay", true);
+						if (acs.size() > 0) {
+							long catId = acs.get(0).getCategoryId();
+							itemMap.put("category", catId);
+						} else {
+							itemMap.put("category", null);
+						}
+
+						firebase = new Firebase(FB_URI + itemTypePath);
+						response = firebase.patch(itemKey, itemMap);
+						if (response.getCode() == 200) {
+							_log.debug("Firebase category add sucessful");
+						} else {
+							_log.debug("Firebase category add unsuccessful. Response code: " + response.getCode());
+						}
+					}
+				} catch (FirebaseException | JacksonUtilityException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				return null;
+			}
+		});
+		
 	}
 
 	/**

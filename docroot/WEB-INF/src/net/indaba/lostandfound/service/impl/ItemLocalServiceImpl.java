@@ -22,7 +22,6 @@ import com.liferay.asset.kernel.model.AssetLinkConstants;
 import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.message.boards.kernel.model.MBMessage;
-import com.liferay.message.boards.kernel.service.MBDiscussionLocalServiceUtil;
 import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -34,8 +33,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.util.portlet.PortletProps;
-
 import aQute.bnd.annotation.ProviderType;
 import net.indaba.lostandfound.firebase.FirebaseItemSyncUtil;
 import net.indaba.lostandfound.model.Item;
@@ -100,7 +97,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			try {
 				_log.debug("Updating item in Firebase");
 				firebaseUtil.addOrUpdateItem(item);
-			} catch (Exception | FirebaseException | JacksonUtilityException e) {
+			} catch (Exception e) {
 				_log.error("Error updating item " + item.getItemId(), e);
 			}
 		}
@@ -125,7 +122,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			try {
 				_log.debug("Deleting item in Firebase");
 				firebaseUtil.deleteItem(item);
-			} catch (FirebaseException | Exception | JacksonUtilityException e) {
+			} catch (Exception | JacksonUtilityException | FirebaseException e) {
 				_log.error("Error deleting item " + item.getItemId(), e);
 				e.printStackTrace();
 			}
@@ -176,12 +173,6 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			}
 		} catch (Exception e) {
 			_log.error("Error updating Items asset", e);
-		} catch (FirebaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JacksonUtilityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
 	}
