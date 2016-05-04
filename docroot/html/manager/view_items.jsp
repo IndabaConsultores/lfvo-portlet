@@ -18,6 +18,11 @@ List<Item> items = (List<Item>)renderRequest.getAttribute("items");
 			<a href="<%=editItemURL%>"><%=item.getName()%></a>
 			
 		</liferay-ui:search-container-column-text>
+		
+		<liferay-ui:search-container-column-text>
+			<liferay-ui:asset-categories-summary classPK="<%=item.getItemId()%>" className="<%=Item.class.getName()%>"/>			
+		</liferay-ui:search-container-column-text>
+		
 		<liferay-ui:search-container-column-jsp
 			cssClass="list-group-item-field"
 			path="/html/manager/item_action.jsp"
