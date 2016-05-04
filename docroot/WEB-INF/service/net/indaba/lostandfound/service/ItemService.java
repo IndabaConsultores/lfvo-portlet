@@ -53,17 +53,10 @@ public interface ItemService extends BaseService, InvokableService {
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext)
 		throws PortalException;
 
-	public Item addOrUpdateItem(Item item, ServiceContext serviceContext,
-		boolean updateFirebase) throws PortalException;
-
-	public Item deleteItem(Item item) throws PortalException;
-
-	public Item deleteItem(Item item, boolean updateFirebase)
+	public Item deleteItem(Item item, ServiceContext serviceContext)
 		throws PortalException;
 
-	public Item deleteItem(long itemId) throws PortalException;
-
-	public Item deleteItem(long itemId, boolean updateFirebase)
+	public Item deleteItem(long itemId, ServiceContext serviceContext)
 		throws PortalException;
 
 	/**

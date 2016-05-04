@@ -48,35 +48,17 @@ public class ItemServiceUtil {
 		return getService().addOrUpdateItem(item, serviceContext);
 	}
 
-	public static net.indaba.lostandfound.model.Item addOrUpdateItem(
+	public static net.indaba.lostandfound.model.Item deleteItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext,
-		boolean updateFirebase)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().addOrUpdateItem(item, serviceContext, updateFirebase);
-	}
-
-	public static net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().deleteItem(item);
-	}
-
-	public static net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item, boolean updateFirebase)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().deleteItem(item, updateFirebase);
-	}
-
-	public static net.indaba.lostandfound.model.Item deleteItem(long itemId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().deleteItem(itemId);
+		return getService().deleteItem(item, serviceContext);
 	}
 
 	public static net.indaba.lostandfound.model.Item deleteItem(long itemId,
-		boolean updateFirebase)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return getService().deleteItem(itemId, updateFirebase);
+		return getService().deleteItem(itemId, serviceContext);
 	}
 
 	/**

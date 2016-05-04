@@ -78,9 +78,6 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext)
 		throws PortalException;
 
-	public Item addOrUpdateItem(Item item, ServiceContext serviceContext,
-		boolean updateFirebase) throws PortalException;
-
 	/**
 	* Creates a new item with the primary key. Does not add the item to the database.
 	*
@@ -94,12 +91,11 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	*
 	* @param item the item
 	* @return the item that was removed
-	* @throws PortalException
 	*/
 	@Indexable(type = IndexableType.DELETE)
-	public Item deleteItem(Item item) throws PortalException;
+	public Item deleteItem(Item item);
 
-	public Item deleteItem(Item item, boolean updateFirebase)
+	public Item deleteItem(Item item, ServiceContext serviceContext)
 		throws PortalException;
 
 	/**
@@ -112,7 +108,7 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	@Indexable(type = IndexableType.DELETE)
 	public Item deleteItem(long itemId) throws PortalException;
 
-	public Item deleteItem(long itemId, boolean updateFirebase)
+	public Item deleteItem(long itemId, ServiceContext serviceContext)
 		throws PortalException;
 
 	/**

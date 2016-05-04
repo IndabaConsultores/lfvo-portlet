@@ -52,16 +52,6 @@ public class ItemLocalServiceWrapper implements ItemLocalService,
 		return _itemLocalService.addOrUpdateItem(item, serviceContext);
 	}
 
-	@Override
-	public net.indaba.lostandfound.model.Item addOrUpdateItem(
-		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext,
-		boolean updateFirebase)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return _itemLocalService.addOrUpdateItem(item, serviceContext,
-			updateFirebase);
-	}
-
 	/**
 	* Creates a new item with the primary key. Does not add the item to the database.
 	*
@@ -78,20 +68,19 @@ public class ItemLocalServiceWrapper implements ItemLocalService,
 	*
 	* @param item the item
 	* @return the item that was removed
-	* @throws PortalException
 	*/
 	@Override
 	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		net.indaba.lostandfound.model.Item item) {
 		return _itemLocalService.deleteItem(item);
 	}
 
 	@Override
 	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item, boolean updateFirebase)
+		net.indaba.lostandfound.model.Item item,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _itemLocalService.deleteItem(item, updateFirebase);
+		return _itemLocalService.deleteItem(item, serviceContext);
 	}
 
 	/**
@@ -109,9 +98,9 @@ public class ItemLocalServiceWrapper implements ItemLocalService,
 
 	@Override
 	public net.indaba.lostandfound.model.Item deleteItem(long itemId,
-		boolean updateFirebase)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _itemLocalService.deleteItem(itemId, updateFirebase);
+		return _itemLocalService.deleteItem(itemId, serviceContext);
 	}
 
 	/**

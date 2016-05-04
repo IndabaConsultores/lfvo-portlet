@@ -41,39 +41,18 @@ public class ItemServiceWrapper implements ItemService,
 	}
 
 	@Override
-	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+	public net.indaba.lostandfound.model.Item deleteItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext,
-		boolean updateFirebase)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _itemService.addOrUpdateItem(item, serviceContext, updateFirebase);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return _itemService.deleteItem(item);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item, boolean updateFirebase)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return _itemService.deleteItem(item, updateFirebase);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item deleteItem(long itemId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return _itemService.deleteItem(itemId);
+		return _itemService.deleteItem(item, serviceContext);
 	}
 
 	@Override
 	public net.indaba.lostandfound.model.Item deleteItem(long itemId,
-		boolean updateFirebase)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _itemService.deleteItem(itemId, updateFirebase);
+		return _itemService.deleteItem(itemId, serviceContext);
 	}
 
 	/**

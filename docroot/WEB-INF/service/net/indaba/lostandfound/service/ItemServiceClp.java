@@ -34,36 +34,22 @@ public class ItemServiceClp implements ItemService {
 				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 
-		_methodName1 = "addOrUpdateItem";
+		_methodName1 = "deleteItem";
 
 		_methodParameterTypes1 = new String[] {
 				"net.indaba.lostandfound.model.Item",
-				"com.liferay.portal.kernel.service.ServiceContext", "boolean"
+				"com.liferay.portal.kernel.service.ServiceContext"
 			};
 
 		_methodName2 = "deleteItem";
 
 		_methodParameterTypes2 = new String[] {
-				"net.indaba.lostandfound.model.Item"
+				"long", "com.liferay.portal.kernel.service.ServiceContext"
 			};
 
-		_methodName3 = "deleteItem";
+		_methodName3 = "getOSGiServiceIdentifier";
 
-		_methodParameterTypes3 = new String[] {
-				"net.indaba.lostandfound.model.Item", "boolean"
-			};
-
-		_methodName4 = "deleteItem";
-
-		_methodParameterTypes4 = new String[] { "long" };
-
-		_methodName5 = "deleteItem";
-
-		_methodParameterTypes5 = new String[] { "long", "boolean" };
-
-		_methodName6 = "getOSGiServiceIdentifier";
-
-		_methodParameterTypes6 = new String[] {  };
+		_methodParameterTypes3 = new String[] {  };
 	}
 
 	@Override
@@ -102,10 +88,9 @@ public class ItemServiceClp implements ItemService {
 	}
 
 	@Override
-	public net.indaba.lostandfound.model.Item addOrUpdateItem(
+	public net.indaba.lostandfound.model.Item deleteItem(
 		net.indaba.lostandfound.model.Item item,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext,
-		boolean updateFirebase)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
@@ -115,102 +100,8 @@ public class ItemServiceClp implements ItemService {
 					new Object[] {
 						ClpSerializer.translateInput(item),
 						
-					ClpSerializer.translateInput(serviceContext),
-						
-					updateFirebase
+					ClpSerializer.translateInput(serviceContext)
 					});
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableService.invokeMethod(_methodName2,
-					_methodParameterTypes2,
-					new Object[] { ClpSerializer.translateInput(item) });
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item deleteItem(
-		net.indaba.lostandfound.model.Item item, boolean updateFirebase)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableService.invokeMethod(_methodName3,
-					_methodParameterTypes3,
-					new Object[] {
-						ClpSerializer.translateInput(item),
-						
-					updateFirebase
-					});
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return (net.indaba.lostandfound.model.Item)ClpSerializer.translateOutput(returnObj);
-	}
-
-	@Override
-	public net.indaba.lostandfound.model.Item deleteItem(long itemId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableService.invokeMethod(_methodName4,
-					_methodParameterTypes4, new Object[] { itemId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -233,14 +124,18 @@ public class ItemServiceClp implements ItemService {
 
 	@Override
 	public net.indaba.lostandfound.model.Item deleteItem(long itemId,
-		boolean updateFirebase)
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableService.invokeMethod(_methodName5,
-					_methodParameterTypes5,
-					new Object[] { itemId, updateFirebase });
+			returnObj = _invokableService.invokeMethod(_methodName2,
+					_methodParameterTypes2,
+					new Object[] {
+						itemId,
+						
+					ClpSerializer.translateInput(serviceContext)
+					});
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -266,8 +161,8 @@ public class ItemServiceClp implements ItemService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableService.invokeMethod(_methodName6,
-					_methodParameterTypes6, new Object[] {  });
+			returnObj = _invokableService.invokeMethod(_methodName3,
+					_methodParameterTypes3, new Object[] {  });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -300,10 +195,4 @@ public class ItemServiceClp implements ItemService {
 	private String[] _methodParameterTypes2;
 	private String _methodName3;
 	private String[] _methodParameterTypes3;
-	private String _methodName4;
-	private String[] _methodParameterTypes4;
-	private String _methodName5;
-	private String[] _methodParameterTypes5;
-	private String _methodName6;
-	private String[] _methodParameterTypes6;
 }
