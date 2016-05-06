@@ -4,7 +4,7 @@
 	</div>
 
 	<div class="file-icon-color-0 sticker sticker-right">
-		<aui:icon cssClass="icon-monospaced" image="lock" markupView="lexicon" message="locked" />
+		<aui:icon cssClass="icon-monospaced" image="trash" markupView="lexicon" message="locked" />
 	</div>
 	
 </liferay-frontend:vertical-card-sticker-bottom>
