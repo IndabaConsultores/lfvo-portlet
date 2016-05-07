@@ -15,6 +15,7 @@
 package net.indaba.lostandfound.service.impl;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
@@ -93,18 +94,20 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 			item = super.updateItem(item);
 		}
 
+		/* UserId needs to be set on REST API calls */
+		AssetEntry assetEntry = updateAsset(serviceContext.getUserId(), item, serviceContext.getAssetCategoryIds(),
+				serviceContext.getAssetTagNames(), serviceContext.getAssetLinkEntryIds(), serviceContext);
 		if (updateFirebase(item, serviceContext)) {
 			try {
 				_log.debug("Updating item in Firebase");
-				firebaseUtil.addOrUpdateItem(item);
+				Future<String> firebaseKey = firebaseUtil.addOrUpdateItem(item, null);
+				List<AssetCategory> categories = AssetCategoryLocalServiceUtil
+						.getAssetEntryAssetCategories(assetEntry.getEntryId());
+				firebaseUtil.addRelations(item, categories, firebaseKey);
 			} catch (Exception e) {
 				_log.error("Error updating item " + item.getItemId(), e);
 			}
 		}
-
-		/* UserId needs to be set on REST API calls */
-		updateAsset(serviceContext.getUserId(), item, serviceContext.getAssetCategoryIds(),
-				serviceContext.getAssetTagNames(), serviceContext.getAssetLinkEntryIds(), serviceContext);
 
 		Indexer<Item> indexer = IndexerRegistryUtil.nullSafeGetIndexer(Item.class);
 		indexer.reindex(item);
@@ -121,8 +124,8 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		if (updateFirebase(item, serviceContext)) {
 			try {
 				_log.debug("Deleting item in Firebase");
-				firebaseUtil.deleteItem(item);
-			} catch (Exception | JacksonUtilityException | FirebaseException e) {
+				firebaseUtil.deleteItem(item, null);
+			} catch (Exception e) {
 				_log.error("Error deleting item " + item.getItemId(), e);
 				e.printStackTrace();
 			}
@@ -153,28 +156,15 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		return super.deleteItem(item);
 	}
 
-	private void updateAsset(long userId, Item item, long[] assetCategoryIds, String[] assetTagNames,
+	private AssetEntry updateAsset(long userId, Item item, long[] assetCategoryIds, String[] assetTagNames,
 			long[] assetLinkEntryIds, ServiceContext serviceContext) throws PortalException {
 
-		try {
 			assetCategoryIds = assetCategoryIds == null ? new long[0] : assetCategoryIds;
 			AssetEntry assetEntry = assetEntryLocalService.updateEntry(userId, item.getGroupId(), Item.class.getName(),
 					item.getItemId(), assetCategoryIds, assetTagNames);
 			assetLinkLocalService.updateLinks(userId, assetEntry.getEntryId(), assetLinkEntryIds,
 					AssetLinkConstants.TYPE_RELATED);
-			if (updateFirebase(null, serviceContext)) {
-				List<AssetCategory> categories = AssetCategoryLocalServiceUtil
-						.getAssetEntryAssetCategories(assetEntry.getEntryId());
-				firebaseUtil.addRelations(item, categories);
-				
-//				List<AssetTag> tags = AssetTagLocalServiceUtil
-//						.getAssetEntryAssetTags(assetEntry.getEntryId());
-//				firebaseUtil.addRelations(item, tags);
-			}
-		} catch (Exception e) {
-			_log.error("Error updating Items asset", e);
-		}
-		
+			return assetEntry;
 	}
 
 	private final Log _log = LogFactoryUtil.getLog(this.getClass());

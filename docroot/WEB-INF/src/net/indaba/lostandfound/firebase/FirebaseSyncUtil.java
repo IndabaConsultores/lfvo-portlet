@@ -95,12 +95,12 @@ public class FirebaseSyncUtil {
 			Item item = e.getKey();
 			String fbKey = e.getValue();
 			if (fbKey.equals("liferay")) {
-				itemUtil.addOrUpdateItem(item);
+				itemUtil.addOrUpdateItem(item, null);
 			} else {
 				boolean isNew = item.isNew();
 				item = ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
 				if (isNew) {
-					itemUtil.update(item, fbKey);
+					itemUtil.update(item, fbKey, null);
 				}
 			}
 		}

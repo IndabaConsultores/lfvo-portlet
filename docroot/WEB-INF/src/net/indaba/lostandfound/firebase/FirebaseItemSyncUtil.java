@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -54,11 +55,18 @@ public class FirebaseItemSyncUtil {
 		return Boolean.parseBoolean(firebaseSyncEnabled);
 	}
 
-	public Future<String> add(Item item) {
+	public Future<String> add(Item item, Future<Object> wait) {
+		if (wait != null) {
+			// Wait for future f to finish
+			try {
+				wait.get();
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		return executor.submit(new Callable<String>() {
-			@Override
-			public String call() throws Exception {
+		Future<String> future = executor.submit(() -> {
 				String itemTypePath = getItemPath(item);
 				Firebase firebase;
 				try {
@@ -77,41 +85,50 @@ public class FirebaseItemSyncUtil {
 					e.printStackTrace();
 				}
 				return null;
-			}
 		});
+		executor.shutdown();
+		return future;
 	}
 
-	public Future<String> update(Item item) {
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		return executor.submit(new Callable<String>() {
-
-			@Override
-			public String call() throws Exception {
-				String firebaseKey;
-				try {
-					firebaseKey = getFirebaseKey(item);
-					return update(item, firebaseKey).get();
-				} catch (FirebaseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return null;
+	public Future<String> update(Item item, Future<Object> wait) {
+		if (wait != null) {
+			// Wait for future f to finish
+			try {
+				wait.get();
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
+		}
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		Future<String> future = executor.submit(() -> {
+			try {
+				String firebaseKey = getFirebaseKey(item);
+				return update(item, firebaseKey, null).get();
+			} catch (FirebaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;		
 		});
+		return future;
 	}
 
-	public Future<String> update(Item item, String firebaseKey) {
+	public Future<String> update(Item item, String firebaseKey, Future<Object> wait) {
+		if (wait != null) {
+			// Wait for future f to finish
+			try {
+				wait.get();
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		return executor.submit(new Callable<String>() {
-			
-			@Override
-			public String call() throws Exception {
+		Future<String> future = executor.submit(() -> {
 				String itemTypePath = getItemPath(item);
-
-				Firebase firebase;
 				try {
-					firebase = new Firebase(FB_URI + itemTypePath);
+					Firebase firebase = new Firebase(FB_URI + itemTypePath);
 					Map<String, Object> itemMap = itemToMap(item);
 					FirebaseResponse response;
 					response = firebase.patch("/" + firebaseKey, itemMap);
@@ -127,50 +144,63 @@ public class FirebaseItemSyncUtil {
 				}
 
 				return null;
-			}
 		});
+		executor.shutdown();
+		return future;
 	}
 
-	public Future<String> addOrUpdateItem(Item item) {
+	public Future<String> addOrUpdateItem(Item item, Future<Object> wait) {
+		if (wait != null) {
+			// Wait for future f to finish
+			try {
+				wait.get();
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		return executor.submit(new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				String itemKey;
-				try {
-					itemKey = getFirebaseKey(item);
-					if (itemKey != null) { /* Item exists already in Firebase: update */
-						update(item, itemKey);
-					} else { /* Item does not exist in Firebase: create */
-						add(item);
-					}
-					
-				} catch (FirebaseException | UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		Future<String> future = executor.submit(() -> {
+			try {
+				String itemKey = getFirebaseKey(item);
+				if (itemKey != null) { /* Item exists already in Firebase: update */
+					return update(item, itemKey, null).get();
+				} else { /* Item does not exist in Firebase: create */
+					return add(item, null).get();
 				}
-				return null;
+			} catch (FirebaseException | UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			return null;
 		});
+		executor.shutdown();
+		return future;
 	}
 
-	public Future<Object> deleteItem(Item item) throws FirebaseException, UnsupportedEncodingException, JacksonUtilityException {
+	public Future<Object> deleteItem(Item item, Future<Object> wait) {
+		if (wait != null) {
+			// Wait for future f to finish
+			try {
+				wait.get();
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		return executor.submit(new Callable<Object>() {
-			@Override
-			public Object call() throws Exception {
+		Future<Object> future = executor.submit(() -> {
 				String itemTypePath = getItemPath(item);
-
-				Firebase firebase;
 				try {
-					firebase = new Firebase(FB_URI + itemTypePath);
+					Firebase firebase = new Firebase(FB_URI + itemTypePath);
 					String itemKey = getFirebaseKey(item);
 					FirebaseResponse response;
 					if (itemKey != null) {
-						addRelations(item, new ArrayList<AssetCategory>()).get();
+						addRelations(item, new ArrayList<AssetCategory>(), null).get();
 						response = firebase.delete("/" + itemKey);
 						if (response.getCode() == 200) {
 							_log.debug("Firebase delete sucessful");
+							return true;
 						} else {
 							_log.debug("Firebase delete unsuccessful. Response code: " + response.getCode());
 						}
@@ -181,18 +211,24 @@ public class FirebaseItemSyncUtil {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-				
-				return null;
-			}
+				return false;
 		});
+		executor.shutdown();
+		return future;
 	}
 
-	public Future<Object> addRelations(Item item, List<AssetCategory> acs) {
+	public Future<Object> addRelations(Item item, List<AssetCategory> acs, Future<String> wait) {
+		if (wait != null) {
+			// Wait for future f to finish
+			try {
+				wait.get();
+			} catch (InterruptedException | ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		return executor.submit(new Callable<Object>() {
-			@Override
-			public Object call() throws Exception {
+		return executor.submit(() -> {
 				String itemTypePath = getItemPath(item);
 				String itemKey;
 				try {
@@ -268,9 +304,7 @@ public class FirebaseItemSyncUtil {
 					e1.printStackTrace();
 				}
 				return null;
-			}
 		});
-		
 	}
 
 	/**
