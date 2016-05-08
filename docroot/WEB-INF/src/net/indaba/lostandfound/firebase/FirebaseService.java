@@ -297,7 +297,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 					if (response.getCode() == 200) {
 						Map<String, Object> o = response.getBody();
 						if (o != null) {
-							oldRefMap = o;
+							oldRefMap = flatten(o);
 						}
 					}
 
@@ -347,6 +347,26 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 		});
 	}
 	
+	private Map<String, Object> flatten(Map<String, Object> map) {
+		Map<String, Object> result = new LinkedHashMap<String, Object>();
+		Iterator<String> it = map.keySet().iterator();
+		while (it.hasNext()) {
+			String root = it.next();
+			Object o = map.get(root);
+			if (o instanceof Map) {
+				@SuppressWarnings("unchecked")
+				Map<String, Object> m = Map.class.cast(o);
+				m = flatten(m);
+				for (String k : m.keySet()) {
+					result.put(root + "/" + k, m.get(k));
+				}
+			} else {
+				result.put(root, o);
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * Sets the references for a many-to-many relationship
 	 * @param entity

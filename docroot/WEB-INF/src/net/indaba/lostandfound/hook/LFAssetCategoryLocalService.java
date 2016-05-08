@@ -73,15 +73,7 @@ public class LFAssetCategoryLocalService extends AssetCategoryLocalServiceWrappe
 	@Override
 	public AssetCategory deleteCategory(AssetCategory category, boolean skipRebuildTree) throws PortalException {
 		if (firebaseUtil.isSyncEnabled()) {
-			List<AssetEntry> assetEntries = AssetEntryLocalServiceUtil
-					.getAssetCategoryAssetEntries(category.getCategoryId());
 			List<Item> items = new ArrayList<Item>();
-			for (AssetEntry ae : assetEntries) {
-				if (ae.getClassName().equals(Item.class.getName())) {
-					Item item = ItemLocalServiceUtil.fetchItem(ae.getClassPK());
-					items.add(item);
-				}
-			}
 			FirebaseService<Item> fbItemService = FirebaseSynchronizer.getInstance().getService(Item.class);
 
 			Future<Boolean> result = firebaseUtil.setRelationOneToMany(category, items, fbItemService, null);
