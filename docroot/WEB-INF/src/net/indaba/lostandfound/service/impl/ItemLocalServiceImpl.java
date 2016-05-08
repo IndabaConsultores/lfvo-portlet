@@ -127,17 +127,6 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	}
 
 	public Item deleteItem(Item item, ServiceContext serviceContext) throws PortalException {
-
-		if (updateFirebase(item, serviceContext)) {
-			try {
-				_log.debug("Deleting item in Firebase");
-				firebaseUtil.delete(item, null);
-			} catch (Exception e) {
-				_log.error("Error deleting item " + item.getItemId(), e);
-				e.printStackTrace();
-			}
-
-		}
 		try {
 			AssetEntry assetEntry = assetEntryLocalService.fetchEntry(Item.class.getName(), item.getItemId());
 			assetLinkLocalService.deleteLinks(assetEntry.getEntryId());
@@ -153,13 +142,28 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		/* Delete related messages */
 		List<MBMessage> msgs = MBMessageLocalServiceUtil
 				.getMessages(Item.class.getName(), item.getItemId(), WorkflowConstants.STATUS_ANY);
+		MBMessage rootMsg = null;
 		for (MBMessage m : msgs) {
-			MBMessageLocalServiceUtil.deleteMessage(m);
+			if (m.getParentMessageId() == 0) {
+				rootMsg = m;
+			} else {
+				MBMessageLocalServiceUtil.deleteMessage(m);
+			}
 		}
+		MBMessageLocalServiceUtil.deleteMessage(rootMsg);
 		
 		/* Delete related LFImages*/
 		LFImageLocalServiceUtil.deleteByItemId(item.getItemId(), serviceContext);
-		
+		if (updateFirebase(item, serviceContext)) {
+			try {
+				_log.debug("Deleting item in Firebase");
+				firebaseUtil.delete(item, null);
+			} catch (Exception e) {
+				_log.error("Error deleting item " + item.getItemId(), e);
+				e.printStackTrace();
+			}
+
+		}
 		return super.deleteItem(item);
 	}
 

@@ -26,7 +26,7 @@ public class FirebaseOneWayService<T extends BaseModel<T>> extends FirebaseServi
 			FirebaseResponse response = firebase.put("/" + entity.getPrimaryKeyObj(), entityMap);
 			if (response.getCode() == 200) {
 				_log.debug("Firebase create sucessful");
-				return (String) response.getBody().get("name");
+				return (String) response.getBody().keySet().iterator().next();
 			} else {
 				_log.error("Firebase create unsuccessful. Response code: " + response.getCode());
 				return null;

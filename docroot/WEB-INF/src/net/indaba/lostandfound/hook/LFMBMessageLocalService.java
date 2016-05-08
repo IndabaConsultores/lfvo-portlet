@@ -1,5 +1,7 @@
 package net.indaba.lostandfound.hook;
 
+import java.util.concurrent.Future;
+
 import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.message.boards.kernel.model.MBMessageDisplay;
 import com.liferay.message.boards.kernel.model.MBThread;
@@ -19,11 +21,11 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import net.indaba.lostandfound.firebase.FirebaseService;
 import net.indaba.lostandfound.firebase.FirebaseSynchronizer;
 import net.indaba.lostandfound.model.Item;
+import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 
 public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 
-	@SuppressWarnings("unchecked")
-	FirebaseService<MBMessage> firebaseUtil = (FirebaseService<MBMessage>) FirebaseSynchronizer.getInstance().getService(MBMessage.class);
+	FirebaseService<MBMessage> firebaseUtil = FirebaseSynchronizer.getInstance().getService(MBMessage.class);
 
 	/*
 	 * (non-Java-doc)
@@ -85,7 +87,10 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 				message.getPrimaryKey(), false, true, true);
 
 		if (updateFirebase(message, serviceContext) && !isThemeDisplayNull) {
-			firebaseUtil.add(message);
+			Future<String> fbKey = firebaseUtil.add(message, null);
+			Item item = ItemLocalServiceUtil.fetchItem(message.getClassPK());
+			FirebaseService<Item> fbItemService = FirebaseSynchronizer.getInstance().getService(Item.class);
+			firebaseUtil.setRelationManyToOne(message, item, fbItemService, fbKey);
 		}
 		return message;
 	}
@@ -115,7 +120,10 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 		message = super.updateDiscussionMessage(userId, messageId, className, classPK, subject, body,
 				serviceContext);
 		if (updateFirebase(message, serviceContext) && !isThemeDisplayNull) {
-			firebaseUtil.update(message);
+			Future<String> fbKey = firebaseUtil.update(message, null);
+			Item item = ItemLocalServiceUtil.fetchItem(message.getClassPK());
+			FirebaseService<Item> fbItemService = FirebaseSynchronizer.getInstance().getService(Item.class);
+			firebaseUtil.setRelationManyToOne(message, item, fbItemService, fbKey);
 		}
 		return message;
 	}
@@ -123,7 +131,9 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 	@Override
 	public MBMessage deleteMessage(MBMessage message) throws PortalException {
 		if (updateFirebase(message, null)) {
-			firebaseUtil.delete(message);
+			FirebaseService<Item> fbItemService = FirebaseSynchronizer.getInstance().getService(Item.class);
+			Future<Boolean> result = firebaseUtil.setRelationManyToOne(message, null, fbItemService, null);
+			firebaseUtil.delete(message, result);
 		}
 		return super.deleteMessage(message);
 	}

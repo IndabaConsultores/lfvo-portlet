@@ -97,7 +97,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 			response = firebase.patch("/" + firebaseKey, itemMap);
 			if (response.getCode() == 200) {
 				_log.debug("Firebase update sucessful");
-				return (String) response.getBody().get("name");
+				return (String) response.getBody().keySet().iterator().next();
 			} else {
 				_log.error("Firebase update unsuccessful. Response code: " + response.getCode());
 			}
@@ -142,7 +142,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 					_log.error("Firebase delete unsuccessful. Response code: " + response.getCode());
 				}
 			} else {
-				_log.error("Could not find item with id " + entity.getPrimaryKeyObj());
+				_log.error("Could not find entity with id " + entity.getPrimaryKeyObj());
 			}
 		} catch (FirebaseException | UnsupportedEncodingException e) {
 			_log.error("Firebase delete unsuccessful. Error: " + e.getMessage());
@@ -416,9 +416,8 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 					if (relatedEntity != null) {
 						newRef = relatedEntityService.getFirebaseKey(relatedEntity);
 						/* Update relatedEntity's reference(s) */
-						if (oldRef != newRef) {
-							if (newRef != null)
-								relatedEntityService.setReference("To" + X, "add", newRef, fbKey, entityRefName, null);
+						if (newRef != null && !newRef.equals(oldRef)) {
+							relatedEntityService.setReference("To" + X, "add", newRef, fbKey, entityRefName, null);
 							if (oldRef != null)
 								relatedEntityService.setReference("To" + X, "delete", oldRef, fbKey, entityRefName, null);
 						}
