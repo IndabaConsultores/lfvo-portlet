@@ -34,13 +34,13 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+
 import aQute.bnd.annotation.ProviderType;
-import net.indaba.lostandfound.firebase.FirebaseItemSyncUtil;
+import net.indaba.lostandfound.firebase.FirebaseService;
+import net.indaba.lostandfound.firebase.FirebaseSynchronizer;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
 import net.indaba.lostandfound.service.base.ItemLocalServiceBaseImpl;
-import net.thegreshams.firebase4j.error.FirebaseException;
-import net.thegreshams.firebase4j.error.JacksonUtilityException;
 
 /**
  * The implementation of the item local service.
@@ -64,8 +64,12 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	 * Never reference this class directly. Always use {@link net.indaba.lostandfound.service.ItemLocalServiceUtil} to access the item local service.
 	 */
 	
-	private FirebaseItemSyncUtil firebaseUtil = FirebaseItemSyncUtil.getInstance();
-	
+	private FirebaseService<Item> firebaseUtil = FirebaseSynchronizer.getInstance()
+			.getService(Item.class);
+
+	private FirebaseService<AssetCategory> fbCatService = FirebaseSynchronizer
+			.getInstance().getService(AssetCategory.class);
+
 	private boolean updateFirebase(Item item, ServiceContext serviceContext) {
 		ThemeDisplay themeDisplay = new ThemeDisplay();
 		if (serviceContext != null) {
@@ -99,11 +103,14 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 				serviceContext.getAssetTagNames(), serviceContext.getAssetLinkEntryIds(), serviceContext);
 		if (updateFirebase(item, serviceContext)) {
 			try {
-				_log.debug("Updating item in Firebase");
-				Future<String> firebaseKey = firebaseUtil.addOrUpdateItem(item, null);
+				Future<String> firebaseKey = firebaseUtil.addOrUpdate(item, null);
 				List<AssetCategory> categories = AssetCategoryLocalServiceUtil
 						.getAssetEntryAssetCategories(assetEntry.getEntryId());
-				firebaseUtil.addRelations(item, categories, firebaseKey);
+				//firebaseUtil.addRelations(item, categories, firebaseKey);
+				AssetCategory category = null;
+				if (!categories.isEmpty())
+					category = categories.get(0);
+				firebaseUtil.setRelationManyToOne(item, category, fbCatService, firebaseKey);
 			} catch (Exception e) {
 				_log.error("Error updating item " + item.getItemId(), e);
 			}
@@ -124,7 +131,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		if (updateFirebase(item, serviceContext)) {
 			try {
 				_log.debug("Deleting item in Firebase");
-				firebaseUtil.deleteItem(item, null);
+				firebaseUtil.delete(item, null);
 			} catch (Exception e) {
 				_log.error("Error deleting item " + item.getItemId(), e);
 				e.printStackTrace();

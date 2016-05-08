@@ -1,7 +1,5 @@
 package net.indaba.lostandfound.hook;
 
-import java.io.UnsupportedEncodingException;
-
 import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.message.boards.kernel.model.MBMessageDisplay;
 import com.liferay.message.boards.kernel.model.MBThread;
@@ -17,16 +15,15 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.util.portlet.PortletProps;
 
-import net.indaba.lostandfound.firebase.FirebaseMBMessageSyncUtil;
+import net.indaba.lostandfound.firebase.FirebaseService;
+import net.indaba.lostandfound.firebase.FirebaseSynchronizer;
 import net.indaba.lostandfound.model.Item;
-import net.thegreshams.firebase4j.error.FirebaseException;
-import net.thegreshams.firebase4j.error.JacksonUtilityException;
 
 public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 
-	FirebaseMBMessageSyncUtil firebaseUtil = FirebaseMBMessageSyncUtil.getInstance();
+	@SuppressWarnings("unchecked")
+	FirebaseService<MBMessage> firebaseUtil = (FirebaseService<MBMessage>) FirebaseSynchronizer.getInstance().getService(MBMessage.class);
 
 	/*
 	 * (non-Java-doc)
@@ -88,12 +85,7 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 				message.getPrimaryKey(), false, true, true);
 
 		if (updateFirebase(message, serviceContext) && !isThemeDisplayNull) {
-			try {
-				firebaseUtil.add(message);
-			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			firebaseUtil.add(message);
 		}
 		return message;
 	}
@@ -123,12 +115,7 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 		message = super.updateDiscussionMessage(userId, messageId, className, classPK, subject, body,
 				serviceContext);
 		if (updateFirebase(message, serviceContext) && !isThemeDisplayNull) {
-			try {
-				firebaseUtil.update(message);
-			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			firebaseUtil.update(message);
 		}
 		return message;
 	}
@@ -136,12 +123,7 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 	@Override
 	public MBMessage deleteMessage(MBMessage message) throws PortalException {
 		if (updateFirebase(message, null)) {
-			try {
-				firebaseUtil.delete(message);
-			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			firebaseUtil.delete(message);
 		}
 		return super.deleteMessage(message);
 	}

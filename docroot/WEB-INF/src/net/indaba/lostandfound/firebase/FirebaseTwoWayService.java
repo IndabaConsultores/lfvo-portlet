@@ -2,10 +2,7 @@ package net.indaba.lostandfound.firebase;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.concurrent.Future;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 
 import net.thegreshams.firebase4j.error.FirebaseException;
@@ -15,8 +12,9 @@ import net.thegreshams.firebase4j.service.Firebase;
 
 public class FirebaseTwoWayService<T extends BaseModel<T>> extends FirebaseService<T> {
 
-	public FirebaseTwoWayService(String fbModelSingular, String fbModelPlural, FirebaseMapper<T> mapper) {
-		super(fbModelSingular, fbModelPlural, mapper);
+	public FirebaseTwoWayService(String fbBaseURL, String fbModelSingular, String fbModelPlural,
+			FirebaseMapper<T> mapper) {
+		super(fbBaseURL, fbModelSingular, fbModelPlural, mapper);
 	}
 
 	public String add(T entity) {
@@ -61,6 +59,4 @@ public class FirebaseTwoWayService<T extends BaseModel<T>> extends FirebaseServi
 		}
 		return null;
 	}
-
-	private final Log _log = LogFactoryUtil.getLog(FirebaseTwoWayService.class);
 }

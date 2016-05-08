@@ -25,7 +25,6 @@ import net.thegreshams.firebase4j.service.Firebase;
 
 public abstract class FirebaseService<T extends BaseModel<T>> {
 	
-	private final String FB_BASE_URI = PortletProps.get("firebase.url");
 	private String fbURI;
 	
 	private String fbModelSingular;
@@ -35,13 +34,13 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 	
 	private String fbIdField = "\"id\"";
 
-	public FirebaseService(String fbModelSingular, String fbModelPlural, FirebaseMapper<T> mapper) {
+	public FirebaseService(String fbBaseURL, String fbModelSingular, String fbModelPlural, FirebaseMapper<T> mapper) {
 		super();
 		this.fbModelSingular = fbModelSingular;
 		this.fbModelPlural = fbModelPlural;
 		this.mapper = mapper;
 		
-		this.fbURI = FB_BASE_URI + fbModelPlural;
+		this.fbURI = fbBaseURL + fbModelPlural;
 	}
 	
 	public final String getFbURI() {
@@ -209,7 +208,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 	}
 
 	/**
-	 * 
+	 * Adds/Removes a reference on firebase entity with fbKey
 	 * @param type A String of the following: {"ToOne", "ToMany"}
 	 * @param operation A String of the following: {"add", "delete"}
 	 * @param fbKey The FirebaseKey for the entity
@@ -320,7 +319,6 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 					for (Entry<String, Object> e : oldRefMap.entrySet()) {
 						String relatedEntityKey = e.getKey();
 						relatedEntityService.setReference("To" + X, "delete", relatedEntityKey, fbKey, entityRefName, null);
-
 					}
 
 					/* Set references on entity to newRelatedEntities */
@@ -559,7 +557,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 	}
 
 	/**
-	 * 
+	 * Checks whether synchronization is enabled at portlet.properties
 	 * @return true if Firebase replication is enabled at the Portlet Properties
 	 */
 	public boolean isSyncEnabled() {
@@ -596,6 +594,6 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 		return future;
 	}
 
-	private final Log _log = LogFactoryUtil.getLog(FirebaseService.class);
+	protected final Log _log = LogFactoryUtil.getLog(this.getClass());
 }
 

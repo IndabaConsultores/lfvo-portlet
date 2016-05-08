@@ -2,10 +2,7 @@ package net.indaba.lostandfound.firebase;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.concurrent.Future;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 
 import net.thegreshams.firebase4j.error.FirebaseException;
@@ -15,8 +12,9 @@ import net.thegreshams.firebase4j.service.Firebase;
 
 public class FirebaseOneWayService<T extends BaseModel<T>> extends FirebaseService<T> {
 
-	public FirebaseOneWayService(String fbModelSingular, String fbModelPlural, FirebaseMapper<T> mapper) {
-		super(fbModelSingular, fbModelPlural, mapper);
+	public FirebaseOneWayService(String fbBaseURL, String fbModelSingular, String fbModelPlural,
+			FirebaseMapper<T> mapper) {
+		super(fbBaseURL, fbModelSingular, fbModelPlural, mapper);
 	}
 
 	@Override
@@ -44,8 +42,5 @@ public class FirebaseOneWayService<T extends BaseModel<T>> extends FirebaseServi
 	public String getFirebaseKey(T entity) {
 		return String.valueOf(entity.getPrimaryKeyObj());
 	}
-	
-	private final Log _log = LogFactoryUtil.getLog(FirebaseOneWayService.class);
-
 
 }
