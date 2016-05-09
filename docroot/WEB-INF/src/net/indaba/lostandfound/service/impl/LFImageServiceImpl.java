@@ -32,10 +32,14 @@ import net.indaba.lostandfound.service.base.LFImageServiceBaseImpl;
  * The implementation of the l f image remote service.
  *
  * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link net.indaba.lostandfound.service.LFImageService} interface.
+ * All custom service methods should be put in this class. Whenever methods are
+ * added, rerun ServiceBuilder to copy their definitions into the
+ * {@link net.indaba.lostandfound.service.LFImageService} interface.
  *
  * <p>
- * This is a remote service. Methods of this service are expected to have security checks based on the propagated JAAS credentials because this service can be accessed remotely.
+ * This is a remote service. Methods of this service are expected to have
+ * security checks based on the propagated JAAS credentials because this service
+ * can be accessed remotely.
  * </p>
  *
  * @author aritz
@@ -47,36 +51,44 @@ public class LFImageServiceImpl extends LFImageServiceBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never reference this class directly. Always use {@link net.indaba.lostandfound.service.LFImageServiceUtil} to access the l f image remote service.
+	 * Never reference this class directly. Always use {@link
+	 * net.indaba.lostandfound.service.LFImageServiceUtil} to access the l f
+	 * image remote service.
 	 */
-	public List<LFImage> findByItemId(long itemId){
+	public List<LFImage> findByItemId(long itemId) {
 		return lfImagePersistence.findByItemId(itemId);
 	}
-	
+
 	public LFImage addLFImage(LFImage lfImage, ServiceContext serviceContext) {
 		return LFImageLocalServiceUtil.addLFImage(lfImage, serviceContext);
 	}
-	
-	public LFImage deleteLFImage(LFImage lfImage, ServiceContext serviceContext) {
+
+	public LFImage deleteLFImage(LFImage lfImage,
+			ServiceContext serviceContext) {
 		return LFImageLocalServiceUtil.deleteLFImage(lfImage, serviceContext);
 	}
-	
-	public LFImage deleteLFImage(long lfImageId, ServiceContext serviceContext) throws PortalException {
+
+	public LFImage deleteLFImage(long lfImageId, ServiceContext serviceContext)
+			throws PortalException {
 		return LFImageLocalServiceUtil.deleteLFImage(lfImageId, serviceContext);
 	}
-	
-	public void deleteByItemId(long itemId, ServiceContext serviceContext){
+
+	public void deleteByItemId(long itemId, ServiceContext serviceContext) {
 		LFImageLocalServiceUtil.deleteByItemId(itemId, serviceContext);
 	}
-	
-	public LFImage addLFImage(String imageBase64String, long itemId, ServiceContext serviceContext) {
-		ByteArrayInputStream imageBase64 = new ByteArrayInputStream(imageBase64String.getBytes(StandardCharsets.UTF_8));
-		OutputBlob dataOutputBlob = new OutputBlob(imageBase64, imageBase64String.length());
-		
-		LFImage lfImage = LFImageLocalServiceUtil.createLFImage(CounterLocalServiceUtil.increment());
+
+	public LFImage addLFImage(String imageBase64String, long itemId,
+			ServiceContext serviceContext) {
+		ByteArrayInputStream imageBase64 = new ByteArrayInputStream(
+				imageBase64String.getBytes(StandardCharsets.UTF_8));
+		OutputBlob dataOutputBlob = new OutputBlob(imageBase64,
+				imageBase64String.length());
+
+		LFImage lfImage = LFImageLocalServiceUtil.createLFImage(
+				CounterLocalServiceUtil.increment());
 		lfImage.setItemId(itemId);
 		lfImage.setImage(dataOutputBlob);
 		return LFImageLocalServiceUtil.addLFImage(lfImage, serviceContext);
 	}
-	
+
 }

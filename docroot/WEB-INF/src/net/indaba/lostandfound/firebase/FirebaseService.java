@@ -2,6 +2,7 @@ package net.indaba.lostandfound.firebase;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,55 +25,57 @@ import net.thegreshams.firebase4j.model.FirebaseResponse;
 import net.thegreshams.firebase4j.service.Firebase;
 
 public abstract class FirebaseService<T extends BaseModel<T>> {
-	
+
 	private String fbURI;
-	
+
 	private String fbModelSingular;
 	private String fbModelPlural;
-	
+
 	private FirebaseMapper<T> mapper;
-	
+
 	private String fbIdField = "\"id\"";
 
-	public FirebaseService(String fbBaseURL, String fbModelSingular, String fbModelPlural, FirebaseMapper<T> mapper) {
+	public FirebaseService(String fbBaseURL, String fbModelSingular,
+			String fbModelPlural, FirebaseMapper<T> mapper) {
 		super();
 		this.fbModelSingular = fbModelSingular;
 		this.fbModelPlural = fbModelPlural;
 		this.mapper = mapper;
-		
+
 		this.fbURI = fbBaseURL + "/" + fbModelPlural;
 	}
-	
+
 	public final String getFbURI() {
 		return this.fbURI;
 	}
-	
+
 	public final String getFbModelSingular() {
 		return this.fbModelSingular;
 	}
-	
+
 	public final String getFbModelPlural() {
 		return this.fbModelPlural;
 	}
-	
+
 	public final FirebaseMapper<T> getFbMapper() {
 		return this.mapper;
 	}
-	
+
 	public final String getFbIdField() {
 		return this.fbIdField;
 	}
-	
+
 	public final void setFbURI(String fbURI) {
 		this.fbURI = fbURI;
 	}
-	
+
 	public final void setFbIdField(String fbIdField) {
 		this.fbIdField = fbIdField;
 	}
-	
+
 	/**
 	 * Adds the entity to Firebase
+	 * 
 	 * @param entity
 	 * @return The FirebaseKey for the entity
 	 */
@@ -80,6 +83,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 
 	/**
 	 * Updates the entity in Firebase
+	 * 
 	 * @param entity
 	 * @return The FirebaseKey for the entity
 	 */
@@ -87,7 +91,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 		String firebaseKey = getFirebaseKey(entity);
 		return update(entity, firebaseKey);
 	}
-	
+
 	protected String update(T entity, String firebaseKey) {
 		try {
 			Firebase firebase = new Firebase(getFbURI());
@@ -99,17 +103,21 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 				_log.debug("Firebase update sucessful");
 				return (String) response.getBody().keySet().iterator().next();
 			} else {
-				_log.error("Firebase update unsuccessful. Response code: " + response.getCode());
+				_log.error("Firebase update unsuccessful. Response code: "
+						+ response.getCode());
 			}
-		} catch (FirebaseException | JacksonUtilityException | UnsupportedEncodingException e) {
-			_log.error("Firebase update unsuccessful. Error: " + e.getMessage());
+		} catch (FirebaseException | JacksonUtilityException
+				| UnsupportedEncodingException e) {
+			_log.error("Firebase update unsuccessful. Error: " + e
+					.getMessage());
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Adds or updates the entity in Firebase
+	 * 
 	 * @param entity
 	 * @return The FirebaseKey for the entity
 	 */
@@ -121,9 +129,10 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 			return add(entity);
 		}
 	}
-	
+
 	/**
 	 * Deletes the entity in Firebase
+	 * 
 	 * @param entity
 	 * @return True iff the entity was found and removed
 	 */
@@ -133,29 +142,35 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 			String itemKey = getFirebaseKey(entity);
 			FirebaseResponse response;
 			if (itemKey != null) {
-				//setRelationManyToMany(entity, new ArrayList<AssetCategory>(), null, null).get();
+				// setRelationManyToMany(entity, new ArrayList<AssetCategory>(),
+				// null, null).get();
 				response = firebase.delete("/" + itemKey);
 				if (response.getCode() == 200) {
 					_log.debug("Firebase delete sucessful");
 					return true;
 				} else {
-					_log.error("Firebase delete unsuccessful. Response code: " + response.getCode());
+					_log.error("Firebase delete unsuccessful. Response code: "
+							+ response.getCode());
 				}
 			} else {
-				_log.error("Could not find entity with id " + entity.getPrimaryKeyObj());
+				_log.error("Could not find entity with id " + entity
+						.getPrimaryKeyObj());
 			}
 		} catch (FirebaseException | UnsupportedEncodingException e) {
-			_log.error("Firebase delete unsuccessful. Error: " + e.getMessage());
+			_log.error("Firebase delete unsuccessful. Error: " + e
+					.getMessage());
 			e.printStackTrace();
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Asynchronously adds the entity to Firebase
+	 * 
 	 * @param entity
-	 * @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
+	 * @param previousFuture
+	 *            Future object to wait for before the method is really
+	 *            executed. Set to null to avoid any wait
 	 * @return A promise containing the FirebaseKey for the entity
 	 */
 	public final Future<String> add(T entity, Future<?> previousFuture) {
@@ -167,9 +182,11 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 
 	/**
 	 * Asynchronously updates the entity in Firebase
+	 * 
 	 * @param entity
-	 * @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
+	 * @param previousFuture
+	 *            Future object to wait for before the method is really
+	 *            executed. Set to null to avoid any wait
 	 * @return A promise containing the FirebaseKey for the entity
 	 */
 	public final Future<String> update(T entity, Future<?> previousFuture) {
@@ -181,12 +198,15 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 
 	/**
 	 * Asynchronously adds or updates the entity in Firebase
+	 * 
 	 * @param entity
-	 * @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
+	 * @param previousFuture
+	 *            Future object to wait for before the method is really
+	 *            executed. Set to null to avoid any wait
 	 * @return A promise containing the FirebaseKey for the entity
 	 */
-	public final Future<String> addOrUpdate(T entity, Future<?> previousFuture) {
+	public final Future<String> addOrUpdate(T entity,
+			Future<?> previousFuture) {
 		return asyncWrapper(() -> {
 			waitFor(previousFuture);
 			return addOrUpdate(entity);
@@ -195,9 +215,11 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 
 	/**
 	 * Asynchronously deletes the entity in Firebase
+	 * 
 	 * @param entity
-	 * @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
+	 * @param previousFuture
+	 *            Future object to wait for before the method is really
+	 *            executed. Set to null to avoid any wait
 	 * @return A promise boolean with true iff the entity was found and removed
 	 */
 	public final Future<Boolean> delete(T entity, Future<?> previousFuture) {
@@ -209,22 +231,31 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 
 	/**
 	 * Adds/Removes a reference on firebase entity with fbKey
-	 * @param type A String of the following: {"ToOne", "ToMany"}
-	 * @param operation A String of the following: {"add", "delete"}
-	 * @param fbKey The FirebaseKey for the entity
-	 * @param referenceKey The Reference value to add
-	 * @param referenceField The field name for the reference
-	 * @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
-	 * @return A future object which contains true if the reference is successfully added
+	 * 
+	 * @param type
+	 *            A String of the following: {"ToOne", "ToMany"}
+	 * @param operation
+	 *            A String of the following: {"add", "delete"}
+	 * @param fbKey
+	 *            The FirebaseKey for the entity
+	 * @param referenceKey
+	 *            The Reference value to add
+	 * @param referenceField
+	 *            The field name for the reference
+	 * @param previousFuture
+	 *            Future object to wait for before the method is really
+	 *            executed. Set to null to avoid any wait
+	 * @return A future object which contains true if the reference is
+	 *         successfully added
 	 */
-	private Future<Boolean> setReference(String type, String operation, String fbKey, String referenceKey,
+	private Future<Boolean> setReference(String type, String operation,
+			String fbKey, String referenceKey,
 			String referenceField, Future<?> previousFuture) {
 		return asyncWrapper(() -> {
 			waitFor(previousFuture);
 			String URI = null;
 			Map<String, Object> referenceMap = new LinkedHashMap<String, Object>();
-			
+
 			switch (type) {
 			case "ToOne":
 				referenceMap.put(referenceField, referenceKey);
@@ -243,14 +274,16 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 					response = firebase.patch(referenceMap);
 					break;
 				case "delete":
-					response = firebase.delete("/" + referenceMap.keySet().iterator().next());
+					response = firebase.delete("/" + referenceMap.keySet()
+							.iterator().next());
 					break;
 				}
 				if (response.getCode() == 200) {
 					_log.debug("Reference added on " + fbKey);
 					return true;
 				} else {
-					_log.error("Error adding reference: " + response.getBody().get("error"));
+					_log.error("Error adding reference: " + response.getBody()
+							.get("error"));
 					return false;
 				}
 			} catch (FirebaseException | JacksonUtilityException e) {
@@ -259,24 +292,30 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 			return false;
 		});
 	}
-	
+
 	/**
 	 * Sets the references for a X-to-many relationship
-	 * @param X A String in {"One", "Many"}
+	 * 
+	 * @param X
+	 *            A String in {"One", "Many"}
 	 * @param entity
 	 * @param relatedEntities
-	 * @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
-	 * @return A future object which contains true if the reference is successfully added
+	 * @param previousFuture
+	 *            Future object to wait for before the method is really
+	 *            executed. Set to null to avoid any wait
+	 * @return A future object which contains true if the reference is
+	 *         successfully added
 	 */
-	private <S extends BaseModel<S>> Future<Boolean> setRelationXToMany(String X, T entity, List<S> relatedEntities, 
+	private <S extends BaseModel<S>> Future<Boolean> setRelationXToMany(
+			String X, T entity, List<S> relatedEntities,
 			FirebaseService<S> relatedEntityService, Future<?> previousFuture) {
 		return asyncWrapper(() -> {
 			waitFor(previousFuture);
 			try {
 				String fbKey = getFirebaseKey(entity);
 				if (fbKey != null) {
-					String referenceField = relatedEntityService.getFbModelPlural();
+					String referenceField = relatedEntityService
+							.getFbModelPlural();
 					String entityRefName = null;
 					switch (X) {
 					case "One":
@@ -305,20 +344,27 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 					Map<String, Object> newRefMap = new LinkedHashMap<String, Object>();
 					for (S relatedEntity : relatedEntities) {
 						/* Compare oldRelatedEntities with newRelatedEntities */
-						String relatedEntityKey = relatedEntityService.getFirebaseKey(relatedEntity);
+						String relatedEntityKey = relatedEntityService
+								.getFirebaseKey(relatedEntity);
 						if (oldRefMap.containsKey(relatedEntityKey)) {
 							oldRefMap.remove(relatedEntityKey);
 						} else {
-								relatedEntityService.setReference("To" + X, "add", relatedEntityKey, fbKey, entityRefName, null);
+							relatedEntityService.setReference("To" + X, "add",
+									relatedEntityKey, fbKey, entityRefName,
+									null);
 						}
 						/* Collect the relatedEntity into the newMap */
 						newRefMap.put(relatedEntityKey, true);
 					}
 
-					/* Delete references from entity to remaining oldRelatedEntities */
+					/*
+					 * Delete references from entity to remaining
+					 * oldRelatedEntities
+					 */
 					for (Entry<String, Object> e : oldRefMap.entrySet()) {
 						String relatedEntityKey = e.getKey();
-						relatedEntityService.setReference("To" + X, "delete", relatedEntityKey, fbKey, entityRefName, null);
+						relatedEntityService.setReference("To" + X, "delete",
+								relatedEntityKey, fbKey, entityRefName, null);
 					}
 
 					/* Set references on entity to newRelatedEntities */
@@ -336,7 +382,8 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 						_log.debug("Firebase relation add sucessful");
 						return true;
 					} else {
-						_log.error("Firebase relation add unsuccessful. Error " + response.getCode() + " "
+						_log.error("Firebase relation add unsuccessful. Error "
+								+ response.getCode() + " "
 								+ response.getBody().get("error"));
 					}
 				}
@@ -346,7 +393,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 			return false;
 		});
 	}
-	
+
 	private Map<String, Object> flatten(Map<String, Object> map) {
 		Map<String, Object> result = new LinkedHashMap<String, Object>();
 		Iterator<String> it = map.keySet().iterator();
@@ -369,48 +416,64 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 
 	/**
 	 * Sets the references for a many-to-many relationship
+	 * 
 	 * @param entity
 	 * @param relatedEntities
-	 * @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
-	 * @return A future object which contains true if the reference is successfully added
+	 * @param previousFuture
+	 *            Future object to wait for before the method is really
+	 *            executed. Set to null to avoid any wait
+	 * @return A future object which contains true if the reference is
+	 *         successfully added
 	 */
-	public <S extends BaseModel<S>> Future<Boolean> setRelationManyToMany(T entity, List<S> relatedEntities, 
+	public <S extends BaseModel<S>> Future<Boolean> setRelationManyToMany(
+			T entity, List<S> relatedEntities,
 			FirebaseService<S> relatedEntityService, Future<?> previousFuture) {
-		return setRelationXToMany("Many", entity, relatedEntities, relatedEntityService, previousFuture);
+		return setRelationXToMany("Many", entity, relatedEntities,
+				relatedEntityService, previousFuture);
 	}
-	
+
 	/**
 	 * Sets the references for a one-to-many relationship
+	 * 
 	 * @param entity
 	 * @param relatedEntities
-	 * @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
-	 * @return A future object which contains true if the reference is successfully added
+	 * @param previousFuture
+	 *            Future object to wait for before the method is really
+	 *            executed. Set to null to avoid any wait
+	 * @return A future object which contains true if the reference is
+	 *         successfully added
 	 */
-	public <S extends BaseModel<S>> Future<Boolean> setRelationOneToMany(T entity, List<S> relatedEntities, 
+	public <S extends BaseModel<S>> Future<Boolean> setRelationOneToMany(
+			T entity, List<S> relatedEntities,
 			FirebaseService<S> relatedEntityService, Future<?> previousFuture) {
-		return setRelationXToMany("One", entity, relatedEntities, relatedEntityService, previousFuture);
+		return setRelationXToMany("One", entity, relatedEntities,
+				relatedEntityService, previousFuture);
 	}
-	
+
 	/**
 	 * Sets the references for a X-to-one relationship
-	 * @param X A String in {"One", "Many"}
+	 * 
+	 * @param X
+	 *            A String in {"One", "Many"}
 	 * @param entity
 	 * @param relatedEntities
-	 * @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
-	 * @return A future object which contains true if the reference is successfully added
+	 * @param previousFuture
+	 *            Future object to wait for before the method is really
+	 *            executed. Set to null to avoid any wait
+	 * @return A future object which contains true if the reference is
+	 *         successfully added
 	 */
-	private <S extends BaseModel<S>> Future<Boolean> setRelationXToOne(String X, T entity, S relatedEntity, 
+	private <S extends BaseModel<S>> Future<Boolean> setRelationXToOne(String X,
+			T entity, S relatedEntity,
 			FirebaseService<S> relatedEntityService, Future<?> previousFuture) {
 		return asyncWrapper(() -> {
 			waitFor(previousFuture);
 			try {
 				String fbKey = getFirebaseKey(entity);
 				if (fbKey != null) {
-					String referenceField = relatedEntityService.getFbModelSingular();
-		
+					String referenceField = relatedEntityService
+							.getFbModelSingular();
+
 					String entityRefName = null;
 					switch (X) {
 					case "One":
@@ -420,30 +483,37 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 						entityRefName = getFbModelPlural();
 						break;
 					}
-					
+
 					Firebase firebase;
 					FirebaseResponse response;
-					
+
 					/* Obtain previous reference */
 					firebase = new Firebase(getFbURI() + "/" + fbKey);
 					response = firebase.get();
 					String oldRef = null;
 					if (response.getCode() == 200) {
-						oldRef = (String) response.getBody().get(referenceField);
+						oldRef = (String) response.getBody().get(
+								referenceField);
 					}
-					
+
 					String newRef = null;
 					if (relatedEntity != null) {
-						newRef = relatedEntityService.getFirebaseKey(relatedEntity);
+						newRef = relatedEntityService.getFirebaseKey(
+								relatedEntity);
 						/* Update relatedEntity's reference(s) */
 						if (newRef != null && !newRef.equals(oldRef)) {
-							relatedEntityService.setReference("To" + X, "add", newRef, fbKey, entityRefName, null);
+							relatedEntityService.setReference("To" + X, "add",
+									newRef, fbKey, entityRefName, null);
 							if (oldRef != null)
-								relatedEntityService.setReference("To" + X, "delete", oldRef, fbKey, entityRefName, null);
+								relatedEntityService.setReference("To" + X,
+										"delete", oldRef, fbKey, entityRefName,
+										null);
 						}
 					} else {
 						if (oldRef != null)
-							relatedEntityService.setReference("To" + X, "delete", oldRef, fbKey, entityRefName, null);
+							relatedEntityService.setReference("To" + X,
+									"delete", oldRef, fbKey, entityRefName,
+									null);
 					}
 
 					/* Set references on entity to newRelatedEntity */
@@ -457,7 +527,8 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 						_log.info("Firebase relation add sucessful");
 						return true;
 					} else {
-						_log.error("Firebase relation add unsuccessful. Error " + response.getCode() + " "
+						_log.error("Firebase relation add unsuccessful. Error "
+								+ response.getCode() + " "
 								+ response.getBody().get("error"));
 					}
 				}
@@ -468,131 +539,137 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 			return false;
 		});
 	}
-	
+
 	/**
 	 * Sets the references for a many-to-one relationship
+	 * 
 	 * @param entity
 	 * @param relatedEntities
-	 * @param @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
-	 * @return A future object which contains true if the reference is successfully added
+	 * @param @param
+	 *            previousFuture Future object to wait for before the method is
+	 *            really executed. Set to null to avoid any wait
+	 * @return A future object which contains true if the reference is
+	 *         successfully added
 	 */
-	public <S extends BaseModel<S>> Future<Boolean> setRelationManyToOne(T entity, S relatedEntity, 
+	public <S extends BaseModel<S>> Future<Boolean> setRelationManyToOne(
+			T entity, S relatedEntity,
 			FirebaseService<S> relatedEntityService, Future<?> previousFuture) {
-		return setRelationXToOne("Many", entity, relatedEntity, relatedEntityService, previousFuture);
+		return setRelationXToOne("Many", entity, relatedEntity,
+				relatedEntityService, previousFuture);
 	}
-	
+
 	/**
 	 * Sets the references for a one-to-one relationship
+	 * 
 	 * @param entity
 	 * @param relatedEntities
-	 * @param previousFuture Future object to wait for before the method is really executed.
-	 * 	Set to null to avoid any wait
-	 * @return A future object which contains true if the reference is successfully added
+	 * @param previousFuture
+	 *            Future object to wait for before the method is really
+	 *            executed. Set to null to avoid any wait
+	 * @return A future object which contains true if the reference is
+	 *         successfully added
 	 */
-	public <S extends BaseModel<S>> Future<Boolean> setRelationOneToOne(T entity, S relatedEntity, 
+	public <S extends BaseModel<S>> Future<Boolean> setRelationOneToOne(
+			T entity, S relatedEntity,
 			FirebaseService<S> relatedEntityService, Future<?> previousFuture) {
-		return setRelationXToOne("One", entity, relatedEntity, relatedEntityService, previousFuture);
+		return setRelationXToOne("One", entity, relatedEntity,
+				relatedEntityService, previousFuture);
 	}
-	
+
 	/**
 	 * Gets the Firebase object key for the given entity if it exists
+	 * 
 	 * @param entity
-	 * @return A String containing the FirebaseKey
-	 * 	or null if no matching entity was found in Firebase
+	 * @return A String containing the FirebaseKey or null if no matching entity
+	 *         was found in Firebase
 	 */
 	public abstract String getFirebaseKey(T entity);
 
-	protected List<T> getLiferayItemsAfter(long liferayTS) {
-		return null;
-	};
-	
-	protected Map<String, T> getFirebaseItemsAfter(long firebaseTS) throws FirebaseException, UnsupportedEncodingException {
-		Map<String, T> items = new LinkedHashMap<String, T>();
+	public Map<String, T> getByModifiedAfter(long modifiedDate)
+			throws FirebaseException, UnsupportedEncodingException {
+		Map<String, T> entities = new LinkedHashMap<String, T>();
 
 		Firebase firebase = new Firebase(getFbURI());
-		/* Get alerts */
 		firebase.addQuery("orderBy", "\"modifiedAt\"");
-		firebase.addQuery("startAt", String.valueOf(firebaseTS));
-		FirebaseResponse response = firebase.get("/alert");
-		Map<String, Object> lostItems = response.getBody();
-		T item;
-		Iterator<Entry<String, Object>> it = lostItems.entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<String, Object> e = it.next();
+		firebase.addQuery("startAt", String.valueOf(modifiedDate));
+		FirebaseResponse response = firebase.get();
+		Map<String, Object> entitiesMap = response.getBody();
+		T entity;
+		for (Entry<String, Object> entry : entitiesMap.entrySet()) {
 			@SuppressWarnings("unchecked")
-			Map<String, Object> map = (Map<String, Object>) e.getValue();
-			item = mapper.parseMap(map);
-			if (Long.valueOf((String) item.getPrimaryKeyObj()) != 0) {
-				items.put(e.getKey(), item);
+			Map<String, Object> map = (Map<String, Object>) entry.getValue();
+			entity = mapper.parseMap(map);
+			if (Long.valueOf((String) entity.getPrimaryKeyObj()) != 0) {
+				entities.put(entry.getKey(), entity);
 			} else {
-				item.setNew(true);
-				items.put(e.getKey(), item);
+				entity.setNew(true);
+				entities.put(entry.getKey(), entity);
 			}
 		}
-		return items;
+		return entities;
 	}
 
-	public Map<T, String> getUnsyncedItemsSince(long date) throws UnsupportedEncodingException, FirebaseException {
-		Map<T, String> unsyncedItems = new LinkedHashMap<T, String>();
+	public Map<T, String> compareEntities(Map<String, T> fbEntities, List<T> lrEntities,
+			Comparator<T> comparator) throws UnsupportedEncodingException, FirebaseException {
+		
+		Map<T, String> result = new LinkedHashMap<T, String>();
 
-		/* Get Liferay items that were added/updated after last sync time */
-		List<T> lrItemList = getLiferayItemsAfter(date);
-		/* Get Firebase items that were added/updated after last sync time */
-		Map<String, T> fbItemSet = getFirebaseItemsAfter(date);
-
-		Map<Serializable, T> lrItemSet = new LinkedHashMap<Serializable, T>();
+		Map<Serializable, T> lrEntitiesSet = new LinkedHashMap<Serializable, T>();
 
 		/* Convert list to map for easier access by itemId */
-		for (T i : lrItemList) {
-			lrItemSet.put(i.getPrimaryKeyObj(), i);
+		for (T i : lrEntities) {
+			lrEntitiesSet.put(i.getPrimaryKeyObj(), i);
 		}
 		/* Add fbItem in fbItemSet */
-		T lrItem, fbItem;
-		for (Entry<String, T> e : fbItemSet.entrySet()) {
-			fbItem = e.getValue();
-			lrItem = lrItemSet.get(fbItem.getPrimaryKeyObj());
-			if (lrItem != null) {
-				/* item exists in FB and LR; compare modified date */
-//				int dateComp = lrItem.getModifiedDate().compareTo(fbItem.getModifiedDate());
-//				if (dateComp == 0) {
-//					/* item has not changed; remove from lrItemSet */
-//					lrItemSet.remove(lrItem.getPrimaryKeyObj()());
-//				} else if (dateComp < 0) {
-//					/* fbItem is more recent; add to result */
-//					unsyncedItems.put(fbItem, e.getKey());
-//				}
+		T lrEntity, fbEntity;
+		for (Entry<String, T> e : fbEntities.entrySet()) {
+			fbEntity = e.getValue();
+			lrEntity = lrEntitiesSet.get(fbEntity.getPrimaryKeyObj());
+			if (lrEntity != null) {
+				/* entity exists in FB and LR; compare modified date */
+				int compareResult = comparator.compare(fbEntity, lrEntity);
+				 if (compareResult > 0) {
+					 /* fbEntity is more recent; add to result */
+					 result.put(fbEntity, e.getKey());
+				 }
+				 if (compareResult >= 0) {
+					 /* lrEntity is older or equal; remove from lrEntitiesSet */
+					 lrEntitiesSet.remove(lrEntity.getPrimaryKeyObj());
+				 }
 			} else {
-				/* Item exists in FB but not in LR */
-				unsyncedItems.put(fbItem, e.getKey());
+				/* Entity exists in FB but not in LR */
+				result.put(fbEntity, e.getKey());
 			}
 		}
-		/* Add remaining LR items to result */
-		for (Entry<Serializable, T> e : lrItemSet.entrySet()) {
-			unsyncedItems.put(e.getValue(), "liferay");
+		/* Remaining lrEntities do not exist in FB */
+		for (Entry<Serializable, T> e : lrEntitiesSet.entrySet()) {
+			result.put(e.getValue(), "liferay");
 		}
-		
-		return unsyncedItems;
+
+		return result;
 	}
 
 	/**
 	 * Checks whether synchronization is enabled at portlet.properties
+	 * 
 	 * @return true if Firebase replication is enabled at the Portlet Properties
 	 */
 	public boolean isSyncEnabled() {
 		String firebaseSyncEnabled = PortletProps.get("firebase.sync.enabled");
 		return Boolean.parseBoolean(firebaseSyncEnabled);
 	}
-	
+
 	/**
 	 * Blocks a thread until the 'future' is completed
-	 * @param future Future object to wait for
+	 * 
+	 * @param future
+	 *            Future object to wait for
 	 * @return S, the object 'future' returns after it is done
 	 */
 	protected <S> S waitFor(Future<S> future) {
 		try {
 			if (future != null) {
-				return future.get();	
+				return future.get();
 			}
 		} catch (InterruptedException | ExecutionException e) {
 			_log.error("Previous method error: " + e.getMessage());
@@ -600,10 +677,12 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Wraps a Callable object and executes it concurrently
-	 * @param task The task to run
+	 * 
+	 * @param task
+	 *            The task to run
 	 * @return A 'future' promise with the result of the task given
 	 */
 	protected <S> Future<S> asyncWrapper(Callable<S> task) {
@@ -615,4 +694,3 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 
 	protected final Log _log = LogFactoryUtil.getLog(this.getClass());
 }
-

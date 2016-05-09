@@ -19,9 +19,11 @@ import net.indaba.lostandfound.firebase.FirebaseSynchronizer;
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 
-public class LFAssetCategoryLocalService extends AssetCategoryLocalServiceWrapper {
+public class LFAssetCategoryLocalService extends
+		AssetCategoryLocalServiceWrapper {
 
-	private FirebaseService<AssetCategory> firebaseUtil = FirebaseSynchronizer.getInstance()
+	private FirebaseService<AssetCategory> firebaseUtil = FirebaseSynchronizer
+			.getInstance()
 			.getService(AssetCategory.class);
 
 	/*
@@ -31,15 +33,19 @@ public class LFAssetCategoryLocalService extends AssetCategoryLocalServiceWrappe
 	 * AssetCategoryLocalServiceWrapper(AssetCategoryLocalService
 	 * assetCategoryLocalService)
 	 */
-	public LFAssetCategoryLocalService(AssetCategoryLocalService assetCategoryLocalService) {
+	public LFAssetCategoryLocalService(
+			AssetCategoryLocalService assetCategoryLocalService) {
 		super(assetCategoryLocalService);
 	}
 
 	@Override
-	public AssetCategory addCategory(long userId, long groupId, long parentCategoryId, Map<Locale, String> titleMap,
-			Map<Locale, String> descriptionMap, long vocabularyId, String[] categoryProperties,
+	public AssetCategory addCategory(long userId, long groupId,
+			long parentCategoryId, Map<Locale, String> titleMap,
+			Map<Locale, String> descriptionMap, long vocabularyId,
+			String[] categoryProperties,
 			ServiceContext serviceContext) throws PortalException {
-		AssetCategory category = super.addCategory(userId, groupId, parentCategoryId, titleMap, descriptionMap,
+		AssetCategory category = super.addCategory(userId, groupId,
+				parentCategoryId, titleMap, descriptionMap,
 				vocabularyId, categoryProperties, serviceContext);
 		if (firebaseUtil.isSyncEnabled()) {
 			Future<String> fbKey = firebaseUtil.add(category, null);
@@ -48,10 +54,14 @@ public class LFAssetCategoryLocalService extends AssetCategoryLocalServiceWrappe
 	}
 
 	@Override
-	public AssetCategory updateCategory(long userId, long categoryId, long parentCategoryId,
-			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap, long vocabularyId,
-			String[] categoryProperties, ServiceContext serviceContext) throws PortalException {
-		AssetCategory category = super.updateCategory(userId, categoryId, parentCategoryId, titleMap, descriptionMap,
+	public AssetCategory updateCategory(long userId, long categoryId,
+			long parentCategoryId,
+			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			long vocabularyId,
+			String[] categoryProperties, ServiceContext serviceContext)
+					throws PortalException {
+		AssetCategory category = super.updateCategory(userId, categoryId,
+				parentCategoryId, titleMap, descriptionMap,
 				vocabularyId, categoryProperties, serviceContext);
 		if (firebaseUtil.isSyncEnabled()) {
 			Future<String> fbKey = firebaseUtil.update(category, null);
@@ -64,19 +74,24 @@ public class LFAssetCategoryLocalService extends AssetCategoryLocalServiceWrappe
 					items.add(item);
 				}
 			}
-			FirebaseService<Item> fbItemService = FirebaseSynchronizer.getInstance().getService(Item.class);
-			firebaseUtil.setRelationOneToMany(category, items, fbItemService, fbKey);
+			FirebaseService<Item> fbItemService = FirebaseSynchronizer
+					.getInstance().getService(Item.class);
+			firebaseUtil.setRelationOneToMany(category, items, fbItemService,
+					fbKey);
 		}
 		return category;
 	}
 
 	@Override
-	public AssetCategory deleteCategory(AssetCategory category, boolean skipRebuildTree) throws PortalException {
+	public AssetCategory deleteCategory(AssetCategory category,
+			boolean skipRebuildTree) throws PortalException {
 		if (firebaseUtil.isSyncEnabled()) {
 			List<Item> items = new ArrayList<Item>();
-			FirebaseService<Item> fbItemService = FirebaseSynchronizer.getInstance().getService(Item.class);
+			FirebaseService<Item> fbItemService = FirebaseSynchronizer
+					.getInstance().getService(Item.class);
 
-			Future<Boolean> result = firebaseUtil.setRelationOneToMany(category, items, fbItemService, null);
+			Future<Boolean> result = firebaseUtil.setRelationOneToMany(category,
+					items, fbItemService, null);
 			firebaseUtil.delete(category, result);
 		}
 		return super.deleteCategory(category, skipRebuildTree);

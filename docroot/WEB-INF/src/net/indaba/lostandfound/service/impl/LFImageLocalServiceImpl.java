@@ -58,13 +58,15 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 	 * f image local service.
 	 */
 
-	FirebaseService<LFImage> firebaseUtil = (FirebaseService<LFImage>) FirebaseSynchronizer.getInstance()
-			.getService(LFImage.class);
+	FirebaseService<LFImage> firebaseUtil = FirebaseSynchronizer
+			.getInstance().getService(LFImage.class);
 
-	private boolean updateFirebase(LFImage image, ServiceContext serviceContext) {
+	private boolean updateFirebase(LFImage image,
+			ServiceContext serviceContext) {
 		ThemeDisplay themeDisplay = new ThemeDisplay();
 		if (serviceContext != null) {
-			themeDisplay = (ThemeDisplay) serviceContext.getRequest().getAttribute(WebKeys.THEME_DISPLAY);
+			themeDisplay = (ThemeDisplay) serviceContext.getRequest()
+					.getAttribute(WebKeys.THEME_DISPLAY);
 		}
 		return (firebaseUtil.isSyncEnabled() && themeDisplay != null);
 	}
@@ -82,23 +84,29 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 		if (updateFirebase(lfImage, serviceContext)) {
 			Future<String> fbKey = firebaseUtil.add(image, null);
 			Item item = ItemLocalServiceUtil.fetchItem(lfImage.getItemId());
-			FirebaseService<Item> fbItemService = FirebaseSynchronizer.getInstance().getService(Item.class);
-			firebaseUtil.setRelationManyToOne(lfImage, item, fbItemService, fbKey);
+			FirebaseService<Item> fbItemService = FirebaseSynchronizer
+					.getInstance().getService(Item.class);
+			firebaseUtil.setRelationManyToOne(lfImage, item, fbItemService,
+					fbKey);
 		}
 		return image;
 	}
 
-	public LFImage deleteLFImage(LFImage lfImage, ServiceContext serviceContext) {
+	public LFImage deleteLFImage(LFImage lfImage,
+			ServiceContext serviceContext) {
 		if (updateFirebase(lfImage, serviceContext)) {
 			Item item = ItemLocalServiceUtil.fetchItem(lfImage.getItemId());
-			FirebaseService<Item> fbItemService = FirebaseSynchronizer.getInstance().getService(Item.class);
-			Future<Boolean> result = firebaseUtil.setRelationManyToOne(lfImage, item, fbItemService, null);
+			FirebaseService<Item> fbItemService = FirebaseSynchronizer
+					.getInstance().getService(Item.class);
+			Future<Boolean> result = firebaseUtil.setRelationManyToOne(lfImage,
+					item, fbItemService, null);
 			firebaseUtil.delete(lfImage, result);
 		}
 		return super.deleteLFImage(lfImage);
 	}
 
-	public LFImage deleteLFImage(long lfImageId, ServiceContext serviceContext) throws PortalException {
+	public LFImage deleteLFImage(long lfImageId, ServiceContext serviceContext)
+			throws PortalException {
 		return deleteLFImage(getLFImage(lfImageId), serviceContext);
 	}
 

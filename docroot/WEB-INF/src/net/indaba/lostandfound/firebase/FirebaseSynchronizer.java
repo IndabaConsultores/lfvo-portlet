@@ -28,7 +28,6 @@ public class FirebaseSynchronizer {
 
 	private FirebaseMapper<Item> itemMapper = new FirebaseMapper<Item>() {
 
-		@Override
 		public Map<String, Object> toMap(Item item) {
 			HashMap<String, Object> itemMap = new HashMap<String, Object>();
 			itemMap.put("id", item.getItemId());
@@ -47,7 +46,6 @@ public class FirebaseSynchronizer {
 			return itemMap;
 		}
 
-		@Override
 		public Item parseMap(Map<String, Object> itemMap) {
 			Item item;
 			Object o;
@@ -93,7 +91,6 @@ public class FirebaseSynchronizer {
 	private FirebaseService<Item> fbItemService = new FirebaseService<Item>(
 			PortletProps.get("firebase.url"), "item", "items", itemMapper) {
 
-		@Override
 		public String add(Item item) {
 			try {
 				String itemType = getItemType(item);
@@ -117,7 +114,6 @@ public class FirebaseSynchronizer {
 			return null;
 		}
 
-		@Override
 		public String getFirebaseKey(Item item) {
 			try {
 				String itemType = getItemType(item);
@@ -161,7 +157,6 @@ public class FirebaseSynchronizer {
 
 	private FirebaseMapper<AssetCategory> catMapper = new FirebaseMapper<AssetCategory>() {
 
-		@Override
 		public Map<String, Object> toMap(AssetCategory category) {
 			Map<String, Object> categoryMap = new HashMap<String, Object>();
 			categoryMap.put("title", category.getTitleMap());
@@ -174,7 +169,6 @@ public class FirebaseSynchronizer {
 			return categoryMap;
 		}
 
-		@Override
 		public AssetCategory parseMap(Map<String, Object> entityMap) {
 			// Never used
 			return null;
@@ -188,7 +182,6 @@ public class FirebaseSynchronizer {
 
 	private FirebaseMapper<LFImage> imgMapper = new FirebaseMapper<LFImage>() {
 
-		@Override
 		public Map<String, Object> toMap(LFImage image) {
 			Map<String, Object> imageMap = image.getModelAttributes();
 			imageMap.remove("lfImageId");
@@ -205,7 +198,6 @@ public class FirebaseSynchronizer {
 			return imageMap;
 		}
 
-		@Override
 		public LFImage parseMap(Map<String, Object> entityMap) {
 			// TODO implement method body
 			return null;
@@ -219,7 +211,6 @@ public class FirebaseSynchronizer {
 
 	private FirebaseMapper<Group> groupMapper = new FirebaseMapper<Group>() {
 
-		@Override
 		public Map<String, Object> toMap(Group group) {
 			Map<String, Object> groupMap = new HashMap<String, Object>();
 			groupMap.put("name", group.getNameMap());
@@ -228,7 +219,6 @@ public class FirebaseSynchronizer {
 			return groupMap;
 		};
 
-		@Override
 		public Group parseMap(Map<String, Object> entityMap) {
 			// TODO implement method body
 			return null;
@@ -241,7 +231,6 @@ public class FirebaseSynchronizer {
 
 	private FirebaseMapper<MBMessage> msgMapper = new FirebaseMapper<MBMessage>() {
 
-		@Override
 		public Map<String, Object> toMap(MBMessage message) {
 			Map<String, Object> messageMap = new HashMap<String, Object>();
 			messageMap.put("id", message.getMessageId());
@@ -255,7 +244,6 @@ public class FirebaseSynchronizer {
 			return messageMap;
 		};
 
-		@Override
 		public MBMessage parseMap(Map<String, Object> map) {
 			MBMessage msg;
 			Object o = map.get("id");
