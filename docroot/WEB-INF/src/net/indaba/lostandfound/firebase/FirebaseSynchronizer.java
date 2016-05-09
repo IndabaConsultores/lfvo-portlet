@@ -23,7 +23,7 @@ import net.thegreshams.firebase4j.model.FirebaseResponse;
 import net.thegreshams.firebase4j.service.Firebase;
 
 public class FirebaseSynchronizer {
-	
+
 	private static FirebaseSynchronizer instance = null;
 
 	private FirebaseMapper<Item> itemMapper = new FirebaseMapper<Item>() {
@@ -53,7 +53,8 @@ public class FirebaseSynchronizer {
 			Object o;
 			o = itemMap.get("id");
 			if (o != null) {
-				item = ItemLocalServiceUtil.createItem(Long.valueOf(o.toString()));
+				item = ItemLocalServiceUtil
+						.createItem(Long.valueOf(o.toString()));
 				item.setNew(false);
 			} else {
 				item = ItemLocalServiceUtil.createItem(0);
@@ -64,9 +65,11 @@ public class FirebaseSynchronizer {
 			o = itemMap.get("description");
 			item.setDescription(o != null ? (String) o : "");
 			o = itemMap.get("createdAt");
-			item.setCreateDate(new Date(o != null ? Long.valueOf(o.toString()) : 0));
+			item.setCreateDate(
+					new Date(o != null ? Long.valueOf(o.toString()) : 0));
 			o = itemMap.get("modifiedAt");
-			item.setModifiedDate(new Date(o != null ? Long.valueOf(o.toString()) : 0));
+			item.setModifiedDate(
+					new Date(o != null ? Long.valueOf(o.toString()) : 0));
 			o = itemMap.get("office");
 			item.setGroupId(o != null ? Long.valueOf(o.toString()) : 0);
 			o = itemMap.get("companyId");
@@ -87,13 +90,13 @@ public class FirebaseSynchronizer {
 
 	};
 
-	private FirebaseService<Item> fbItemService = new FirebaseService<Item>(PortletProps.get("firebase.url"), "item",
-			"items", itemMapper) {
+	private FirebaseService<Item> fbItemService = new FirebaseService<Item>(
+			PortletProps.get("firebase.url"), "item", "items", itemMapper) {
 
 		@Override
 		public String add(Item item) {
 			try {
-				String itemType = (item.getType().equals("alert")) ? "alert" : "office";
+				String itemType = getItemType(item);
 				Firebase firebase = new Firebase(getFbURI() + "/" + itemType);
 				Map<String, Object> entityMap = getFbMapper().toMap(item);
 				FirebaseResponse response = firebase.post(entityMap);
@@ -101,11 +104,14 @@ public class FirebaseSynchronizer {
 					_log.debug("Firebase create sucessful");
 					return (String) response.getBody().get("name");
 				} else {
-					_log.error("Firebase create unsuccessful. Response code: " + response.getCode());
+					_log.error("Firebase create unsuccessful. Response code: "
+							+ response.getCode());
 					return null;
 				}
-			} catch (FirebaseException | JacksonUtilityException | UnsupportedEncodingException e) {
-				_log.error("Firebase create unsuccessful. Error : " + e.getMessage());
+			} catch (FirebaseException | JacksonUtilityException
+					| UnsupportedEncodingException e) {
+				_log.error("Firebase create unsuccessful. Error : "
+						+ e.getMessage());
 				e.printStackTrace();
 			}
 			return null;
@@ -114,11 +120,12 @@ public class FirebaseSynchronizer {
 		@Override
 		public String getFirebaseKey(Item item) {
 			try {
-				String itemType = (item.getType().equals("alert")) ? "alert" : "office";
+				String itemType = getItemType(item);
 				Firebase firebase = new Firebase(getFbURI() + "/" + itemType);
 
 				firebase.addQuery("orderBy", getFbIdField());
-				firebase.addQuery("equalTo", String.valueOf(item.getPrimaryKeyObj()));
+				firebase.addQuery("equalTo",
+						String.valueOf(item.getPrimaryKeyObj()));
 				FirebaseResponse response = firebase.get();
 				if (response.getCode() == 200) {
 					Map<String, Object> responseMap = response.getBody();
@@ -129,13 +136,25 @@ public class FirebaseSynchronizer {
 						return null;
 					}
 				} else {
-					_log.error("Firebase get key unsuccessfull. Error: " + response.getCode() + " "
+					_log.error("Firebase get key unsuccessfull. Error: "
+							+ response.getCode() + " "
 							+ response.getBody().get("error"));
 				}
 			} catch (FirebaseException | UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
 			return null;
+		}
+
+		private String getItemType(Item item) {
+			switch (item.getType()) {
+			case "alert":
+			case "lost":
+			case "found":
+				return "alert";
+			default:
+				return "office";
+			}
 		}
 
 	};
@@ -164,7 +183,8 @@ public class FirebaseSynchronizer {
 	};
 
 	private FirebaseService<AssetCategory> fbCatService = FirebaseServiceFactory
-			.createService(FirebaseServiceFactory.SYNC_TYPE.ONE_WAY, "category", "categories", catMapper);
+			.createService(FirebaseServiceFactory.SYNC_TYPE.ONE_WAY, "category",
+					"categories", catMapper);
 
 	private FirebaseMapper<LFImage> imgMapper = new FirebaseMapper<LFImage>() {
 
@@ -194,7 +214,8 @@ public class FirebaseSynchronizer {
 	};
 
 	private FirebaseService<LFImage> fbImageService = FirebaseServiceFactory
-			.createService(FirebaseServiceFactory.SYNC_TYPE.TWO_WAY, "image", "images", imgMapper);
+			.createService(FirebaseServiceFactory.SYNC_TYPE.TWO_WAY, "image",
+					"images", imgMapper);
 
 	private FirebaseMapper<Group> groupMapper = new FirebaseMapper<Group>() {
 
@@ -215,7 +236,8 @@ public class FirebaseSynchronizer {
 	};
 
 	private FirebaseService<Group> fbGroupService = FirebaseServiceFactory
-			.createService(FirebaseServiceFactory.SYNC_TYPE.ONE_WAY, "office", "offices", groupMapper);
+			.createService(FirebaseServiceFactory.SYNC_TYPE.ONE_WAY, "office",
+					"offices", groupMapper);
 
 	private FirebaseMapper<MBMessage> msgMapper = new FirebaseMapper<MBMessage>() {
 
@@ -241,7 +263,8 @@ public class FirebaseSynchronizer {
 				msg = MBMessageLocalServiceUtil.createMBMessage(0);
 				msg.setNew(true);
 			} else {
-				msg = MBMessageLocalServiceUtil.createMBMessage(Long.valueOf(o.toString()));
+				msg = MBMessageLocalServiceUtil
+						.createMBMessage(Long.valueOf(o.toString()));
 				msg.setNew(false);
 			}
 			o = map.get("office");
@@ -279,20 +302,23 @@ public class FirebaseSynchronizer {
 	};
 
 	private FirebaseService<MBMessage> fbMsgService = FirebaseServiceFactory
-			.createService(FirebaseServiceFactory.SYNC_TYPE.TWO_WAY, "message", "messages", msgMapper);
+			.createService(FirebaseServiceFactory.SYNC_TYPE.TWO_WAY, "message",
+					"messages", msgMapper);
 
 	private FirebaseSynchronizer() {
 		super();
 	}
-	
+
 	public static FirebaseSynchronizer getInstance() {
 		if (instance == null) {
 			instance = new FirebaseSynchronizer();
 		}
 		return instance;
 	}
+
 	@SuppressWarnings("unchecked")
-	public <T extends BaseModel<T>> FirebaseService<T> getService(Class<T> clazz) {
+	public <T extends BaseModel<T>> FirebaseService<T> getService(
+			Class<T> clazz) {
 		if (clazz.equals(Item.class)) {
 			return (FirebaseService<T>) fbItemService;
 		} else if (clazz.equals(AssetCategory.class)) {
@@ -306,5 +332,5 @@ public class FirebaseSynchronizer {
 		}
 		return null;
 	}
-	
+
 }

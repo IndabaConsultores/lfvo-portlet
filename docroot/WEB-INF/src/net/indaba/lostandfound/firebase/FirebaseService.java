@@ -40,7 +40,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 		this.fbModelPlural = fbModelPlural;
 		this.mapper = mapper;
 		
-		this.fbURI = fbBaseURL + fbModelPlural;
+		this.fbURI = fbBaseURL + "/" + fbModelPlural;
 	}
 	
 	public final String getFbURI() {
