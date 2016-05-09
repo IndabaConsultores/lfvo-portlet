@@ -14,6 +14,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.apache.commons.io.IOUtils;
 
@@ -48,7 +50,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 	public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
 		_log.debug("doView");
-		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		List<Item> items;
 		try {
 			items = ItemLocalServiceUtil.getItems(themeDisplay.getScopeGroupId(), -1, -1);
@@ -56,38 +58,38 @@ public class ItemManagerPortlet extends MVCPortlet {
 		} catch (PortalException e) {
 			e.printStackTrace();
 		}
-		
+
 		super.doView(renderRequest, renderResponse);
 	}
 
 	public void addOrUpdateItem(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
-		
+
 		_log.debug("editItem " + ParamUtil.get(actionRequest, "itemId", 0));
 		long itemId = ParamUtil.get(actionRequest, "itemId", 0);
 		String name = ParamUtil.get(actionRequest, "name", "");
-		
+
 		Item item = null;
-		if(itemId==0){
+		if (itemId == 0) {
 			item = ItemLocalServiceUtil.createItem(0);
 		} else {
 			item = ItemLocalServiceUtil.getItem(itemId);
 		}
-		
+
 		item.setName(name);
 		item.setGroupId(serviceContext.getScopeGroupId());
 		item.setUserId(serviceContext.getUserId());
 		item.setPublishDate(new Date());
-		
+
 		ItemServiceUtil.addOrUpdateItem(item, serviceContext);
-		
+
 		addItemImage(actionRequest, actionResponse, item.getItemId());
-		
+
 		sendRedirect(actionRequest, actionResponse);
-		
+
 	}
-	
+
 	public void deleteItem(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
@@ -96,7 +98,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		ItemServiceUtil.deleteItem(itemId, serviceContext);
 		sendRedirect(actionRequest, actionResponse);
 	}
-	
+
 	public void deleteLfImage(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
@@ -104,28 +106,28 @@ public class ItemManagerPortlet extends MVCPortlet {
 		net.indaba.lostandfound.service.LFImageServiceUtil.deleteLFImage(lfImageId, serviceContext);
 		sendRedirect(actionRequest, actionResponse);
 	}
-	
+
 	public void moveItemToTrash(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		_log.debug("moveItemToTrash " + ParamUtil.get(actionRequest, "itemId", 0));
-		
-		deleteItem(actionRequest,actionResponse);
-		
+
+		deleteItem(actionRequest, actionResponse);
+
 	}
-	
+
 	public void doDataDiagnosis(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		_log.debug("doDataDiagnosis ");
 		FirebaseSyncUtil firebaseUtil = FirebaseSyncUtil.getInstance();
 		try {
 			firebaseUtil.updateUnsyncedItems();
-			//System.out.println(firebaseUtil.getFirebaseUnsyncedItems());
+			// System.out.println(firebaseUtil.getFirebaseUnsyncedItems());
 		} catch (FirebaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void doDataSync(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		_log.debug("doDataDiagnosis ");
@@ -133,55 +135,61 @@ public class ItemManagerPortlet extends MVCPortlet {
 		FirebaseSyncUtil firebaseUtil = FirebaseSyncUtil.getInstance();
 		try {
 			if (true) {
-				firebaseUtil.resyncItems(serviceContext);				
+				firebaseUtil.resyncItems(serviceContext);
 			}
 		} catch (FirebaseException | JacksonUtilityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
-		
+		}
+
 	}
-	
+
 	public void addItemImage(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
-		long itemId = ParamUtil.getLong(actionRequest,"itemId");
+		long itemId = ParamUtil.getLong(actionRequest, "itemId");
 		addItemImage(actionRequest, actionResponse, itemId);
 	}
-	
+
 	public void addItemImage(ActionRequest actionRequest, ActionResponse actionResponse, long itemId)
 			throws IOException, PortletException, PortalException {
-		
+
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
-		
+
 		UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
 		File file = uploadRequest.getFile("itemImage");
-		
-		if(file==null) return;
-		
-		long _itemId = ParamUtil.getLong(uploadRequest,"itemId");
-		if(_itemId==0)
-			_itemId=itemId;
+
+		if (file == null || !file.exists())
+			return;
+
+		long _itemId = ParamUtil.getLong(uploadRequest, "itemId");
+		if (_itemId == 0)
+			_itemId = itemId;
 		_log.debug("addItemImage to item " + _itemId);
-		
-		
-		
+
 		String imageBase63String = Base64.encode(IOUtils.toByteArray(new FileInputStream(file)));
 		ByteArrayInputStream imageBase64 = new ByteArrayInputStream(imageBase63String.getBytes(StandardCharsets.UTF_8));
 		OutputBlob dataOutputBlob = new OutputBlob(imageBase64, imageBase63String.length());
-		
+
 		LFImage lfImage = LFImageLocalServiceUtil.createLFImage(CounterLocalServiceUtil.increment());
 		lfImage.setItemId(_itemId);
 		lfImage.setImage(dataOutputBlob);
 		LFImageServiceUtil.addLFImage(lfImage, serviceContext);
 	}
-	
+
 	public void addMessage(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		_log.debug("addMessage to item ");
 	}
 
+	@Override
+	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
+		_log.debug("servingResource.");
+		super.serveResource(resourceRequest, resourceResponse);
+		
+	}
+
 	Log _log = LogFactoryUtil.getLog(this.getClass());
-	
-	public static final String PATH_EDIT_ITEM="/html/manager/edit_item.jsp";
+
+	public static final String PATH_EDIT_ITEM = "/html/manager/edit_item.jsp";
 
 }
