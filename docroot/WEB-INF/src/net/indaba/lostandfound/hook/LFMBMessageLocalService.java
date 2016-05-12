@@ -50,6 +50,7 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 		}
 		return (firebaseUtil.isSyncEnabled()
 				&& message.getClassName().equals(Item.class.getName())
+				&& message.getParentMessageId() != 0
 				&& themeDisplay != null);
 	}
 

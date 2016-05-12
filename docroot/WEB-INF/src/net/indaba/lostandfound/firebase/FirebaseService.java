@@ -25,7 +25,8 @@ import net.thegreshams.firebase4j.model.FirebaseResponse;
 import net.thegreshams.firebase4j.service.Firebase;
 
 public abstract class FirebaseService<T extends BaseModel<T>> {
-
+	
+	private ExecutorService executor = Executors.newCachedThreadPool();
 	private String fbURI;
 
 	private String fbModelSingular;
@@ -146,7 +147,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 				// null, null).get();
 				response = firebase.delete("/" + itemKey);
 				if (response.getCode() == 200) {
-					_log.debug("Firebase delete sucessful");
+					_log.info("Firebase delete sucessful");
 					return true;
 				} else {
 					_log.error("Firebase delete unsuccessful. Response code: "
@@ -686,9 +687,8 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 	 * @return A 'future' promise with the result of the task given
 	 */
 	protected <S> Future<S> asyncWrapper(Callable<S> task) {
-		ExecutorService executor = Executors.newSingleThreadExecutor();
 		Future<S> future = executor.submit(task);
-		executor.shutdown();
+		//executor.shutdown();
 		return future;
 	}
 
