@@ -25,9 +25,6 @@ import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 
 public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 
-	FirebaseService<MBMessage> firebaseUtil = FirebaseSynchronizer.getInstance()
-			.getService(MBMessage.class);
-
 	/*
 	 * (non-Java-doc)
 	 * 
@@ -39,6 +36,10 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 			MBMessageLocalService mbMessageLocalService) {
 		super(mbMessageLocalService);
 	}
+	
+	private FirebaseService<MBMessage> getFbService() {
+		return FirebaseSynchronizer.getInstance().getService(MBMessage.class);
+	}
 
 	private boolean updateFirebase(MBMessage message,
 			ServiceContext serviceContext) {
@@ -48,7 +49,7 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 					.getAttribute(
 							WebKeys.THEME_DISPLAY);
 		}
-		return (firebaseUtil.isSyncEnabled()
+		return (getFbService().isSyncEnabled()
 				&& message.getClassName().equals(Item.class.getName())
 				&& message.getParentMessageId() != 0
 				&& themeDisplay != null);
@@ -97,11 +98,11 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 				message.getPrimaryKey(), false, true, true);
 
 		if (updateFirebase(message, serviceContext) && !isThemeDisplayNull) {
-			Future<String> fbKey = firebaseUtil.add(message, null);
+			Future<String> fbKey = getFbService().add(message, null);
 			Item item = ItemLocalServiceUtil.fetchItem(message.getClassPK());
 			FirebaseService<Item> fbItemService = FirebaseSynchronizer
 					.getInstance().getService(Item.class);
-			firebaseUtil.setRelationManyToOne(message, item, fbItemService,
+			getFbService().setRelationManyToOne(message, item, fbItemService,
 					fbKey);
 		}
 		return message;
@@ -136,11 +137,11 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 				classPK, subject, body,
 				serviceContext);
 		if (updateFirebase(message, serviceContext) && !isThemeDisplayNull) {
-			Future<String> fbKey = firebaseUtil.update(message, null);
+			Future<String> fbKey = getFbService().update(message, null);
 			Item item = ItemLocalServiceUtil.fetchItem(message.getClassPK());
 			FirebaseService<Item> fbItemService = FirebaseSynchronizer
 					.getInstance().getService(Item.class);
-			firebaseUtil.setRelationManyToOne(message, item, fbItemService,
+			getFbService().setRelationManyToOne(message, item, fbItemService,
 					fbKey);
 		}
 		return message;
@@ -151,9 +152,9 @@ public class LFMBMessageLocalService extends MBMessageLocalServiceWrapper {
 		if (updateFirebase(message, null)) {
 			FirebaseService<Item> fbItemService = FirebaseSynchronizer
 					.getInstance().getService(Item.class);
-			Future<Boolean> result = firebaseUtil.setRelationManyToOne(message,
+			Future<Boolean> result = getFbService().setRelationManyToOne(message,
 					null, fbItemService, null);
-			firebaseUtil.delete(message, result);
+			getFbService().delete(message, result);
 		}
 		return super.deleteMessage(message);
 	}

@@ -294,6 +294,26 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 		});
 	}
 
+	private Map<String, Object> flatten(Map<String, Object> map) {
+		Map<String, Object> result = new LinkedHashMap<String, Object>();
+		Iterator<String> it = map.keySet().iterator();
+		while (it.hasNext()) {
+			String root = it.next();
+			Object o = map.get(root);
+			if (o instanceof Map) {
+				@SuppressWarnings("unchecked")
+				Map<String, Object> m = Map.class.cast(o);
+				m = flatten(m);
+				for (String k : m.keySet()) {
+					result.put(root + "/" + k, m.get(k));
+				}
+			} else {
+				result.put(root, o);
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * Sets the references for a X-to-many relationship
 	 * 
@@ -393,26 +413,6 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 			}
 			return false;
 		});
-	}
-
-	private Map<String, Object> flatten(Map<String, Object> map) {
-		Map<String, Object> result = new LinkedHashMap<String, Object>();
-		Iterator<String> it = map.keySet().iterator();
-		while (it.hasNext()) {
-			String root = it.next();
-			Object o = map.get(root);
-			if (o instanceof Map) {
-				@SuppressWarnings("unchecked")
-				Map<String, Object> m = Map.class.cast(o);
-				m = flatten(m);
-				for (String k : m.keySet()) {
-					result.put(root + "/" + k, m.get(k));
-				}
-			} else {
-				result.put(root, o);
-			}
-		}
-		return result;
 	}
 
 	/**
@@ -586,68 +586,32 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 	 */
 	public abstract String getFirebaseKey(T entity);
 
-	public Map<String, T> getByModifiedAfter(long modifiedDate)
-			throws FirebaseException, UnsupportedEncodingException {
+	public Map<String, T> getByModifiedAfter(long modifiedDate) {
 		Map<String, T> entities = new LinkedHashMap<String, T>();
-
-		Firebase firebase = new Firebase(getFbURI());
-		firebase.addQuery("orderBy", "\"modifiedAt\"");
-		firebase.addQuery("startAt", String.valueOf(modifiedDate));
-		FirebaseResponse response = firebase.get();
-		Map<String, Object> entitiesMap = response.getBody();
-		T entity;
-		for (Entry<String, Object> entry : entitiesMap.entrySet()) {
-			@SuppressWarnings("unchecked")
-			Map<String, Object> map = (Map<String, Object>) entry.getValue();
-			entity = mapper.parseMap(map);
-			if (Long.valueOf((String) entity.getPrimaryKeyObj()) != 0) {
-				entities.put(entry.getKey(), entity);
-			} else {
-				entity.setNew(true);
-				entities.put(entry.getKey(), entity);
+		try {
+			Firebase firebase = new Firebase(getFbURI());
+			firebase.addQuery("orderBy", "\"modifiedAt\"");
+			firebase.addQuery("startAt", String.valueOf(modifiedDate));
+			FirebaseResponse response = firebase.get();
+			Map<String, Object> entitiesMap = response.getBody();
+			T entity;
+			for (Entry<String, Object> entry : entitiesMap.entrySet()) {
+				@SuppressWarnings("unchecked")
+				Map<String, Object> map = (Map<String, Object>) entry
+						.getValue();
+				entity = mapper.parseMap(map);
+				if (Long.valueOf((String) entity.getPrimaryKeyObj()) != 0) {
+					entities.put(entry.getKey(), entity);
+				} else {
+					entity.setNew(true);
+					entities.put(entry.getKey(), entity);
+				}
 			}
+		} catch (FirebaseException | UnsupportedEncodingException e) {
+			_log.error(e.getMessage());
+			e.printStackTrace();
 		}
 		return entities;
-	}
-
-	public Map<T, String> compareEntities(Map<String, T> fbEntities, List<T> lrEntities,
-			Comparator<T> comparator) throws UnsupportedEncodingException, FirebaseException {
-		
-		Map<T, String> result = new LinkedHashMap<T, String>();
-
-		Map<Serializable, T> lrEntitiesSet = new LinkedHashMap<Serializable, T>();
-
-		/* Convert list to map for easier access by itemId */
-		for (T i : lrEntities) {
-			lrEntitiesSet.put(i.getPrimaryKeyObj(), i);
-		}
-		/* Add fbItem in fbItemSet */
-		T lrEntity, fbEntity;
-		for (Entry<String, T> e : fbEntities.entrySet()) {
-			fbEntity = e.getValue();
-			lrEntity = lrEntitiesSet.get(fbEntity.getPrimaryKeyObj());
-			if (lrEntity != null) {
-				/* entity exists in FB and LR; compare modified date */
-				int compareResult = comparator.compare(fbEntity, lrEntity);
-				 if (compareResult > 0) {
-					 /* fbEntity is more recent; add to result */
-					 result.put(fbEntity, e.getKey());
-				 }
-				 if (compareResult >= 0) {
-					 /* lrEntity is older or equal; remove from lrEntitiesSet */
-					 lrEntitiesSet.remove(lrEntity.getPrimaryKeyObj());
-				 }
-			} else {
-				/* Entity exists in FB but not in LR */
-				result.put(fbEntity, e.getKey());
-			}
-		}
-		/* Remaining lrEntities do not exist in FB */
-		for (Entry<Serializable, T> e : lrEntitiesSet.entrySet()) {
-			result.put(e.getValue(), "liferay");
-		}
-
-		return result;
 	}
 
 	/**

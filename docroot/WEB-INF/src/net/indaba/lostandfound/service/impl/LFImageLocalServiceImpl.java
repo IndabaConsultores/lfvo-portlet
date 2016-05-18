@@ -58,8 +58,9 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 	 * f image local service.
 	 */
 
-	FirebaseService<LFImage> firebaseUtil = FirebaseSynchronizer
-			.getInstance().getService(LFImage.class);
+	private FirebaseService<LFImage> getFbService() {
+		return FirebaseSynchronizer.getInstance().getService(LFImage.class);
+	}
 
 	private boolean updateFirebase(LFImage image,
 			ServiceContext serviceContext) {
@@ -68,7 +69,7 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 			themeDisplay = (ThemeDisplay) serviceContext.getRequest()
 					.getAttribute(WebKeys.THEME_DISPLAY);
 		}
-		return (firebaseUtil.isSyncEnabled() && themeDisplay != null);
+		return (getFbService().isSyncEnabled() && themeDisplay != null);
 	}
 
 	public List<LFImage> findByItemId(long itemId) {
@@ -82,11 +83,11 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 		 */
 		LFImage image = super.addLFImage(lfImage);
 		if (updateFirebase(lfImage, serviceContext)) {
-			Future<String> fbKey = firebaseUtil.add(image, null);
+			Future<String> fbKey = getFbService().add(image, null);
 			Item item = ItemLocalServiceUtil.fetchItem(lfImage.getItemId());
 			FirebaseService<Item> fbItemService = FirebaseSynchronizer
 					.getInstance().getService(Item.class);
-			firebaseUtil.setRelationManyToOne(lfImage, item, fbItemService,
+			getFbService().setRelationManyToOne(lfImage, item, fbItemService,
 					fbKey);
 		}
 		return image;
@@ -98,9 +99,9 @@ public class LFImageLocalServiceImpl extends LFImageLocalServiceBaseImpl {
 			Item item = ItemLocalServiceUtil.fetchItem(lfImage.getItemId());
 			FirebaseService<Item> fbItemService = FirebaseSynchronizer
 					.getInstance().getService(Item.class);
-			Future<Boolean> result = firebaseUtil.setRelationManyToOne(lfImage,
+			Future<Boolean> result = getFbService().setRelationManyToOne(lfImage,
 					item, fbItemService, null);
-			firebaseUtil.delete(lfImage, result);
+			getFbService().delete(lfImage, result);
 		}
 		return super.deleteLFImage(lfImage);
 	}

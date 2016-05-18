@@ -9,17 +9,19 @@ import net.indaba.lostandfound.firebase.FirebaseSynchronizer;
 
 public class LFGroupModelListener extends BaseModelListener<Group> {
 
-	private FirebaseService<Group> firebaseUtil = (FirebaseService<Group>) FirebaseSynchronizer.getInstance().getService(Group.class);
+	private FirebaseService<Group> getFbService() {
+		return FirebaseSynchronizer.getInstance().getService(Group.class);
+	}
 
 	private boolean updateFirebase(Group group) {
-		return (firebaseUtil.isSyncEnabled() && group.getSite() 
+		return (getFbService().isSyncEnabled() && group.getSite()
 				&& group.getClassName().equals(Group.class.getName()));
 	}
 
 	@Override
 	public void onAfterCreate(Group group) throws ModelListenerException {
 		if (updateFirebase(group)) {
-			firebaseUtil.add(group);
+			getFbService().add(group);
 		}
 		super.onAfterCreate(group);
 	}
@@ -27,7 +29,7 @@ public class LFGroupModelListener extends BaseModelListener<Group> {
 	@Override
 	public void onAfterUpdate(Group group) throws ModelListenerException {
 		if (updateFirebase(group)) {
-			firebaseUtil.update(group);
+			getFbService().update(group);
 		}
 		super.onAfterUpdate(group);
 	}
@@ -35,7 +37,7 @@ public class LFGroupModelListener extends BaseModelListener<Group> {
 	@Override
 	public void onAfterRemove(Group group) throws ModelListenerException {
 		if (updateFirebase(group)) {
-			firebaseUtil.delete(group);
+			getFbService().delete(group);
 		}
 		super.onAfterRemove(group);
 	}

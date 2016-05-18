@@ -70,12 +70,9 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	 * local service.
 	 */
 
-	private FirebaseService<Item> firebaseUtil = FirebaseSynchronizer
-			.getInstance()
-			.getService(Item.class);
-
-	private FirebaseService<AssetCategory> fbCatService = FirebaseSynchronizer
-			.getInstance().getService(AssetCategory.class);
+	private FirebaseService<Item> getFbService() {
+		return FirebaseSynchronizer.getInstance().getService(Item.class);
+	}
 
 	private boolean updateFirebase(Item item, ServiceContext serviceContext) {
 		ThemeDisplay themeDisplay = new ThemeDisplay();
@@ -84,7 +81,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 					.getAttribute(
 							WebKeys.THEME_DISPLAY);
 		}
-		return (firebaseUtil.isSyncEnabled()
+		return (getFbService().isSyncEnabled()
 				&& themeDisplay != null);
 	}
 
@@ -114,15 +111,17 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 						.getAssetLinkEntryIds(), serviceContext);
 		if (updateFirebase(item, serviceContext)) {
 			try {
-				Future<String> firebaseKey = firebaseUtil.addOrUpdate(item,
+				Future<String> firebaseKey = getFbService().addOrUpdate(item,
 						null);
 				List<AssetCategory> categories = AssetCategoryLocalServiceUtil
 						.getAssetEntryAssetCategories(assetEntry.getEntryId());
-				// firebaseUtil.addRelations(item, categories, firebaseKey);
+				// getFbService().addRelations(item, categories, firebaseKey);
 				AssetCategory category = null;
 				if (!categories.isEmpty())
 					category = categories.get(0);
-				firebaseUtil.setRelationManyToOne(item, category, fbCatService,
+				FirebaseService<AssetCategory> fbCatService = FirebaseSynchronizer
+						.getInstance().getService(AssetCategory.class);
+				getFbService().setRelationManyToOne(item, category, fbCatService,
 						firebaseKey);
 			} catch (Exception e) {
 				_log.error("Error updating item " + item.getItemId(), e);
@@ -177,7 +176,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		if (updateFirebase(item, serviceContext)) {
 			try {
 				_log.debug("Deleting item in Firebase");
-				firebaseUtil.delete(item, null);
+				getFbService().delete(item, null);
 			} catch (Exception e) {
 				_log.error("Error deleting item " + item.getItemId(), e);
 				e.printStackTrace();
