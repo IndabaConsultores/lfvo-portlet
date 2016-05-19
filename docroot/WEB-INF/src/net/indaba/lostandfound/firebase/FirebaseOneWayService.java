@@ -19,12 +19,11 @@ public class FirebaseOneWayService<T extends BaseModel<T>> extends
 		super(fbBaseURL, fbModelSingular, fbModelPlural, mapper);
 	}
 
-	@Override
 	public String add(T entity) {
-
 		try {
 			Firebase firebase = new Firebase(getFbURI());
 			Map<String, Object> entityMap = getFbMapper().toMap(entity);
+			entityMap.put(getFbIdField(), entity.getPrimaryKeyObj());
 			FirebaseResponse response = firebase.put("/" + entity
 					.getPrimaryKeyObj(), entityMap);
 			if (response.getCode() == 200) {
@@ -44,7 +43,6 @@ public class FirebaseOneWayService<T extends BaseModel<T>> extends
 		return null;
 	}
 
-	@Override
 	public String getFirebaseKey(T entity) {
 		return String.valueOf(entity.getPrimaryKeyObj());
 	}

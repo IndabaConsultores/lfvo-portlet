@@ -14,13 +14,16 @@
 
 package net.indaba.lostandfound.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
@@ -115,7 +118,6 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 						null);
 				List<AssetCategory> categories = AssetCategoryLocalServiceUtil
 						.getAssetEntryAssetCategories(assetEntry.getEntryId());
-				// getFbService().addRelations(item, categories, firebaseKey);
 				AssetCategory category = null;
 				if (!categories.isEmpty())
 					category = categories.get(0);
@@ -123,6 +125,12 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 						.getInstance().getService(AssetCategory.class);
 				getFbService().setRelationManyToOne(item, category, fbCatService,
 						firebaseKey);
+				
+				List<AssetTag> tags = AssetTagLocalServiceUtil
+						.getAssetEntryAssetTags(assetEntry.getEntryId());
+				getFbService().setRelationManyToMany(item, tags,
+						FirebaseSynchronizer.getInstance().getService(
+								AssetTag.class), firebaseKey);
 			} catch (Exception e) {
 				_log.error("Error updating item " + item.getItemId(), e);
 			}
@@ -174,14 +182,14 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		LFImageLocalServiceUtil.deleteByItemId(item.getItemId(),
 				serviceContext);
 		if (updateFirebase(item, serviceContext)) {
-			try {
-				_log.debug("Deleting item in Firebase");
-				getFbService().delete(item, null);
-			} catch (Exception e) {
-				_log.error("Error deleting item " + item.getItemId(), e);
-				e.printStackTrace();
-			}
+			Future<Boolean> future = getFbService().setRelationManyToOne(item, null, FirebaseSynchronizer
+					.getInstance().getService(AssetCategory.class), null);
 
+			future = getFbService().setRelationManyToMany(item,
+					new ArrayList<AssetTag>(), FirebaseSynchronizer
+							.getInstance().getService(AssetTag.class), future);
+			_log.debug("Deleting item in Firebase");
+			getFbService().delete(item, future);
 		}
 		return super.deleteItem(item);
 	}

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
 import com.liferay.portal.kernel.events.ActionException;
@@ -28,7 +30,6 @@ import net.thegreshams.firebase4j.model.FirebaseResponse;
 import net.thegreshams.firebase4j.service.Firebase;
 
 public class FirebaseServicesInitAction extends SimpleAction {
-
 
 	private FirebaseMapper<Item> itemMapper = new FirebaseMapper<Item>() {
 
@@ -293,9 +294,29 @@ public class FirebaseServicesInitAction extends SimpleAction {
 
 	};
 
+	private FirebaseMapper<AssetTag> tagMapper = new FirebaseMapper<AssetTag>() {
+
+		public Map<String, Object> toMap(AssetTag entity) {
+			return entity.getModelAttributes();
+		}
+
+		public AssetTag parseMap(Map<String, Object> entityMap) {
+			AssetTag tag = AssetTagLocalServiceUtil.createAssetTag(Long.valueOf(
+					entityMap.get("id").toString()));
+			tag.setModelAttributes(entityMap);
+			return null;
+		}
+
+	};
+
+	private FirebaseService<AssetTag> fbTagService = FirebaseServiceFactory
+			.createService(FirebaseServiceFactory.SYNC_TYPE.ONE_WAY, "tag",
+					"tags", tagMapper);
+
 	private FirebaseService<MBMessage> fbMsgService = FirebaseServiceFactory
 			.createService(FirebaseServiceFactory.SYNC_TYPE.TWO_WAY, "message",
 					"messages", msgMapper);
+
 	@Override
 	public void run(String[] arg0) throws ActionException {
 		FirebaseSynchronizer fbs = FirebaseSynchronizer.getInstance();
@@ -304,6 +325,8 @@ public class FirebaseServicesInitAction extends SimpleAction {
 		fbs.addService(AssetCategory.class, fbCatService);
 		fbs.addService(Group.class, fbGroupService);
 		fbs.addService(MBMessage.class, fbMsgService);
+		fbs.addService(AssetTag.class, fbTagService);
+		fbs.resync(-1);
 	}
 
 }

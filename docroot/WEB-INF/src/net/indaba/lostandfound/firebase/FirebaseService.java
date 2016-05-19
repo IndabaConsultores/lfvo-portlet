@@ -1,8 +1,6 @@
 package net.indaba.lostandfound.firebase;
 
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -143,8 +141,6 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 			String itemKey = getFirebaseKey(entity);
 			FirebaseResponse response;
 			if (itemKey != null) {
-				// setRelationManyToMany(entity, new ArrayList<AssetCategory>(),
-				// null, null).get();
 				response = firebase.delete("/" + itemKey);
 				if (response.getCode() == 200) {
 					_log.info("Firebase delete sucessful");
@@ -585,34 +581,6 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 	 *         was found in Firebase
 	 */
 	public abstract String getFirebaseKey(T entity);
-
-	public Map<String, T> getByModifiedAfter(long modifiedDate) {
-		Map<String, T> entities = new LinkedHashMap<String, T>();
-		try {
-			Firebase firebase = new Firebase(getFbURI());
-			firebase.addQuery("orderBy", "\"modifiedAt\"");
-			firebase.addQuery("startAt", String.valueOf(modifiedDate));
-			FirebaseResponse response = firebase.get();
-			Map<String, Object> entitiesMap = response.getBody();
-			T entity;
-			for (Entry<String, Object> entry : entitiesMap.entrySet()) {
-				@SuppressWarnings("unchecked")
-				Map<String, Object> map = (Map<String, Object>) entry
-						.getValue();
-				entity = mapper.parseMap(map);
-				if (Long.valueOf((String) entity.getPrimaryKeyObj()) != 0) {
-					entities.put(entry.getKey(), entity);
-				} else {
-					entity.setNew(true);
-					entities.put(entry.getKey(), entity);
-				}
-			}
-		} catch (FirebaseException | UnsupportedEncodingException e) {
-			_log.error(e.getMessage());
-			e.printStackTrace();
-		}
-		return entities;
-	}
 
 	/**
 	 * Checks whether synchronization is enabled at portlet.properties

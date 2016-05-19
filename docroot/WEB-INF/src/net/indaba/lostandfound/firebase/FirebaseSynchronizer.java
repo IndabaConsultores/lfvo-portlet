@@ -1,9 +1,14 @@
 package net.indaba.lostandfound.firebase;
 
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.util.portlet.PortletProps;
+
+import net.thegreshams.firebase4j.error.FirebaseException;
+import net.thegreshams.firebase4j.service.Firebase;
 
 public class FirebaseSynchronizer {
 
@@ -11,7 +16,7 @@ public class FirebaseSynchronizer {
 
 	private Map<Class<?>, FirebaseService<?>> firebaseServices = 
 			new LinkedHashMap<Class<?>, FirebaseService<?>>();
-
+	
 	private FirebaseSynchronizer() {
 		super();
 	}
@@ -36,6 +41,15 @@ public class FirebaseSynchronizer {
 			return (FirebaseService<T>) firebaseServices.get(clazz);
 		else
 			return null;
+	}
+	
+	public void resync(long date) {
+		try {
+			Firebase firebase = new Firebase(PortletProps.get("firebase.url") + "/_RESTART");
+			firebase.put(String.valueOf(date));
+		} catch (FirebaseException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

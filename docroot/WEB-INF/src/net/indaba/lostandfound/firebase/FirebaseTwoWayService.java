@@ -23,6 +23,7 @@ public class FirebaseTwoWayService<T extends BaseModel<T>> extends
 		try {
 			Firebase firebase = new Firebase(getFbURI());
 			Map<String, Object> entityMap = getFbMapper().toMap(entity);
+			entityMap.put(getFbIdField(), entity.getPrimaryKeyObj());
 			FirebaseResponse response = firebase.post(entityMap);
 			if (response.getCode() == 200) {
 				_log.debug("Firebase create sucessful");
