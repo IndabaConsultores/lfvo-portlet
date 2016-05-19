@@ -8,11 +8,3 @@
 	</div>
 	
 </liferay-frontend:vertical-card-sticker-bottom>
-
-<liferay-frontend:vertical-card-header>
-	Some text
-</liferay-frontend:vertical-card-header>
-
-<liferay-frontend:vertical-card-footer>
-	Name 
-</liferay-frontend:vertical-card-footer>

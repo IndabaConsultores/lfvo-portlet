@@ -69,7 +69,6 @@ $(':file').change(function(){
     else { 
     	console.log("File looks great!");
    		var formData = new FormData($('#<portlet:namespace/>fm')[0]);
-   		console.log("Go!");
 		$.ajax({
        		url: '<%= editItemURL %>',  //server script to process data
             type: 'POST',
@@ -83,14 +82,11 @@ $(':file').change(function(){
             // Ajax events
             success: completeHandler = function(data) {
             	
-            	alert('OK');
-            	
             	$.ajax({
                		url: '<%= serveImages %>',  //server script to process data
                     type: 'POST',
                     // Ajax events
                     success: completeHandler = function(data) {
-                    	alert('OK2');
                     	 $('#item-image-list').html(data);
                     },
                     error: function(xhr, status, error) {

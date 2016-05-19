@@ -7,6 +7,7 @@
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(lfImage.getImage().getBinaryStream(), writer);
 		request.setAttribute("lfImageId-tmp", String.valueOf(lfImage.getLfImageId()));
+		request.setAttribute("itemId-tmp", String.valueOf(lfImage.getItemId()));
 		
 	%>
 		<li class="col-md-2 col-sm-4 col-xs-6 yui3-dd-draggable" data-draggable="true" data-selectable="true">
