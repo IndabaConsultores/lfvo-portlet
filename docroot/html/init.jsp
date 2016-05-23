@@ -13,6 +13,8 @@
 <%@taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend"%>
 
 <%@page import="java.util.List"%>
+<%@page import="java.io.StringWriter"%>
+<%@page import="org.apache.commons.io.IOUtils"%>
 
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
 <%@page import="com.liferay.portal.kernel.util.StringPool"%>
@@ -23,6 +25,7 @@
 <%@page import="net.indaba.lostandfound.model.Item"%>
 <%@page import="net.indaba.lostandfound.model.LFImage"%>
 <%@page import="net.indaba.lostandfound.service.LFImageLocalServiceUtil"%>
+<%@page import="net.indaba.lostandfound.service.ItemLocalServiceUtil"%>
 
 
 <liferay-theme:defineObjects />
@@ -33,4 +36,8 @@
 	String currentURL = currentURLObj.toString();
 
 	String redirect = ParamUtil.get(request, "redirect", "");
+%>
+
+<%
+long itemId = ParamUtil.getLong(request, "itemId");
 %>

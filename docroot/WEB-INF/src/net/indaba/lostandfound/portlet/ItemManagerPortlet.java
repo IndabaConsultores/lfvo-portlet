@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -13,6 +14,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.apache.commons.io.IOUtils;
 
@@ -80,7 +83,9 @@ public class ItemManagerPortlet extends MVCPortlet {
 		item.setPublishDate(new Date());
 		
 		ItemServiceUtil.addOrUpdateItem(item, serviceContext);
-		
+
+		addItemImage(actionRequest, actionResponse, item.getItemId());
+
 		sendRedirect(actionRequest, actionResponse);
 		
 	}
@@ -127,20 +132,34 @@ public class ItemManagerPortlet extends MVCPortlet {
 	
 	public void addItemImage(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
+		long itemId = ParamUtil.getLong(actionRequest, "itemId");
+		addItemImage(actionRequest, actionResponse, itemId);
+	}
+
+	public void addItemImage(ActionRequest actionRequest, ActionResponse actionResponse, long itemId)
+			throws IOException, PortletException, PortalException {
+
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
 		
 		UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
-		long itemId = ParamUtil.getLong(uploadRequest,"itemId");
 		_log.debug("addItemImage to item " + itemId);
 		
 		File file = uploadRequest.getFile("itemImage");
-		
+
+		if (file == null || !file.exists())
+			return;
+
+		long _itemId = ParamUtil.getLong(uploadRequest, "itemId");
+		if (_itemId == 0)
+			_itemId = itemId;
+		_log.debug("addItemImage to item " + _itemId);
+
 		String imageBase63String = Base64.encode(IOUtils.toByteArray(new FileInputStream(file)));
 		ByteArrayInputStream imageBase64 = new ByteArrayInputStream(imageBase63String.getBytes(StandardCharsets.UTF_8));
 		OutputBlob dataOutputBlob = new OutputBlob(imageBase64, imageBase63String.length());
 		
 		LFImage lfImage = LFImageLocalServiceUtil.createLFImage(CounterLocalServiceUtil.increment());
-		lfImage.setItemId(itemId);
+		lfImage.setItemId(_itemId);
 		lfImage.setImage(dataOutputBlob);
 		LFImageServiceUtil.addLFImage(lfImage, serviceContext);
 	}
@@ -150,8 +169,15 @@ public class ItemManagerPortlet extends MVCPortlet {
 		_log.debug("addMessage to item ");
 	}
 
+	@Override
+	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
+		_log.debug("servingResource.");
+		super.serveResource(resourceRequest, resourceResponse);
+		
+	}
+
 	Log _log = LogFactoryUtil.getLog(this.getClass());
-	
-	public static final String PATH_EDIT_ITEM="/html/manager/edit_item.jsp";
+
+	public static final String PATH_EDIT_ITEM = "/html/manager/edit_item.jsp";
 
 }

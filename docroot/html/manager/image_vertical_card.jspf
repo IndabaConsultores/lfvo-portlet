@@ -4,15 +4,7 @@
 	</div>
 
 	<div class="file-icon-color-0 sticker sticker-right">
-		<aui:icon cssClass="icon-monospaced" image="lock" markupView="lexicon" message="locked" />
+		<aui:icon cssClass="icon-monospaced" image="trash" markupView="lexicon" message="locked" />
 	</div>
 	
 </liferay-frontend:vertical-card-sticker-bottom>
-
-<liferay-frontend:vertical-card-header>
-	Some text
-</liferay-frontend:vertical-card-header>
-
-<liferay-frontend:vertical-card-footer>
-	Name 
-</liferay-frontend:vertical-card-footer>
