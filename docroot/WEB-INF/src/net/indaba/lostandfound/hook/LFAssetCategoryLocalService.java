@@ -1,73 +1,99 @@
 package net.indaba.lostandfound.hook;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.Future;
+
+import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetCategoryLocalServiceWrapper;
+import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
 
-import net.indaba.lostandfound.firebase.FirebaseCategorySyncUtil;
-import net.thegreshams.firebase4j.error.FirebaseException;
-import net.thegreshams.firebase4j.error.JacksonUtilityException;
+import net.indaba.lostandfound.firebase.FirebaseService;
+import net.indaba.lostandfound.firebase.FirebaseSynchronizer;
+import net.indaba.lostandfound.model.Item;
+import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Locale;
-import java.util.Map;
+public class LFAssetCategoryLocalService extends
+		AssetCategoryLocalServiceWrapper {
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-
-public class LFAssetCategoryLocalService extends AssetCategoryLocalServiceWrapper {
-	
-	private FirebaseCategorySyncUtil firebaseUtil = FirebaseCategorySyncUtil.getInstance();
-	
-	/* (non-Java-doc)
-	 * @see com.liferay.asset.kernel.service.AssetCategoryLocalServiceWrapper#AssetCategoryLocalServiceWrapper(AssetCategoryLocalService assetCategoryLocalService)
+	/*
+	 * (non-Java-doc)
+	 * 
+	 * @see com.liferay.asset.kernel.service.AssetCategoryLocalServiceWrapper#
+	 * AssetCategoryLocalServiceWrapper(AssetCategoryLocalService
+	 * assetCategoryLocalService)
 	 */
-	public LFAssetCategoryLocalService(AssetCategoryLocalService assetCategoryLocalService) {
+	public LFAssetCategoryLocalService(
+			AssetCategoryLocalService assetCategoryLocalService) {
 		super(assetCategoryLocalService);
 	}
 	
+	private FirebaseService<AssetCategory> getFbService() {
+		return FirebaseSynchronizer.getInstance().getService(
+				AssetCategory.class);
+	}
+
 	@Override
-	public AssetCategory addCategory(long userId, long groupId, long parentCategoryId, Map<Locale, String> titleMap,
-			Map<Locale, String> descriptionMap, long vocabularyId, String[] categoryProperties,
+	public AssetCategory addCategory(long userId, long groupId,
+			long parentCategoryId, Map<Locale, String> titleMap,
+			Map<Locale, String> descriptionMap, long vocabularyId,
+			String[] categoryProperties,
 			ServiceContext serviceContext) throws PortalException {
-		AssetCategory category = super.addCategory(userId, groupId, parentCategoryId, titleMap, descriptionMap, vocabularyId, categoryProperties,
-				serviceContext);
-		if (firebaseUtil.isSyncEnabled()) {
-			try {
-				firebaseUtil.add(category);
-			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		AssetCategory category = super.addCategory(userId, groupId,
+				parentCategoryId, titleMap, descriptionMap,
+				vocabularyId, categoryProperties, serviceContext);
+		if (getFbService().isSyncEnabled()) {
+			getFbService().add(category, null);
 		}
 		return category;
 	}
-	
+
 	@Override
-	public AssetCategory updateCategory(long userId, long categoryId, long parentCategoryId,
-			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap, long vocabularyId,
-			String[] categoryProperties, ServiceContext serviceContext) throws PortalException {
-		AssetCategory category = super.updateCategory(userId, categoryId, parentCategoryId, titleMap, descriptionMap, vocabularyId,
-				categoryProperties, serviceContext);
-		if (firebaseUtil.isSyncEnabled()) {
-			try {
-				firebaseUtil.update(category);
-			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	public AssetCategory updateCategory(long userId, long categoryId,
+			long parentCategoryId,
+			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			long vocabularyId,
+			String[] categoryProperties, ServiceContext serviceContext)
+					throws PortalException {
+		AssetCategory category = super.updateCategory(userId, categoryId,
+				parentCategoryId, titleMap, descriptionMap,
+				vocabularyId, categoryProperties, serviceContext);
+		if (getFbService().isSyncEnabled()) {
+			Future<String> fbKey = getFbService().update(category, null);
+			List<AssetEntry> assetEntries = AssetEntryLocalServiceUtil
+					.getAssetCategoryAssetEntries(categoryId);
+			List<Item> items = new ArrayList<Item>();
+			for (AssetEntry ae : assetEntries) {
+				if (ae.getClassName().equals(Item.class.getName())) {
+					Item item = ItemLocalServiceUtil.fetchItem(ae.getClassPK());
+					items.add(item);
+				}
 			}
-		}		return category;
+			FirebaseService<Item> fbItemService = FirebaseSynchronizer
+					.getInstance().getService(Item.class);
+			getFbService().setRelationOneToMany(category, items, fbItemService,
+					fbKey);
+		}
+		return category;
 	}
-	
+
 	@Override
-	public AssetCategory deleteCategory(AssetCategory category, boolean skipRebuildTree) throws PortalException {
-		if (firebaseUtil.isSyncEnabled()) {
-			try {
-				firebaseUtil.delete(category);
-			} catch (UnsupportedEncodingException | FirebaseException | JacksonUtilityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	public AssetCategory deleteCategory(AssetCategory category,
+			boolean skipRebuildTree) throws PortalException {
+		if (getFbService().isSyncEnabled()) {
+			List<Item> items = new ArrayList<Item>();
+			FirebaseService<Item> fbItemService = FirebaseSynchronizer
+					.getInstance().getService(Item.class);
+
+			Future<Boolean> result = getFbService().setRelationOneToMany(category,
+					items, fbItemService, null);
+			getFbService().delete(category, result);
 		}
 		return super.deleteCategory(category, skipRebuildTree);
 	}

@@ -6,15 +6,6 @@
 	
 	<service>
 		<service-type>
-			com.liferay.asset.kernel.service.AssetTagLocalService
-		</service-type>
-		<service-impl>
-			net.indaba.lostandfound.hook.LFAssetTagLocalService
-		</service-impl>
-	</service>
-	
-	<service>
-		<service-type>
 			com.liferay.asset.kernel.service.AssetCategoryLocalService
 		</service-type>
 		<service-impl>
