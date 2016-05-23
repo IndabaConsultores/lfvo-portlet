@@ -131,18 +131,11 @@ public class LFImageLocalServiceClpInvoker {
 
 		_methodParameterTypes43 = new String[] {  };
 
-		_methodName49 = "findByItemId";
+		_methodName50 = "findByItemId";
 
-		_methodParameterTypes49 = new String[] { "long" };
+		_methodParameterTypes50 = new String[] { "long" };
 
-		_methodName50 = "addLFImage";
-
-		_methodParameterTypes50 = new String[] {
-				"net.indaba.lostandfound.model.LFImage",
-				"com.liferay.portal.kernel.service.ServiceContext"
-			};
-
-		_methodName51 = "deleteLFImage";
+		_methodName51 = "addLFImage";
 
 		_methodParameterTypes51 = new String[] {
 				"net.indaba.lostandfound.model.LFImage",
@@ -152,12 +145,19 @@ public class LFImageLocalServiceClpInvoker {
 		_methodName52 = "deleteLFImage";
 
 		_methodParameterTypes52 = new String[] {
+				"net.indaba.lostandfound.model.LFImage",
+				"com.liferay.portal.kernel.service.ServiceContext"
+			};
+
+		_methodName53 = "deleteLFImage";
+
+		_methodParameterTypes53 = new String[] {
 				"long", "com.liferay.portal.kernel.service.ServiceContext"
 			};
 
-		_methodName53 = "deleteByItemId";
+		_methodName54 = "deleteByItemId";
 
-		_methodParameterTypes53 = new String[] {
+		_methodParameterTypes54 = new String[] {
 				"long", "com.liferay.portal.kernel.service.ServiceContext"
 			};
 	}
@@ -276,31 +276,31 @@ public class LFImageLocalServiceClpInvoker {
 			return LFImageLocalServiceUtil.getOSGiServiceIdentifier();
 		}
 
-		if (_methodName49.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes49, parameterTypes)) {
-			return LFImageLocalServiceUtil.findByItemId(((Long)arguments[0]).longValue());
-		}
-
 		if (_methodName50.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes50, parameterTypes)) {
-			return LFImageLocalServiceUtil.addLFImage((net.indaba.lostandfound.model.LFImage)arguments[0],
-				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
+			return LFImageLocalServiceUtil.findByItemId(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName51.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes51, parameterTypes)) {
-			return LFImageLocalServiceUtil.deleteLFImage((net.indaba.lostandfound.model.LFImage)arguments[0],
+			return LFImageLocalServiceUtil.addLFImage((net.indaba.lostandfound.model.LFImage)arguments[0],
 				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName52.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes52, parameterTypes)) {
-			return LFImageLocalServiceUtil.deleteLFImage(((Long)arguments[0]).longValue(),
+			return LFImageLocalServiceUtil.deleteLFImage((net.indaba.lostandfound.model.LFImage)arguments[0],
 				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 		}
 
 		if (_methodName53.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes53, parameterTypes)) {
+			return LFImageLocalServiceUtil.deleteLFImage(((Long)arguments[0]).longValue(),
+				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
+		}
+
+		if (_methodName54.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes54, parameterTypes)) {
 			LFImageLocalServiceUtil.deleteByItemId(((Long)arguments[0]).longValue(),
 				(com.liferay.portal.kernel.service.ServiceContext)arguments[1]);
 
@@ -352,8 +352,6 @@ public class LFImageLocalServiceClpInvoker {
 	private String[] _methodParameterTypes20;
 	private String _methodName43;
 	private String[] _methodParameterTypes43;
-	private String _methodName49;
-	private String[] _methodParameterTypes49;
 	private String _methodName50;
 	private String[] _methodParameterTypes50;
 	private String _methodName51;
@@ -362,4 +360,6 @@ public class LFImageLocalServiceClpInvoker {
 	private String[] _methodParameterTypes52;
 	private String _methodName53;
 	private String[] _methodParameterTypes53;
+	private String _methodName54;
+	private String[] _methodParameterTypes54;
 }

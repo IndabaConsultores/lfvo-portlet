@@ -26,10 +26,14 @@ import net.indaba.lostandfound.service.base.ItemServiceBaseImpl;
  * The implementation of the item remote service.
  *
  * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link net.indaba.lostandfound.service.ItemService} interface.
+ * All custom service methods should be put in this class. Whenever methods are
+ * added, rerun ServiceBuilder to copy their definitions into the
+ * {@link net.indaba.lostandfound.service.ItemService} interface.
  *
  * <p>
- * This is a remote service. Methods of this service are expected to have security checks based on the propagated JAAS credentials because this service can be accessed remotely.
+ * This is a remote service. Methods of this service are expected to have
+ * security checks based on the propagated JAAS credentials because this service
+ * can be accessed remotely.
  * </p>
  *
  * @author aritz
@@ -41,18 +45,23 @@ public class ItemServiceImpl extends ItemServiceBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never reference this class directly. Always use {@link net.indaba.lostandfound.service.ItemServiceUtil} to access the item remote service.
+	 * Never reference this class directly. Always use {@link
+	 * net.indaba.lostandfound.service.ItemServiceUtil} to access the item
+	 * remote service.
 	 */
-	
-	public Item addOrUpdateItem(Item item, ServiceContext serviceContext) throws PortalException {
+
+	public Item addOrUpdateItem(Item item, ServiceContext serviceContext)
+			throws PortalException {
 		return ItemLocalServiceUtil.addOrUpdateItem(item, serviceContext);
 	}
 
-	public Item deleteItem(long itemId, ServiceContext serviceContext) throws PortalException {
+	public Item deleteItem(long itemId, ServiceContext serviceContext)
+			throws PortalException {
 		return ItemLocalServiceUtil.deleteItem(itemId, serviceContext);
 	}
 
-	public Item deleteItem(Item item, ServiceContext serviceContext) throws PortalException {
+	public Item deleteItem(Item item, ServiceContext serviceContext)
+			throws PortalException {
 		return ItemLocalServiceUtil.deleteItem(item, serviceContext);
 	}
 }
