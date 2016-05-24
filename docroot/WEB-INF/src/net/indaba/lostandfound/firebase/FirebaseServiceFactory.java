@@ -5,8 +5,7 @@ import com.liferay.util.portlet.PortletProps;
 
 public class FirebaseServiceFactory {
 
-	private final static String FB_BASE_URI = PortletProps.get("firebase.url")
-			+ "/";
+	private final static String FB_BASE_URI = PortletProps.get("firebase.url");
 
 	public static enum SYNC_TYPE {
 		ONE_WAY, TWO_WAY
