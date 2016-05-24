@@ -124,7 +124,7 @@ public class FirebaseServicesInitAction extends SimpleAction {
 				String itemType = getItemType(item);
 				Firebase firebase = new Firebase(getFbURI() + "/" + itemType);
 
-				firebase.addQuery("orderBy", getFbIdField());
+				firebase.addQuery("orderBy", '"' + getFbIdField() + '"');
 				firebase.addQuery("equalTo",
 						String.valueOf(item.getPrimaryKeyObj()));
 				FirebaseResponse response = firebase.get();

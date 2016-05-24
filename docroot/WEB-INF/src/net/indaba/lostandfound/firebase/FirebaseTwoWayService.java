@@ -45,8 +45,7 @@ public class FirebaseTwoWayService<T extends BaseModel<T>> extends
 	public String getFirebaseKey(T entity) {
 		try {
 			Firebase firebase = new Firebase(getFbURI());
-
-			firebase.addQuery("orderBy", getFbIdField());
+			firebase.addQuery("orderBy", '"' + getFbIdField() + '"');
 			firebase.addQuery("equalTo", String.valueOf(entity
 					.getPrimaryKeyObj()));
 			FirebaseResponse response = firebase.get();
