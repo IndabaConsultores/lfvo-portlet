@@ -4,5 +4,6 @@
 <display>
 	<category name="category.sample">
 		<portlet id="lfvo" />
+		<portlet id="app-manager"></portlet>
 	</category>
 </display>
