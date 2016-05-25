@@ -32,7 +32,7 @@ public abstract class FirebaseService<T extends BaseModel<T>> {
 
 	private FirebaseMapper<T> mapper;
 
-	private String fbIdField = "\"id\"";
+	private String fbIdField = "id";
 
 	public FirebaseService(String fbBaseURL, String fbModelSingular,
 			String fbModelPlural, FirebaseMapper<T> mapper) {

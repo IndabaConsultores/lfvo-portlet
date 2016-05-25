@@ -124,7 +124,7 @@ public class FirebaseServicesInitAction extends SimpleAction {
 				String itemType = getItemType(item);
 				Firebase firebase = new Firebase(getFbURI() + "/" + itemType);
 
-				firebase.addQuery("orderBy", getFbIdField());
+				firebase.addQuery("orderBy", '"' + getFbIdField() + '"');
 				firebase.addQuery("equalTo",
 						String.valueOf(item.getPrimaryKeyObj()));
 				FirebaseResponse response = firebase.get();
@@ -294,25 +294,6 @@ public class FirebaseServicesInitAction extends SimpleAction {
 
 	};
 
-	private FirebaseMapper<AssetTag> tagMapper = new FirebaseMapper<AssetTag>() {
-
-		public Map<String, Object> toMap(AssetTag entity) {
-			return entity.getModelAttributes();
-		}
-
-		public AssetTag parseMap(Map<String, Object> entityMap) {
-			AssetTag tag = AssetTagLocalServiceUtil.createAssetTag(Long.valueOf(
-					entityMap.get("id").toString()));
-			tag.setModelAttributes(entityMap);
-			return null;
-		}
-
-	};
-
-	private FirebaseService<AssetTag> fbTagService = FirebaseServiceFactory
-			.createService(FirebaseServiceFactory.SYNC_TYPE.ONE_WAY, "tag",
-					"tags", tagMapper);
-
 	private FirebaseService<MBMessage> fbMsgService = FirebaseServiceFactory
 			.createService(FirebaseServiceFactory.SYNC_TYPE.TWO_WAY, "message",
 					"messages", msgMapper);
@@ -325,7 +306,6 @@ public class FirebaseServicesInitAction extends SimpleAction {
 		fbs.addService(AssetCategory.class, fbCatService);
 		fbs.addService(Group.class, fbGroupService);
 		fbs.addService(MBMessage.class, fbMsgService);
-		fbs.addService(AssetTag.class, fbTagService);
 		fbs.resync(-1);
 	}
 
