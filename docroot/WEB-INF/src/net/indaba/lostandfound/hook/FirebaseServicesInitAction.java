@@ -38,8 +38,8 @@ public class FirebaseServicesInitAction extends SimpleAction {
 			itemMap.put("id", item.getItemId());
 			itemMap.put("name", item.getName());
 			itemMap.put("description", item.getDescription());
-			itemMap.put("createdAt", item.getCreateDate());
-			itemMap.put("modifiedAt", item.getModifiedDate());
+			itemMap.put("createDate", item.getCreateDate());
+			itemMap.put("modifiedDate", item.getModifiedDate());
 			itemMap.put("office", item.getGroupId());
 			itemMap.put("companyId", item.getCompanyId());
 			itemMap.put("type", item.getType());
@@ -67,10 +67,10 @@ public class FirebaseServicesInitAction extends SimpleAction {
 			item.setName(o != null ? (String) o : "");
 			o = itemMap.get("description");
 			item.setDescription(o != null ? (String) o : "");
-			o = itemMap.get("createdAt");
+			o = itemMap.get("createDate");
 			item.setCreateDate(
 					new Date(o != null ? Long.valueOf(o.toString()) : 0));
-			o = itemMap.get("modifiedAt");
+			o = itemMap.get("modifiedDate");
 			item.setModifiedDate(
 					new Date(o != null ? Long.valueOf(o.toString()) : 0));
 			o = itemMap.get("office");
