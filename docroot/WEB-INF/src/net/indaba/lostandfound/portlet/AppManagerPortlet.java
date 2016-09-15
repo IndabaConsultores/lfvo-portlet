@@ -37,7 +37,7 @@ public class AppManagerPortlet extends MVCPortlet implements  ValueEventListener
 		
 		if(FirebaseApp.getApps().size()<1){
 			FirebaseOptions options = new FirebaseOptions.Builder()
-				    .setDatabaseUrl("https://vivid-fire-8126.firebaseio.com/")
+				    .setDatabaseUrl("https://lfvo-test.firebaseio.com/")
 				    .setServiceAccount(AppManagerPortlet.class.getClassLoader().getResourceAsStream("firebase-service-account.json"))
 				    .build();
 			FirebaseApp.initializeApp(options);
@@ -104,17 +104,16 @@ public class AppManagerPortlet extends MVCPortlet implements  ValueEventListener
 		Object document = arg0.getValue();
         HashMap<String, Object> hm = (HashMap)document;
         
-        for (String key : hm.keySet()) {
-        	System.out.println(key + " --> " + hm.get(key));
-			
-		}
-        String groupIdStr = hm.get("groupId").toString();
-        if(groupIdStr!=null){
-        	officeInfo.put(groupIdStr, hm);
+        if(hm!=null){
+	        for (String key : hm.keySet()) {
+	        	System.out.println(key + " --> " + hm.get(key));
+				
+			}
+	        String groupIdStr = hm.get("groupId").toString();
+	        if(groupIdStr!=null){
+	        	officeInfo.put(groupIdStr, hm);
+	        }
         }
-		/*OfficeInfo oi = (OfficeInfo)document; 
-		System.out.println("kooooool " + oi.getId());*/
-		
 	}
 	
 	@Override
