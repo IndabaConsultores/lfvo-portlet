@@ -81,15 +81,41 @@ public class AppManagerPortlet extends MVCPortlet implements  ValueEventListener
 	public void saveInfo(ActionRequest actionRequest, ActionResponse actionResponse){
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		HashMap<String, Object> infoUpdates = new HashMap<String, Object>();
-		
+				
+		// Color 1
 		String color1 = ParamUtil.get(actionRequest, "color1", ""); 
 		if(!"".equals(color1)){
 			infoUpdates.put("color1", color1);
 		}
-		
+				
+		// Color 2
 		String color2 = ParamUtil.get(actionRequest, "color2", ""); 
 		if(!"".equals(color2)){
 			infoUpdates.put("color2", color2);
+		}
+		
+		// Num Telefono
+		String phoneNumber = ParamUtil.get(actionRequest, "phoneNumber", ""); 
+		if(!"".equals(phoneNumber)){
+			infoUpdates.put("phoneNumber", phoneNumber);
+		}
+		
+		// Email
+		String emailAddress = ParamUtil.get(actionRequest, "emailAddress", ""); 
+		if(!"".equals(emailAddress)){
+			infoUpdates.put("emailAddress", emailAddress);
+		}
+		
+		// Icono
+		String icon = ParamUtil.get(actionRequest, "icon", ""); 
+		if(!"".equals(icon)){
+			infoUpdates.put("icon", icon);
+		}
+		
+		// Descripcion
+		String description = ParamUtil.get(actionRequest, "description", ""); 
+		if(!"".equals(description)){
+			infoUpdates.put("description", description);
 		}
 		
 		DatabaseReference ref = officeRefs.get(String.valueOf(themeDisplay.getScopeGroupId()));
