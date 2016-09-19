@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -41,8 +40,6 @@ import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.indaba.lostandfound.service.ItemServiceUtil;
 import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
 import net.indaba.lostandfound.service.LFImageServiceUtil;
-import net.thegreshams.firebase4j.error.FirebaseException;
-import net.thegreshams.firebase4j.error.JacksonUtilityException;
 
 public class ItemManagerPortlet extends MVCPortlet {
 
