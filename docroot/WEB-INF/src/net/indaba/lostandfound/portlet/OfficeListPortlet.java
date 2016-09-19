@@ -1,6 +1,6 @@
 package net.indaba.lostandfound.portlet;
 
-import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
 /**
  * Portlet implementation class OfficeListPortlet
