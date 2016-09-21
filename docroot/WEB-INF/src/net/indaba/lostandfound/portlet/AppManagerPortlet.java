@@ -1,5 +1,7 @@
 package net.indaba.lostandfound.portlet;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +12,8 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.io.IOUtils;
+
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -17,11 +21,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 /**
@@ -78,7 +86,8 @@ public class AppManagerPortlet extends MVCPortlet implements  ValueEventListener
 		super.doView(renderRequest, renderResponse);
 	}
 	
-	public void saveInfo(ActionRequest actionRequest, ActionResponse actionResponse){
+	public void saveInfo(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException, PortalException {
+		
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		HashMap<String, Object> infoUpdates = new HashMap<String, Object>();
 				
@@ -106,12 +115,20 @@ public class AppManagerPortlet extends MVCPortlet implements  ValueEventListener
 			infoUpdates.put("emailAddress", emailAddress);
 		}
 		
-		// Icono
-		String icon = ParamUtil.get(actionRequest, "icon", ""); 
-		if(!"".equals(icon)){
-			infoUpdates.put("icon", icon);
+		// Icono		
+		UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);		
+		File file = uploadRequest.getFile("itemImage");
+		if (file == null || !file.exists()){			
+			String icon = ParamUtil.get(actionRequest, "icon", "");
+			if(!"".equals(icon)){
+				infoUpdates.put("icon", icon);
+			}		
+		}else{
+			String imageBase63String = Base64.encode(IOUtils.toByteArray(new FileInputStream(file)));
+			imageBase63String = "data:image/jpeg;base64," + imageBase63String;			
+			infoUpdates.put("icon", imageBase63String);
 		}
-		
+				
 		// Descripcion
 		String description = ParamUtil.get(actionRequest, "description", ""); 
 		if(!"".equals(description)){
@@ -121,8 +138,7 @@ public class AppManagerPortlet extends MVCPortlet implements  ValueEventListener
 		DatabaseReference ref = officeRefs.get(String.valueOf(themeDisplay.getScopeGroupId()));
 		if(ref!=null){
 			ref.updateChildren(infoUpdates);
-		}
-		
+		}		
 	}
 
 	@Override
@@ -135,7 +151,7 @@ public class AppManagerPortlet extends MVCPortlet implements  ValueEventListener
 	        	System.out.println(key + " --> " + hm.get(key));
 				
 			}
-	        String groupIdStr = hm.get("groupId").toString();
+	        String groupIdStr = hm.get("groupId").toString(); //arg0.getKey() ó hm.get("id").toString();
 	        if(groupIdStr!=null){
 	        	officeInfo.put(groupIdStr, hm);
 	        }
@@ -147,6 +163,4 @@ public class AppManagerPortlet extends MVCPortlet implements  ValueEventListener
 		System.out.println("canceled");
 		
 	}
- 
-
 }
