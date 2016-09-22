@@ -46,6 +46,9 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+		<supported-locale>es_ES</supported-locale>
+		<supported-locale>eu_ES</supported-locale>
+		<resource-bundle>content.Language</resource-bundle>
 		<portlet-info>
 			<title>App Manager</title>
 			<short-title>App Manager</short-title>
