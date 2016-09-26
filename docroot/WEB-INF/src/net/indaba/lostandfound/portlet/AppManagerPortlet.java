@@ -34,7 +34,10 @@ import net.thegreshams.firebase4j.service.Firebase;
  * Portlet implementation class AppManagerPortlet
  */
 public class AppManagerPortlet extends MVCPortlet{
-		
+	
+	// HashMap con todos los parametros de todos los sites
+	HashMap<String, HashMap<String, Object>> officesInfo = new HashMap<String, HashMap<String, Object>>();
+	
 	@Override
 	public void init() throws PortletException {
 		
@@ -58,17 +61,25 @@ public class AppManagerPortlet extends MVCPortlet{
 		long officeId = themeDisplay.getScopeGroupId();
 		DatabaseReference ref=null;
 		ref = FirebaseDatabase
-			    .getInstance()
-			    .getReference("/offices/" + officeId);
-		try {
-			Firebase firebase = new Firebase(ref.toString());
-			FirebaseResponse response = firebase.get();
-			HashMap<String, Object> office = (HashMap<String, Object>)response.getBody();
-			renderRequest.setAttribute("officeInfo", office);
-		} catch (FirebaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			    .getInstance()			    
+			    .getReference("/offices/" + officeId);		
+		
+		if( officesInfo.get(String.valueOf(officeId)) == null){
+			
+			try {
+				Firebase firebase = new Firebase(ref.toString());
+				FirebaseResponse response = firebase.get();
+				HashMap<String, Object> office = (HashMap<String, Object>)response.getBody();
+				
+				officesInfo.put(String.valueOf(officeId), office);				
+				// renderRequest.setAttribute("officeInfo", office);			
+			} catch (FirebaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 		}
+		
+		renderRequest.setAttribute("officeInfo", officesInfo.get(String.valueOf(officeId)));		
 		
 		super.doView(renderRequest, renderResponse);
 	}
@@ -78,7 +89,26 @@ public class AppManagerPortlet extends MVCPortlet{
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		long officeId = themeDisplay.getScopeGroupId();
 		HashMap<String, Object> infoUpdates = new HashMap<String, Object>();
-				
+		HashMap<String, Object> title = new HashMap<String, Object>();
+		HashMap<String, Object> descr = new HashMap<String, Object>();
+		
+		// TITULO
+		// 1) Castellano
+		String title_cas = ParamUtil.get(actionRequest, "title_cas", ""); 
+		if(!"".equals(title_cas)){
+			title.put("es", title_cas);
+		}		
+		
+		// 2) Euskera
+		String title_eus = ParamUtil.get(actionRequest, "title_eus", ""); 
+		if(!"".equals(title_eus)){
+			title.put("eu", title_eus);
+		}		
+		
+		if(!title.isEmpty()){
+			infoUpdates.put("title", title);
+		}
+		
 		// Color 1
 		String color1 = ParamUtil.get(actionRequest, "color1", ""); 
 		if(!"".equals(color1)){
@@ -114,20 +144,37 @@ public class AppManagerPortlet extends MVCPortlet{
 		}else{
 			String imageBase63String = Base64.encode(IOUtils.toByteArray(new FileInputStream(file)));
 			imageBase63String = "data:image/jpeg;base64," + imageBase63String;			
-			infoUpdates.put("icon", imageBase63String);
+			infoUpdates.put("icon", imageBase63String);			
 		}
 		
-		// Descripcion
-		String description = ParamUtil.get(actionRequest, "description", ""); 
-		if(!"".equals(description)){
-			infoUpdates.put("description", description);
+		// DESCRIPCION		
+		// 1) Castellano
+		String description_cas = ParamUtil.get(actionRequest, "description_cas", ""); 
+		if(!"".equals(description_cas)){
+			descr.put("es", description_cas);
 		}
+		
+		// 2) Euskera
+		String description_eus = ParamUtil.get(actionRequest, "description_eus", ""); 
+		if(!"".equals(description_eus)){
+			descr.put("eu", description_eus);
+		}
+		
+		if(!descr.isEmpty()){
+			infoUpdates.put("description", descr);
+		}
+		
+		// URL
+		String url = ParamUtil.get(actionRequest, "url", ""); 
+		if(!"".equals(url)){
+			infoUpdates.put("url", url);
+		}		
 		
 		DatabaseReference ref = FirebaseDatabase
 			    .getInstance()
 			    .getReference("/offices/" + officeId);
 		ref.updateChildren(infoUpdates);
 		
-	}
-	
+		officesInfo.put(String.valueOf(officeId), infoUpdates);
+	}	
 }
