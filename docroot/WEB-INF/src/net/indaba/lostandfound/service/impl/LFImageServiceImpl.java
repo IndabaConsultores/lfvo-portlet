@@ -79,10 +79,17 @@ public class LFImageServiceImpl extends LFImageServiceBaseImpl {
 
 	public LFImage addLFImage(String imageBase64String, long itemId,
 			ServiceContext serviceContext) {
+		String imageString;
+		String imageStrings[] = imageBase64String.split("base64,");
+		if (imageStrings.length > 1) {
+			imageString = imageStrings[1];
+		} else {
+			imageString = imageBase64String;
+		}
 		ByteArrayInputStream imageBase64 = new ByteArrayInputStream(
-				imageBase64String.getBytes(StandardCharsets.UTF_8));
+				imageString.getBytes(StandardCharsets.UTF_8));
 		OutputBlob dataOutputBlob = new OutputBlob(imageBase64,
-				imageBase64String.length());
+				imageString.length());
 
 		LFImage lfImage = LFImageLocalServiceUtil.createLFImage(
 				CounterLocalServiceUtil.increment());
