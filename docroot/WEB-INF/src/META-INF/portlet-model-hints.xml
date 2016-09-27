@@ -22,5 +22,7 @@
 		<field name="lfImageId" type="long" />
 		<field name="itemId" type="long" />
 		<field name="image" type="Blob" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
 	</model>
 </model-hints>

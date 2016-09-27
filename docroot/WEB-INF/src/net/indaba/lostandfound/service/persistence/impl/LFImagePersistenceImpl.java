@@ -28,6 +28,8 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.CacheModel;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.SetUtil;
@@ -45,6 +47,7 @@ import net.indaba.lostandfound.service.persistence.LFImagePersistence;
 import java.io.Serializable;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1323,6 +1326,28 @@ public class LFImagePersistenceImpl extends BasePersistenceImpl<LFImage>
 			lfImage.setUuid(uuid);
 		}
 
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+
+		Date now = new Date();
+
+		if (isNew && (lfImage.getCreateDate() == null)) {
+			if (serviceContext == null) {
+				lfImage.setCreateDate(now);
+			}
+			else {
+				lfImage.setCreateDate(serviceContext.getCreateDate(now));
+			}
+		}
+
+		if (!lfImageModelImpl.hasSetModifiedDate()) {
+			if (serviceContext == null) {
+				lfImage.setModifiedDate(now);
+			}
+			else {
+				lfImage.setModifiedDate(serviceContext.getModifiedDate(now));
+			}
+		}
+
 		Session session = null;
 
 		try {
@@ -1410,6 +1435,8 @@ public class LFImagePersistenceImpl extends BasePersistenceImpl<LFImage>
 		lfImageImpl.setLfImageId(lfImage.getLfImageId());
 		lfImageImpl.setItemId(lfImage.getItemId());
 		lfImageImpl.setImage(lfImage.getImage());
+		lfImageImpl.setCreateDate(lfImage.getCreateDate());
+		lfImageImpl.setModifiedDate(lfImage.getModifiedDate());
 
 		return lfImageImpl;
 	}

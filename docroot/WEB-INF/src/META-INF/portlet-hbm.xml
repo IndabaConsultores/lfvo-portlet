@@ -29,6 +29,8 @@
 		<property name="uuid" type="com.liferay.portal.dao.orm.hibernate.StringType" column="uuid_" />
 		<property name="itemId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<one-to-one name="imageBlobModel" access="com.liferay.portal.dao.orm.hibernate.PrivatePropertyAccessor" class="net.indaba.lostandfound.model.LFImageImageBlobModel" cascade="save-update" outer-join="false" constrained="true" />
+		<property name="createDate" type="org.hibernate.type.TimestampType" />
+		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
 	</class>
 	<class name="net.indaba.lostandfound.model.LFImageImageBlobModel" table="lfvo_LFImage" lazy="true">
 		<id name="lfImageId" column="lfImageId">

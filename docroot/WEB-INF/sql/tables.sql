@@ -19,5 +19,7 @@ create table lfvo_LFImage (
 	uuid_ VARCHAR(75) null,
 	lfImageId LONG not null primary key,
 	itemId LONG,
-	image BLOB
+	image BLOB,
+	createDate DATE null,
+	modifiedDate DATE null
 );

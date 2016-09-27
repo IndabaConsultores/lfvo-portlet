@@ -50,6 +50,9 @@
 		
 		<column name="itemId" type="long"></column>
 		<column name="image" type="Blob"></column>
+		
+		<column name="createDate" type="Date"></column>
+		<column name="modifiedDate" type="Date"></column>
 
 		<finder name="ItemId" return-type="Collection">
 			<finder-column name="itemId" />
