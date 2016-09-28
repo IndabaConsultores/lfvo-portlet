@@ -47,7 +47,6 @@ public class FirebaseServicesInitAction extends SimpleAction {
 			location.put("latitude", item.getLat());
 			location.put("longitude", item.getLng());
 			itemMap.put("location", location);
-			itemMap.put("createdBy", PortletProps.get("firebase.user.id"));
 			return itemMap;
 		}
 

@@ -131,7 +131,9 @@ $(':file').change(function(){
 <%}%>
 
 
-
+<%
+if(item.getItemId()!=0){
+%>
 
 <portlet:actionURL name="invokeTaglibDiscussion" var="addMessageURL">
 </portlet:actionURL>
@@ -145,3 +147,4 @@ $(':file').change(function(){
 		redirect="<%=redirect%>" 
 		formName="fm3"></liferay-ui:discussion>
 
+<%}%>

@@ -158,6 +158,9 @@ public class ItemManagerPortlet extends MVCPortlet {
 		LFImage lfImage = LFImageLocalServiceUtil.createLFImage(CounterLocalServiceUtil.increment());
 		lfImage.setItemId(_itemId);
 		lfImage.setImage(dataOutputBlob);
+		Date now = new Date();
+		lfImage.setCreateDate(now);
+		lfImage.setModifiedDate(now);
 		LFImageServiceUtil.addLFImage(lfImage, serviceContext);
 	}
 	

@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import java.util.Date;
+
 /**
  * The cache model class for representing LFImage in entity cache.
  *
@@ -63,7 +65,7 @@ public class LFImageCacheModel implements CacheModel<LFImage>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(7);
+		StringBundler sb = new StringBundler(11);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -71,6 +73,11 @@ public class LFImageCacheModel implements CacheModel<LFImage>, Externalizable {
 		sb.append(lfImageId);
 		sb.append(", itemId=");
 		sb.append(itemId);
+		sb.append(", createDate=");
+		sb.append(createDate);
+		sb.append(", modifiedDate=");
+		sb.append(modifiedDate);
+		sb.append("}");
 
 		return sb.toString();
 	}
@@ -89,6 +96,20 @@ public class LFImageCacheModel implements CacheModel<LFImage>, Externalizable {
 		lfImageImpl.setLfImageId(lfImageId);
 		lfImageImpl.setItemId(itemId);
 
+		if (createDate == Long.MIN_VALUE) {
+			lfImageImpl.setCreateDate(null);
+		}
+		else {
+			lfImageImpl.setCreateDate(new Date(createDate));
+		}
+
+		if (modifiedDate == Long.MIN_VALUE) {
+			lfImageImpl.setModifiedDate(null);
+		}
+		else {
+			lfImageImpl.setModifiedDate(new Date(modifiedDate));
+		}
+
 		lfImageImpl.resetOriginalValues();
 
 		return lfImageImpl;
@@ -101,6 +122,8 @@ public class LFImageCacheModel implements CacheModel<LFImage>, Externalizable {
 		lfImageId = objectInput.readLong();
 
 		itemId = objectInput.readLong();
+		createDate = objectInput.readLong();
+		modifiedDate = objectInput.readLong();
 	}
 
 	@Override
@@ -116,9 +139,13 @@ public class LFImageCacheModel implements CacheModel<LFImage>, Externalizable {
 		objectOutput.writeLong(lfImageId);
 
 		objectOutput.writeLong(itemId);
+		objectOutput.writeLong(createDate);
+		objectOutput.writeLong(modifiedDate);
 	}
 
 	public String uuid;
 	public long lfImageId;
 	public long itemId;
+	public long createDate;
+	public long modifiedDate;
 }

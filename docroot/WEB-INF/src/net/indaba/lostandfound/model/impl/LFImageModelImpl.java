@@ -41,6 +41,7 @@ import java.sql.Blob;
 import java.sql.Types;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,9 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 			{ "uuid_", Types.VARCHAR },
 			{ "lfImageId", Types.BIGINT },
 			{ "itemId", Types.BIGINT },
-			{ "image", Types.BLOB }
+			{ "image", Types.BLOB },
+			{ "createDate", Types.TIMESTAMP },
+			{ "modifiedDate", Types.TIMESTAMP }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -81,9 +84,11 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 		TABLE_COLUMNS_MAP.put("lfImageId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("itemId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("image", Types.BLOB);
+		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table lfvo_LFImage (uuid_ VARCHAR(75) null,lfImageId LONG not null primary key,itemId LONG,image BLOB)";
+	public static final String TABLE_SQL_CREATE = "create table lfvo_LFImage (uuid_ VARCHAR(75) null,lfImageId LONG not null primary key,itemId LONG,image BLOB,createDate DATE null,modifiedDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table lfvo_LFImage";
 	public static final String ORDER_BY_JPQL = " ORDER BY lfImage.lfImageId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY lfvo_LFImage.lfImageId ASC";
@@ -120,6 +125,8 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 		model.setLfImageId(soapModel.getLfImageId());
 		model.setItemId(soapModel.getItemId());
 		model.setImage(soapModel.getImage());
+		model.setCreateDate(soapModel.getCreateDate());
+		model.setModifiedDate(soapModel.getModifiedDate());
 
 		return model;
 	}
@@ -188,6 +195,8 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 		attributes.put("lfImageId", getLfImageId());
 		attributes.put("itemId", getItemId());
 		attributes.put("image", getImage());
+		attributes.put("createDate", getCreateDate());
+		attributes.put("modifiedDate", getModifiedDate());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -219,6 +228,18 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 
 		if (image != null) {
 			setImage(image);
+		}
+
+		Date createDate = (Date)attributes.get("createDate");
+
+		if (createDate != null) {
+			setCreateDate(createDate);
+		}
+
+		Date modifiedDate = (Date)attributes.get("modifiedDate");
+
+		if (modifiedDate != null) {
+			setModifiedDate(modifiedDate);
 		}
 	}
 
@@ -310,6 +331,34 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 		}
 	}
 
+	@JSON
+	@Override
+	public Date getCreateDate() {
+		return _createDate;
+	}
+
+	@Override
+	public void setCreateDate(Date createDate) {
+		_createDate = createDate;
+	}
+
+	@JSON
+	@Override
+	public Date getModifiedDate() {
+		return _modifiedDate;
+	}
+
+	public boolean hasSetModifiedDate() {
+		return _setModifiedDate;
+	}
+
+	@Override
+	public void setModifiedDate(Date modifiedDate) {
+		_setModifiedDate = true;
+
+		_modifiedDate = modifiedDate;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -344,6 +393,8 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 		lfImageImpl.setUuid(getUuid());
 		lfImageImpl.setLfImageId(getLfImageId());
 		lfImageImpl.setItemId(getItemId());
+		lfImageImpl.setCreateDate(getCreateDate());
+		lfImageImpl.setModifiedDate(getModifiedDate());
 
 		lfImageImpl.resetOriginalValues();
 
@@ -414,6 +465,8 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 
 		lfImageModelImpl._imageBlobModel = null;
 
+		lfImageModelImpl._setModifiedDate = false;
+
 		lfImageModelImpl._columnBitmask = 0;
 	}
 
@@ -433,12 +486,30 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 
 		lfImageCacheModel.itemId = getItemId();
 
+		Date createDate = getCreateDate();
+
+		if (createDate != null) {
+			lfImageCacheModel.createDate = createDate.getTime();
+		}
+		else {
+			lfImageCacheModel.createDate = Long.MIN_VALUE;
+		}
+
+		Date modifiedDate = getModifiedDate();
+
+		if (modifiedDate != null) {
+			lfImageCacheModel.modifiedDate = modifiedDate.getTime();
+		}
+		else {
+			lfImageCacheModel.modifiedDate = Long.MIN_VALUE;
+		}
+
 		return lfImageCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(9);
+		StringBundler sb = new StringBundler(13);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -446,13 +517,18 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 		sb.append(getLfImageId());
 		sb.append(", itemId=");
 		sb.append(getItemId());
+		sb.append(", createDate=");
+		sb.append(getCreateDate());
+		sb.append(", modifiedDate=");
+		sb.append(getModifiedDate());
+		sb.append("}");
 
 		return sb.toString();
 	}
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(16);
+		StringBundler sb = new StringBundler(22);
 
 		sb.append("<model><model-name>");
 		sb.append("net.indaba.lostandfound.model.LFImage");
@@ -469,6 +545,14 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 		sb.append(
 			"<column><column-name>itemId</column-name><column-value><![CDATA[");
 		sb.append(getItemId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>createDate</column-name><column-value><![CDATA[");
+		sb.append(getCreateDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>modifiedDate</column-name><column-value><![CDATA[");
+		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -487,6 +571,9 @@ public class LFImageModelImpl extends BaseModelImpl<LFImage>
 	private long _originalItemId;
 	private boolean _setOriginalItemId;
 	private LFImageImageBlobModel _imageBlobModel;
+	private Date _createDate;
+	private Date _modifiedDate;
+	private boolean _setModifiedDate;
 	private long _columnBitmask;
 	private LFImage _escapedModel;
 }
