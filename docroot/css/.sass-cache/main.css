@@ -1,9 +1,18 @@
 .LFImage {
   width: 50px; }
 
-/*
-APP MANAGER STYLES
-*/
+/* OFFICE LIST STYLES*/
+.card_content {
+  padding-bottom: 10px;
+  text-align: center; }
+
+.card_header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%); }
+
+/* APP MANAGER STYLES */
 .color1 {
   background: linear-gradient(#9FC6E7, #62a2d8); }
 
@@ -107,6 +116,4 @@ APP MANAGER STYLES
   padding-left: 40px;
   padding-top: 10px; }
 
-/*
-FIN APP MANAGER STYLES
-*/
+/* FIN APP MANAGER STYLES */
