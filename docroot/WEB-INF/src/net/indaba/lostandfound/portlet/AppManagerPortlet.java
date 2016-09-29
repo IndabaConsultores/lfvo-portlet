@@ -177,4 +177,15 @@ public class AppManagerPortlet extends MVCPortlet{
 		
 		officesInfo.put(String.valueOf(officeId), infoUpdates);
 	}	
+
+	public void buildApp(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException {
+		String script = "/path/to/script.sh";
+		String targetDir = "/path/to/target/dir";
+		ThemeDisplay td = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		String officeId = String.valueOf(td.getSiteGroupId());
+		Process p = new ProcessBuilder(script, officeId)
+				.directory(new File(targetDir))
+				.redirectOutput(new File(targetDir + "/build" + officeId + ".log"))
+				.start();
+	}
 }
