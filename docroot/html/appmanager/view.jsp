@@ -15,6 +15,10 @@ String icon = "";
 String description_cas = "";
 String description_eus = "";
 String url = "";
+
+// La primera vez ponemos las coordenadas de Indaba
+String latitude = "43.298611";
+String longitude = "-2.006008";
 %>
 
 <%if(officeInfo!=null){
@@ -55,11 +59,28 @@ String url = "";
 
  	if(description != null && description.get("eu") != null){
  		description_eus = description.get("eu").toString();
- 	}
+ 	} 		
+ 	
+	if(officeInfo.get("latitude") != null){
+		latitude = officeInfo.get("latitude").toString();
+	}	
+	
+	if(officeInfo.get("longitude") != null){
+		longitude = officeInfo.get("longitude").toString();
+	}
 	
 	if(officeInfo.get("url") != null){
 		url = officeInfo.get("url").toString();
-	}	
+	}
+	
+	HashMap<String, Object> location =  (HashMap)officeInfo.get("location");
+	if(location != null && location.get("latitude") != null){
+		latitude = location.get("latitude").toString();
+	}
+	
+	if(location != null && location.get("longitude") != null){
+		longitude = location.get("longitude").toString();
+	}
 %>
 
 <portlet:actionURL var="saveInfoUrl" name="saveInfo" ></portlet:actionURL>
@@ -221,11 +242,25 @@ String url = "";
             <input name="url" id="url" type="text" size="30" value="<%=url%>">
         </div>
     </div>
-
+	
+	<div class="control-group">
+        <label class="control-label" for="googleM"><liferay-ui:message key="appManager.coordenadas"/>:</label>
+        <div class="controls">
+			<iframe id="googleM" src="" frameborder="0" scrolling="no" width="500" height="400">
+ 			</iframe>
+ 			<div id="latitud">
+ 				<input type="hidden" id="latitude" name="latitude" value="<%=latitude%>">
+ 			</div>	
+			<div id="longitud">
+				<input type="hidden" id="longitude" name="longitude" value="<%=longitude%>">
+			</div>
+	 	</div>
+    </div>
+    		
 	<div class="my-boton">
     	<input class="btn btn-info btn-sm" type="submit" value="Submit">
      </div>
-
+     
 </form>
 </div>
 
@@ -240,7 +275,7 @@ String url = "";
 
 var currentLangCode = '<%=pageContext.getRequest().getLocale().getLanguage()%>';
 
-$( document ).ready(function() {
+$( document ).ready(function() {	
 	
 	var pnamespace = '<portlet:namespace/>';
 	
@@ -281,7 +316,18 @@ $( document ).ready(function() {
 	// C) Pintamos el icono
 	var icono = "<%=icon%>";
 	$("#iconImage").attr("src", icono);
+	
+	// D) Cargamos Google Maps
+	$("#googleM").attr('src', '/o/lfvo-portlet/html/appmanager/gMaps.html');
 });
+
+
+// Llamamos esta funcion desde el iframe
+function setCoordenadas( lat, lon){	
+	var pnamespace = '<portlet:namespace/>';	
+	$("#" + pnamespace + "latitude").val( lat );
+	$("#" + pnamespace + "longitude").val( lon );
+}
 
 // Al cambiar el color de la paleta 1
 $(".inlineList_1 li a.palette-item-inner").click(function() {

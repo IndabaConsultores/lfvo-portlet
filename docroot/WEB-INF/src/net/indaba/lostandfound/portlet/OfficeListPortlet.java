@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import net.indaba.lostandfound.model.Item;
@@ -54,16 +53,21 @@ public class OfficeListPortlet extends MVCPortlet {
 		
 		// *********************
 		// 1) Sites de LIFERAY
-		// *********************		
-		List<Group> offices = new ArrayList<Group>();
-		long globalGroupId = 0;
-//		try {
-			offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), 0, true);
-//			globalGroupId= GroupLocalServiceUtil.getCompanyGroup(PortalUtil.getDefaultCompanyId()).getGroupId(); // Quitamos el grupo Global
-			
-//		} catch (PortalException e1) {			
-//			e1.printStackTrace();
-//		}
+		// *********************
+		List<Group> offices = new ArrayList<Group>();		
+		String mainSiteGroupId = com.liferay.util.portlet.PortletProps.get("lfvo.main.site.group.id");		
+		if(mainSiteGroupId != null && !"".equals(mainSiteGroupId)){
+			try {		
+				offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), Long.parseLong(mainSiteGroupId), true);				
+				
+			} catch (NumberFormatException e) {			
+				e.printStackTrace();
+				offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), 0, true);				
+				
+			}			
+		} else {
+			offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), 0, true);			
+		}
 		
 		// *********************
 		// 2) Sites de FIREBASE
@@ -81,10 +85,6 @@ public class OfficeListPortlet extends MVCPortlet {
 					
 		if( officesMap != null){			
 			for(Group office : offices){
-				
-//				if(office.getGroupId() == globalGroupId){
-//					continue;
-//				}
 				
 				HashMap<String, Object> result = new HashMap<String, Object>();
 				HashMap<String, Object> officeBD = (HashMap<String, Object>) officesMap.get(String.valueOf(office.getGroupId())); // Site Firebase <> Site Liferay
@@ -161,5 +161,3 @@ public class OfficeListPortlet extends MVCPortlet {
 		super.doView(renderRequest, renderResponse);
 	}
 }
-	
-	

@@ -91,6 +91,7 @@ public class AppManagerPortlet extends MVCPortlet{
 		HashMap<String, Object> infoUpdates = new HashMap<String, Object>();
 		HashMap<String, Object> title = new HashMap<String, Object>();
 		HashMap<String, Object> descr = new HashMap<String, Object>();
+		HashMap<String, Object> location = new HashMap<String, Object>();
 		
 		// TITULO
 		// 1) Castellano
@@ -170,11 +171,35 @@ public class AppManagerPortlet extends MVCPortlet{
 			infoUpdates.put("url", url);
 		}		
 		
+		// POSICION DEL SITIO
+		// 1) Latitud
+		String latitude = ParamUtil.get(actionRequest, "latitude", ""); 
+		if(!"".equals(latitude)){
+			location.put("latitude", latitude);
+		}		
+				
+		// 2) Longitud
+		String longitude = ParamUtil.get(actionRequest, "longitude", ""); 
+		if(!"".equals(longitude)){
+			location.put("longitude", longitude);
+		}		
+				
+		if(!location.isEmpty()){
+			infoUpdates.put("location", location);
+		}
+		
 		DatabaseReference ref = FirebaseDatabase
 			    .getInstance()
 			    .getReference("/offices/" + officeId);
 		ref.updateChildren(infoUpdates);
 		
 		officesInfo.put(String.valueOf(officeId), infoUpdates);
-	}	
+	}
+	
+//	@Override
+//	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException,PortletException {
+//				
+//		super.serveResource(resourceRequest, resourceResponse);
+//	}
+	
 }
