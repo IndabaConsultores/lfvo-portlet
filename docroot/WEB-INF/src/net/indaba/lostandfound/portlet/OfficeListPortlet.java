@@ -150,7 +150,7 @@ public class OfficeListPortlet extends MVCPortlet {
 					
 					// G) URL del sitio Lost And Found
 					String siteUrl = office.getFriendlyURL();
-					result.put("siteUrl", siteUrl);
+					result.put("siteUrl", "/web" + siteUrl);
 					
 					resultado.put(String.valueOf(office.getGroupId()), result);
 				}
