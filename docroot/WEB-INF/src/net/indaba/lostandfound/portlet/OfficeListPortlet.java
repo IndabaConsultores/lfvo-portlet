@@ -180,7 +180,7 @@ public class OfficeListPortlet extends MVCPortlet {
 	}
 
 	private File getApk(String groupId) {
-		String filename = "lfvoApp" + groupId + ".apk";
+		String filename = "lfvoApp" + groupId + "/lfvoApp.apk";
 		//TODO set path/to/apk in server
 		String filepath = PortletProps.get("lfvo.apks.dir") + filename;
 		File file = new File(filepath);

@@ -6,5 +6,7 @@
 		<portlet id="lfvo" />
 		<portlet id="app-manager"></portlet>
 		<portlet id="office-list"></portlet>
+		<portlet id="apk-download"></portlet>
 	</category>
 </display>
+
