@@ -15,6 +15,7 @@ String telefono = "";
 String email = "";
 String url = "";
 String siteUrl = "";
+Boolean apkCreada = false;
 %>
 
 <div class="col-md-12">
@@ -36,6 +37,7 @@ String siteUrl = "";
 			url = "&nbsp;";
 		}
 		siteUrl = oficinaValues.get("siteUrl").toString();
+		apkCreada = (Boolean)oficinaValues.get("apkGenerated");
 	%>	
 	
 		<div class="col-md-4">
@@ -50,11 +52,20 @@ String siteUrl = "";
     					<h3><%= nombre_es %></h3>
     				<% }else{ %>
     					<h3><%= nombre_eu %></h3>
-   					 <% } %>						 
+   					<% } %>						 
 					<p> <%=numObjetos%> <liferay-ui:message key="officeList.encontrados"/> </p>  
 					<h6 class="text-default">Telefono: <%=telefono%></h6>
 					<h6 class="text-default">Email: <%=email%></h6>
 					<h6 class="text-default"><%=url%> </h6>
+					<h6 class="text-default">Apk: 
+					<% if (apkCreada) { %>
+						<a href="<portlet:resourceURL>
+							<portlet:param name="groupId" value="<%=key%>"/>
+						</portlet:resourceURL>">Descarga aqui</a>
+					<% } else {%>
+						No generado
+					<% } %>
+					</h6>
 				</div>
 			</div>
 		</div>		
