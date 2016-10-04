@@ -60,3 +60,4 @@ String siteUrl = "";
 		</div>		
 	<%}%>
 </div>
+<div style="clear: both"></div>
