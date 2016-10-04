@@ -323,7 +323,8 @@ $( document ).ready(function() {
 	$("#iconImage").attr("src", icono);
 	
 	// D) Cargamos Google Maps
-	$("#googleM").attr('src', '/o/lfvo-portlet/html/appmanager/gMaps.html');
+	//$("#googleM").attr('src', '/o/lfvo-portlet/html/appmanager/gMaps.html');
+	$("#googleM").attr('src', '/o/lfvo-portlet/html/appmanager/leaflet.html');
 });
 
 

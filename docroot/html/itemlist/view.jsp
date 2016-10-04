@@ -36,7 +36,7 @@ String image = "";
  						<portlet:param name="itemId" value="<%=String.valueOf(item.getItemId()) %>" />
 						<portlet:param name="redirect" value="<%= currentURL %>"/>				
 					</portlet:renderURL>
-					<a href="<%=viewItemURL%>">
+					<a href="<%=viewItemURL%>" title="<%=item.getName()%>">
 						<img src=<%=image%>>
 					</a>										
 				</div>
