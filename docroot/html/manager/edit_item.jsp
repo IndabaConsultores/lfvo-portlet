@@ -20,7 +20,8 @@ else{
 	enctype="multipart/form-data">
 	<aui:input name="itemId" value="<%=item.getItemId()%>" type="hidden"></aui:input>
 	<aui:input name="name" value="<%=item.getName()%>"></aui:input>
-	
+	<aui:input type="textarea" name="description" value="<%=item.getDescription()%>"></aui:input>
+		
 	<liferay-ui:asset-categories-error />
 	<liferay-ui:asset-tags-error />
 	<liferay-ui:panel defaultState="closed" extended="<%= false %>" id="guestbookCategorizationPanel" persistState="<%= true %>" title="categorization">
