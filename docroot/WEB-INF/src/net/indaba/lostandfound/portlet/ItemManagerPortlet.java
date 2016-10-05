@@ -66,6 +66,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		_log.debug("editItem " + ParamUtil.get(actionRequest, "itemId", 0));
 		long itemId = ParamUtil.get(actionRequest, "itemId", 0);
 		String name = ParamUtil.get(actionRequest, "name", "");
+		String description = ParamUtil.get(actionRequest, "description", "");
 		
 		Item item = null;
 		if(itemId==0){
@@ -75,6 +76,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		}
 		
 		item.setName(name);
+		item.setDescription(description);
 		item.setGroupId(serviceContext.getScopeGroupId());
 		item.setUserId(serviceContext.getUserId());
 		item.setPublishDate(new Date());
