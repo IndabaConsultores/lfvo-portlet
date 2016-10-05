@@ -1,5 +1,7 @@
 package net.indaba.lostandfound.portlet;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +10,10 @@ import java.util.List;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -17,8 +23,11 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
@@ -44,8 +53,7 @@ public class OfficeListPortlet extends MVCPortlet {
 				
 		super.init();
 	}
-	
-	@Override
+		
 	public void doView(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
@@ -152,6 +160,10 @@ public class OfficeListPortlet extends MVCPortlet {
 					String siteUrl = office.getFriendlyURL();
 					result.put("siteUrl", "/web" + siteUrl);
 					
+					// H) Estado del apk (true si se ha generado)
+					Boolean apkGenerated = checkApkGenerated(office);
+					result.put("apkGenerated", apkGenerated);
+					
 					resultado.put(String.valueOf(office.getGroupId()), result);
 				}
 			}
@@ -160,4 +172,38 @@ public class OfficeListPortlet extends MVCPortlet {
 		renderRequest.setAttribute("resultado", resultado);		
 		super.doView(renderRequest, renderResponse);
 	}
+
+	private Boolean checkApkGenerated(Group office) {
+		String groupId = String.valueOf(office.getGroupId());
+		File file = getApk(groupId);
+		return file.exists();
+	}
+
+	private File getApk(String groupId) {
+		String filename = "lfvoApp" + groupId + "/lfvoApp.apk";
+		//TODO set path/to/apk in server
+		String filepath = PortletProps.get("lfvo.apks.dir") + filename;
+		File file = new File(filepath);
+		return file;
+	}
+	
+	@Override
+	public void serveResource(ResourceRequest resourceRequest,
+			ResourceResponse resourceResponse) throws IOException,
+			PortletException {
+		
+		String groupId = resourceRequest.getParameter("groupId");
+		File file = getApk(groupId);
+		
+		String contentType = "application/vnd.android.package-archive";
+		
+		FileInputStream in = new FileInputStream(file);
+		
+		HttpServletResponse httpRes = PortalUtil.getHttpServletResponse(resourceResponse);
+		HttpServletRequest httpReq = PortalUtil.getHttpServletRequest(resourceRequest);
+		ServletResponseUtil.sendFile(httpReq,httpRes, file.getName(), in, contentType);
+		
+		super.serveResource(resourceRequest, resourceResponse);
+	}
+
 }
