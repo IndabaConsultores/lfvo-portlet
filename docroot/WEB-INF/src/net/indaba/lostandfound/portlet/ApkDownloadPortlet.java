@@ -19,18 +19,12 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.util.portlet.PortletProps;
 
+import net.indaba.lostandfound.util.AppFileUtil;
+
 /**
  * Portlet implementation class ApkDownloadPortlet
  */
 public class ApkDownloadPortlet extends MVCPortlet {
-	
-	private Boolean checkApk(long groupId) {
-		String filename = "lfvoApp_" + groupId + "/lfvoApp.apk";
-		//TODO set path/to/apk in server
-		String filepath = PortletProps.get("lfvo.apks.dir") + filename;
-		File file = new File(filepath);
-		return file.exists();
-	}
 	
 	@Override
 	public void doView(RenderRequest renderRequest,
@@ -38,7 +32,7 @@ public class ApkDownloadPortlet extends MVCPortlet {
 			PortletException {
 		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		long groupId = themeDisplay.getScopeGroupId();
-		Boolean apkCreated = checkApk(groupId);
+		Boolean apkCreated = AppFileUtil.apkExistsForSite(groupId);
 		renderRequest.setAttribute("apkCreated", apkCreated);
 		super.doView(renderRequest, renderResponse);
 	}
@@ -52,24 +46,19 @@ public class ApkDownloadPortlet extends MVCPortlet {
 		ThemeDisplay td = (ThemeDisplay) resourceRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 		long groupId = td.getSiteGroupId();
-		String filename = "", 
-				filepath = "",
-				contentType = "";
-		
+		String contentType = "";
+		File file = null;
 		switch (resource) {
 		case "apk":
-			filename = "lfvoApp_" + groupId + "/lfvoApp.apk";
-			filepath = PortletProps.get("lfvo.apks.dir") + filename;
+			file = AppFileUtil.getApkForSite(groupId);
 			contentType = "application/vnd.android.package-archive";
 			break;
 		case "icon":
-			filename = "lfvoApp_" + groupId + "/icon.png";
-			filepath = PortletProps.get("lfvo.apks.dir") + filename;
+			file = AppFileUtil.getIconForSite(groupId);
 			contentType = "image/png";
 			break;
 		}
 		
-		File file = new File(filepath);
 		FileInputStream in = new FileInputStream(file);
 
 		HttpServletResponse httpRes = PortalUtil.getHttpServletResponse(

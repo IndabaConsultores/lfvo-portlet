@@ -76,7 +76,7 @@ public class AppManagerPortlet extends MVCPortlet{
 			} catch (FirebaseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}			
+			}
 		}
 		
 		renderRequest.setAttribute("officeInfo", officesInfo.get(String.valueOf(officeId)));		
@@ -196,6 +196,7 @@ public class AppManagerPortlet extends MVCPortlet{
 		officesInfo.put(String.valueOf(officeId), infoUpdates);
 	}	
 
+	
 	public void buildApp(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException {
 		String script = "/path/to/script.sh";
 		String targetDir = "/path/to/target/dir";
