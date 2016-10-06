@@ -8,18 +8,6 @@
 	<portlet:param name="resource" value="apk"/>
 </portlet:resourceURL>
 
-<style>
-.apk-icon {
-	display: block;
-	margin: auto;
-	object-fit: cover;
-	max-height: 110px;
-	max-width: 110px;
-	border: solid DarkSlateGray 1px;
-	border-radius: 25%;
-}
-</style>
-
 <% 
 Boolean apkCreated = (Boolean) request.getAttribute("apkCreated");
 if (apkCreated) { %>
@@ -34,6 +22,7 @@ if (apkCreated) { %>
 			<i class="icon-download-alt"></i>
 			<span>&nbsp;Download</span>
 		</a>
+		<img class="apk-cqr" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<%=apkUrl%>"/>
 	</div>
 </div>
 <%} else {%>

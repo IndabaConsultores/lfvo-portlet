@@ -2,6 +2,23 @@
 	width: 50px;
 }
 
+/* DOWNLOAD APK STYLES */
+.apk-icon {
+	display: block;
+	margin: auto;
+	object-fit: cover;
+	max-height: 110px;
+	max-width: 110px;
+	border: solid DarkSlateGray 1px;
+	border-radius: 25%;
+}
+
+.apk-cqr {
+	height: 100px;
+	width: 100px;
+	margin-top: 10px;
+}
+
 /* ITEM DETAIL STYLES */
 .cats {
     margin-bottom: 30px;
