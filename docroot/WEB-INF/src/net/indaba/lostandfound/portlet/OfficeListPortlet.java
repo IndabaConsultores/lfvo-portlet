@@ -113,6 +113,9 @@ public class OfficeListPortlet extends MVCPortlet {
 					}
 					result.put("nombre_es", nombre_es);
 					result.put("nombre_eu", nombre_eu);
+										
+					String site_name = office.getName();
+					result.put("site_name", site_name);
 					
 					
 					// B) Icono del site

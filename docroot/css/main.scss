@@ -16,7 +16,9 @@
 .apk-cqr {
 	height: 100px;
 	width: 100px;
-	margin-top: 10px;
+	display: block;
+    margin: auto;
+    object-fit: cover;
 }
 
 /* ITEM DETAIL STYLES */

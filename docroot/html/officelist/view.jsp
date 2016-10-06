@@ -16,6 +16,7 @@ String email = "";
 String url = "";
 String siteUrl = "";
 Boolean apkCreada = false;
+String site_name = "";
 %>
 
 <div class="col-md-12">
@@ -38,6 +39,7 @@ Boolean apkCreada = false;
 		}
 		siteUrl = oficinaValues.get("siteUrl").toString();
 		apkCreada = (Boolean)oficinaValues.get("apkGenerated");
+		site_name = oficinaValues.get("site_name").toString();
 	%>	
 	
 		<div class="col-md-4">
@@ -48,22 +50,30 @@ Boolean apkCreada = false;
 					</a>
 				</div>
 				<div class="card_content">						
-					<% if (languageId.equals("es_ES")){ %>
-    					<h3><%= nombre_es %></h3>
-    				<% }else{ %>
-    					<h3><%= nombre_eu %></h3>
+					<% if (languageId.equals("es_ES")){ 
+							if("".equals(nombre_es.trim())){ %>
+								<h3><%= site_name %></h3>
+							<% }else{ %>
+								<h3><%= nombre_es %></h3>
+							<% } %> 					
+    				<% }else{    				 
+    						if("".equals(nombre_eu.trim())){ %>
+								<h3><%= site_name %></h3>
+							<% }else{ %>
+								<h3><%= nombre_eu %></h3>
+							<% } %> 
    					<% } %>						 
 					<p> <%=numObjetos%> <liferay-ui:message key="officeList.encontrados"/> </p>  
-					<h6 class="text-default">Telefono: <%=telefono%></h6>
-					<h6 class="text-default">Email: <%=email%></h6>
+					<h6 class="text-default"><liferay-ui:message key="officeList.telefono"/>: <%=telefono%></h6>
+					<h6 class="text-default"><liferay-ui:message key="officeList.email"/>: <%=email%></h6>
 					<h6 class="text-default"><%=url%> </h6>
-					<h6 class="text-default">Apk: 
+					<h6 class="text-default"><liferay-ui:message key="officeList.apk"/>: 
 					<% if (apkCreada) { %>
 						<a href="<portlet:resourceURL>
 							<portlet:param name="groupId" value="<%=key%>"/>
-						</portlet:resourceURL>">Descarga aqui</a>
+						</portlet:resourceURL>"><liferay-ui:message key="officeList.download"/></a>
 					<% } else {%>
-						No generado
+						<liferay-ui:message key="officeList.noGenerado"/>
 					<% } %>
 					</h6>
 				</div>
