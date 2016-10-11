@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Base64;
@@ -259,6 +260,8 @@ public class AppManagerPortlet extends MVCPortlet{
 				int processReturn = p.waitFor();
 				if (processReturn != 0) {
 					SessionErrors.add(actionRequest, "your-request-failed-to-complete");
+				} else {
+					SessionMessages.add(actionRequest, "app-build-successful");
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
