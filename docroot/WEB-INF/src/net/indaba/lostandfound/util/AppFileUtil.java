@@ -1,10 +1,11 @@
 package net.indaba.lostandfound.util;
 
 import java.io.File;
+import com.liferay.util.portlet.PortletProps;
 
 public class AppFileUtil {
 	
-	static private String baseDir = "/path/to/apks/dir/";
+	static private String baseDir = PortletProps.get("lfvo.apks.dir");
 	static private String apkFilename = "lfvoApp.apk";
 	static private String iconFilename = "icon.png";
 	static private String splashFilename = "splash.png";

@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.util.portlet.PortletProps;
 
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
@@ -216,8 +217,8 @@ public class AppManagerPortlet extends MVCPortlet{
 		
 		File iconFile = uploadRequest.getFile("appIcon");
 		File splashFile = uploadRequest.getFile("appSplash");
-		String script = "/path/to/script.sh";
-		String targetDir = "/path/to/target/dir/";
+		String targetDir = PortletProps.get("lfvo.apks.dir");
+		String script = targetDir + "build-app.sh";
 
 		BufferedImage icon = ImageIO.read(iconFile);
 		BufferedImage splash = ImageIO.read(splashFile);
