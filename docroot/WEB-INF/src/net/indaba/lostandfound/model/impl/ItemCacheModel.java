@@ -192,9 +192,9 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 		type = objectInput.readUTF();
 		description = objectInput.readUTF();
 
-		lat = objectInput.readLong();
+		lat = objectInput.readDouble();
 
-		lng = objectInput.readLong();
+		lng = objectInput.readDouble();
 	}
 
 	@Override
@@ -246,9 +246,9 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 			objectOutput.writeUTF(description);
 		}
 
-		objectOutput.writeLong(lat);
+		objectOutput.writeDouble(lat);
 
-		objectOutput.writeLong(lng);
+		objectOutput.writeDouble(lng);
 	}
 
 	public String uuid;
@@ -263,6 +263,6 @@ public class ItemCacheModel implements CacheModel<Item>, Externalizable {
 	public String name;
 	public String type;
 	public String description;
-	public long lat;
-	public long lng;
+	public double lat;
+	public double lng;
 }

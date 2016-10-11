@@ -11,8 +11,8 @@ create table lfvo_Item (
 	name VARCHAR(75) null,
 	type_ VARCHAR(75) null,
 	description VARCHAR(75) null,
-	lat LONG,
-	lng LONG
+	lat DOUBLE,
+	lng DOUBLE
 );
 
 create table lfvo_LFImage (

@@ -19,8 +19,8 @@
 		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="type" type="com.liferay.portal.dao.orm.hibernate.StringType" column="type_" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property name="lat" type="com.liferay.portal.dao.orm.hibernate.LongType" />
-		<property name="lng" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="lat" type="com.liferay.portal.dao.orm.hibernate.DoubleType" />
+		<property name="lng" type="com.liferay.portal.dao.orm.hibernate.DoubleType" />
 	</class>
 	<class name="net.indaba.lostandfound.model.impl.LFImageImpl" table="lfvo_LFImage">
 		<id name="lfImageId" type="long">
