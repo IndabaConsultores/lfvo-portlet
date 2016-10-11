@@ -29,11 +29,6 @@ portletURL.setParameter("navigation", navigation);
 		/>
 	</aui:nav>
 
-	<aui:form action="<%= portletURL.toString() %>" name="searchFm">
-		<aui:nav-bar-search>
-			<liferay-ui:input-search markupView="lexicon" />
-		</aui:nav-bar-search>
-	</aui:form>
 </aui:nav-bar>
 
 <c:choose>
