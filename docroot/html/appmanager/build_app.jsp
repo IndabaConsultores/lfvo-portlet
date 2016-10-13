@@ -104,7 +104,7 @@
 				} else {
 					$(':submit').prop('disabled', false);
 				}
-			$(previewDivId).html('<img class="img-preview" src="' + image.src + '">');
+				$(previewDivId).html('<img class="img-preview" src="' + image.src + '">');
 			}
 			image.src = _URL.createObjectURL(file);
 		}

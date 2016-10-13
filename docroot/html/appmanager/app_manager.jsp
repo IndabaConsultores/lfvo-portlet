@@ -16,9 +16,9 @@ String description_cas = "";
 String description_eus = "";
 String url = "";
 
-// La primera vez ponemos las coordenadas de Indaba
-String latitude = "43.298611";
-String longitude = "-2.006008";
+//La primera vez ponemos las coordenadas de Indaba
+double latitude = 43.298611;
+double longitude = -2.006008;
 %>
 
 <%if(officeInfo!=null){
@@ -60,14 +60,6 @@ String longitude = "-2.006008";
  	if(description != null && description.get("eu") != null){
  		description_eus = description.get("eu").toString();
  	} 		
- 	
-	if(officeInfo.get("latitude") != null){
-		latitude = officeInfo.get("latitude").toString();
-	}	
-	
-	if(officeInfo.get("longitude") != null){
-		longitude = officeInfo.get("longitude").toString();
-	}
 	
 	if(officeInfo.get("url") != null){
 		url = officeInfo.get("url").toString();
@@ -75,11 +67,11 @@ String longitude = "-2.006008";
 	
 	HashMap<String, Object> location =  (HashMap)officeInfo.get("location");
 	if(location != null && location.get("latitude") != null){
-		latitude = location.get("latitude").toString();
+		latitude = Double.parseDouble(location.get("latitude").toString());
 	}
 	
 	if(location != null && location.get("longitude") != null){
-		longitude = location.get("longitude").toString();
+		longitude = Double.parseDouble(location.get("longitude").toString());
 	}
 %>
 

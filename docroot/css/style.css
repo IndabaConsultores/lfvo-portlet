@@ -44,7 +44,7 @@ Main Components
   /* show the timeline after events position has been set (using JavaScript) */
   opacity: 1;
 }
-.cd-horizontal-timeline .timeline {
+.cd-horizontal-timeline .horizontaltimeline {
   position: relative;
   height: 100px;
   width: 90%;
@@ -68,13 +68,13 @@ Main Components
 }
 .cd-horizontal-timeline .events-wrapper::before {
   left: 0;
-  background-image: -webkit-linear-gradient( left , #f8f8f8, rgba(248, 248, 248, 0));
-  background-image: linear-gradient(to right, #f8f8f8, rgba(248, 248, 248, 0));
+  /* background-image: -webkit-linear-gradient( left , #f8f8f8, rgba(248, 248, 248, 0)); */
+  /* background-image: linear-gradient(to right, #f8f8f8, rgba(248, 248, 248, 0)); */
 }
 .cd-horizontal-timeline .events-wrapper::after {
   right: 0;
-  background-image: -webkit-linear-gradient( right , #f8f8f8, rgba(248, 248, 248, 0));
-  background-image: linear-gradient(to left, #f8f8f8, rgba(248, 248, 248, 0));
+  /* background-image: -webkit-linear-gradient( right , #f8f8f8, rgba(248, 248, 248, 0)); */
+  /* background-image: linear-gradient(to left, #f8f8f8, rgba(248, 248, 248, 0)); */
 }
 .cd-horizontal-timeline .events {
   /* this is the grey line/timeline */
@@ -117,7 +117,7 @@ Main Components
   bottom: 0;
   z-index: 2;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   padding-bottom: 15px;
   color: #383838;
   /* fix bug on Safari - text flickering while timeline translates */
@@ -320,7 +320,7 @@ Main Components
 }
 @media only screen and (min-width: 768px) {
   .cd-horizontal-timeline .events-content h2 {
-    font-size: 4rem;
+    font-size: 7rem;
   }
   .cd-horizontal-timeline .events-content em {
     font-size: 2rem;
