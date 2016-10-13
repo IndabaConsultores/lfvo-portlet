@@ -169,20 +169,20 @@ public class AppManagerPortlet extends MVCPortlet{
 		String url = ParamUtil.get(actionRequest, "url", ""); 
 		if(!"".equals(url)){
 			infoUpdates.put("url", url);
-		}		
+		}
 		
 		// POSICION DEL SITIO
 		// 1) Latitud
-		String latitude = ParamUtil.get(actionRequest, "latitude", ""); 
+		double latitude = ParamUtil.getDouble(actionRequest, "latitude"); 
 		if(!"".equals(latitude)){
 			location.put("latitude", latitude);
-		}		
+		}
 				
 		// 2) Longitud
-		String longitude = ParamUtil.get(actionRequest, "longitude", ""); 
+		double longitude = ParamUtil.getDouble(actionRequest, "longitude"); 
 		if(!"".equals(longitude)){
 			location.put("longitude", longitude);
-		}		
+		}
 				
 		if(!location.isEmpty()){
 			infoUpdates.put("location", location);
