@@ -24,8 +24,8 @@
 		<column name="name" type="String"></column>
 		<column name="type" type="String"></column>
 		<column name="description" type="String"></column>
-		<column name="lat" type="long"></column>
-		<column name="lng" type="long"></column>
+		<column name="lat" type="double"></column>
+		<column name="lng" type="double"></column>
 		
 		<!-- Order -->
 		<order by="asc">

@@ -25,12 +25,14 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.util.portlet.PortletProps;
 
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
+import net.indaba.lostandfound.util.AppFileUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
 import net.thegreshams.firebase4j.service.Firebase;
@@ -45,7 +47,7 @@ public class OfficeListPortlet extends MVCPortlet {
 		
 		if(FirebaseApp.getApps().size()<1){
 			FirebaseOptions options = new FirebaseOptions.Builder()
-				    .setDatabaseUrl("https://lfvo-test.firebaseio.com/")
+				    .setDatabaseUrl(PortletProps.get("firebase.url"))
 				    .setServiceAccount(AppManagerPortlet.class.getClassLoader().getResourceAsStream("firebase-service-account.json"))
 				    .build();
 			FirebaseApp.initializeApp(options);
@@ -164,7 +166,7 @@ public class OfficeListPortlet extends MVCPortlet {
 					result.put("siteUrl", "/web" + siteUrl);
 					
 					// H) Estado del apk (true si se ha generado)
-					Boolean apkGenerated = checkApkGenerated(office);
+					Boolean apkGenerated = AppFileUtil.apkExistsForSite(office.getGroupId());
 					result.put("apkGenerated", apkGenerated);
 					
 					resultado.put(String.valueOf(office.getGroupId()), result);
@@ -175,28 +177,14 @@ public class OfficeListPortlet extends MVCPortlet {
 		renderRequest.setAttribute("resultado", resultado);		
 		super.doView(renderRequest, renderResponse);
 	}
-
-	private Boolean checkApkGenerated(Group office) {
-		String groupId = String.valueOf(office.getGroupId());
-		File file = getApk(groupId);
-		return file.exists();
-	}
-
-	private File getApk(String groupId) {
-		String filename = "lfvoApp" + groupId + "/lfvoApp.apk";
-		//TODO set path/to/apk in server
-		String filepath = PortletProps.get("lfvo.apks.dir") + filename;
-		File file = new File(filepath);
-		return file;
-	}
 	
 	@Override
 	public void serveResource(ResourceRequest resourceRequest,
 			ResourceResponse resourceResponse) throws IOException,
 			PortletException {
 		
-		String groupId = resourceRequest.getParameter("groupId");
-		File file = getApk(groupId);
+		long groupId = Long.valueOf(resourceRequest.getParameter("groupId"));
+		File file = AppFileUtil.getApkForSite(groupId);
 		
 		String contentType = "application/vnd.android.package-archive";
 		

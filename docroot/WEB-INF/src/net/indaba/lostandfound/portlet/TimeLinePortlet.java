@@ -125,7 +125,7 @@ public class TimeLinePortlet extends MVCPortlet {
 							} catch (ParseException e) {
 								
 							}
-														
+							
 							// PopUp - Mapa Street
 							TimeLinePopUp miPopUp = new TimeLinePopUp();
 							miPopUp.setDate_es(fechaFormat);

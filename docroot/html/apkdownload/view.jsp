@@ -12,7 +12,7 @@
 Boolean apkCreated = (Boolean) request.getAttribute("apkCreated");
 if (apkCreated) { %>
 
-<div class="col-md-3 ">
+<div class="col-md-12 ">
 	<div class="card card-rounded"> 
 		<div class="card-row" style="text-align:center"> 
 			<h3>Deskargatu aplikazioa</h3> 

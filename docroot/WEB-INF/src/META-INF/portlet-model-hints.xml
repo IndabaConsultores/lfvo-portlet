@@ -13,9 +13,11 @@
 		<field name="objectId" type="String" />
 		<field name="name" type="String" />
 		<field name="type" type="String" />
-		<field name="description" type="String" />
-		<field name="lat" type="long" />
-		<field name="lng" type="long" />
+		<field name="description" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
+		<field name="lat" type="double" />
+		<field name="lng" type="double" />
 	</model>
 	<model name="net.indaba.lostandfound.model.LFImage">
 		<field name="uuid" type="String" />

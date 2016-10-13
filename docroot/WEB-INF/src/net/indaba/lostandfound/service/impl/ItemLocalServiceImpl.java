@@ -14,6 +14,7 @@
 
 package net.indaba.lostandfound.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -96,6 +97,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 
 		if (item.isNew()) {
 			item.setItemId(CounterLocalServiceUtil.increment());
+			item.setCreateDate(new Date());
 			item = super.addItem(item);
 			CommentManagerUtil.addDiscussion(serviceContext.getUserId(),
 					serviceContext.getScopeGroupId(),

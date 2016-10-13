@@ -85,8 +85,8 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 			{ "name", Types.VARCHAR },
 			{ "type_", Types.VARCHAR },
 			{ "description", Types.VARCHAR },
-			{ "lat", Types.BIGINT },
-			{ "lng", Types.BIGINT }
+			{ "lat", Types.DOUBLE },
+			{ "lng", Types.DOUBLE }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -103,11 +103,11 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("type_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("lat", Types.BIGINT);
-		TABLE_COLUMNS_MAP.put("lng", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("lat", Types.DOUBLE);
+		TABLE_COLUMNS_MAP.put("lng", Types.DOUBLE);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table lfvo_Item (uuid_ VARCHAR(75) null,itemId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate DATE null,modifiedDate DATE null,publishDate DATE null,objectId VARCHAR(75) null,name VARCHAR(75) null,type_ VARCHAR(75) null,description VARCHAR(75) null,lat LONG,lng LONG)";
+	public static final String TABLE_SQL_CREATE = "create table lfvo_Item (uuid_ VARCHAR(75) null,itemId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate DATE null,modifiedDate DATE null,publishDate DATE null,objectId VARCHAR(75) null,name VARCHAR(75) null,type_ VARCHAR(75) null,description STRING null,lat DOUBLE,lng DOUBLE)";
 	public static final String TABLE_SQL_DROP = "drop table lfvo_Item";
 	public static final String ORDER_BY_JPQL = " ORDER BY item.createDate ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY lfvo_Item.createDate ASC";
@@ -314,13 +314,13 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 			setDescription(description);
 		}
 
-		Long lat = (Long)attributes.get("lat");
+		Double lat = (Double)attributes.get("lat");
 
 		if (lat != null) {
 			setLat(lat);
 		}
 
-		Long lng = (Long)attributes.get("lng");
+		Double lng = (Double)attributes.get("lng");
 
 		if (lng != null) {
 			setLng(lng);
@@ -542,23 +542,23 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 
 	@JSON
 	@Override
-	public long getLat() {
+	public double getLat() {
 		return _lat;
 	}
 
 	@Override
-	public void setLat(long lat) {
+	public void setLat(double lat) {
 		_lat = lat;
 	}
 
 	@JSON
 	@Override
-	public long getLng() {
+	public double getLng() {
 		return _lng;
 	}
 
 	@Override
-	public void setLng(long lng) {
+	public void setLng(double lng) {
 		_lng = lng;
 	}
 
@@ -903,8 +903,8 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 	private String _name;
 	private String _type;
 	private String _description;
-	private long _lat;
-	private long _lng;
+	private double _lat;
+	private double _lng;
 	private long _columnBitmask;
 	private Item _escapedModel;
 }
