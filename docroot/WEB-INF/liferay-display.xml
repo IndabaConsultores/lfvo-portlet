@@ -8,5 +8,6 @@
 		<portlet id="office-list"></portlet>
 		<portlet id="item-list"></portlet>
 		<portlet id="apk-download"></portlet>
+		<portlet id="lfvo-timeline"></portlet>
 	</category>
 </display>
