@@ -112,10 +112,15 @@ public class TimeLinePortlet extends MVCPortlet {
 							HashMap<String, Object> miItem = new HashMap<String, Object>();
 														
 							// Creamos una fecha con formato simple
-							SimpleDateFormat dt1 = new SimpleDateFormat("dd/MM/yyyy");
-							String fechaFormat = dt1.format(item.getCreateDate());
-							SimpleDateFormat dt2 = new SimpleDateFormat("yyyy/MM/dd");
-							String fechaFormatEus = dt2.format(item.getCreateDate());
+							Date createDate = item.getCreateDate();
+							String fechaFormat="";
+							String fechaFormatEus ="";
+							if(createDate!=null){
+								SimpleDateFormat dt1 = new SimpleDateFormat("dd/MM/yyyy");
+								fechaFormat = dt1.format(item.getCreateDate());
+								SimpleDateFormat dt2 = new SimpleDateFormat("yyyy/MM/dd");
+								fechaFormatEus = dt2.format(item.getCreateDate());
+							}
 														
 							// Quitamos la hora y minutos de la fecha original
 							SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");

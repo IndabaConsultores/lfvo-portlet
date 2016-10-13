@@ -8,7 +8,7 @@ String selectedCatIds = (String)request.getAttribute("selectedCatIds"); // Ids s
 String image = "";
 %>
 
-<div class="col-md-10">
+<div class="col-md-9">
 
 	<% for (Item item : items) { %>	
 		<div class="col-md-3">			
@@ -45,7 +45,7 @@ String image = "";
 	<%}%>
 </div>
 
-<div class="col-md-2">
+<div class="col-md-3">
 
 	<portlet:actionURL var="filtrar" name="filtrar" ></portlet:actionURL>
 	<form id="myForm" action="<%=filtrar%>" method="post">
