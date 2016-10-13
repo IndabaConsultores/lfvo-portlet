@@ -164,7 +164,8 @@ Main Components
 }
 @media only screen and (min-width: 1100px) {
   .cd-horizontal-timeline {
-    margin: 6em auto;
+    margin: 2em auto;
+    box-shadow: 0 1px 3px -1px rgba(0,0,0,0.9);
   }
   .cd-horizontal-timeline::before {
     /* never visible - this is used in jQuery to check the current MQ */

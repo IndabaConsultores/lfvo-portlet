@@ -14,39 +14,7 @@ ArrayList<Date> keys = (ArrayList<Date>)request.getAttribute("orderedKeys");
 String languageId = LanguageUtil.getLanguageId(request); 
 %>
 
-<!-- 1) MAPA DE ALERTAS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
-
-<div id="mapid" style="height: 450px;"></div>
-<script>
-	var currentLangCode = '<%=pageContext.getRequest().getLocale().getLanguage()%>';
-	var data = <%=pageContext.getRequest().getAttribute("popUps")%>;
-	
-	var mymap = L.map('mapid').setView([43.306163, -1.972854], 13);
-
-	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-		maxZoom: 18
-	}).addTo(mymap);
-
-	L.control.scale().addTo(mymap);
-
-	for (var i = 0; i < data.length; i++) {
-	
-		var popupHTML = '<div style="text-align:center"><b>' + data[i].name  +'</b><br/><img class="popup-img" style="max-width:75px !important;" src="' + data[i].image + '"/>';		
-		if( currentLangCode == 'es'){
-			popupHTML = popupHTML + '<br/><b>' + data[i].date_es  +'</b></div>';
-		}else{
-			popupHTML = popupHTML + '<br/><b>' + data[i].date_eu  +'</b></div>';
-		}
-		
-	 	L.marker([Number(data[i].lat), Number(data[i].lng)]).addTo(mymap).bindPopup(popupHTML).on('click', function(e) {this.openPopup();});
-	}
-</script>
-
-
-<!-- 2) TIMELINE DE ALERTAS -->
+<!-- 1) TIMELINE DE ALERTAS -->
 <% if(keys != null && !keys.isEmpty()){ %>
 
 <link rel="stylesheet" href="/o/lfvo-portlet/css/reset.css"> <!-- CSS reset -->
@@ -93,6 +61,8 @@ String languageId = LanguageUtil.getLanguageId(request);
 		</ul> <!-- .cd-timeline-navigation -->
 	</div> <!-- .timeline -->
 
+	<!-- Esta parte la oculamos, ya que la mostramos junto al mapa -->
+	<div style="display: none;">
 	<div class="events-content">
 		<ol>
 		
@@ -119,13 +89,16 @@ String languageId = LanguageUtil.getLanguageId(request);
 						String titulo = miElement.get("name").toString();
 						String imagen = miElement.get("image").toString();
 						String desc = miElement.get("desc").toString();
+						
+						String lat = miElement.get("lat").toString();
+						String lng = miElement.get("lng").toString();
 				%>
 
 						<div class="alerta-timeline">
 							<div class="card card-horizontal card-rounded">
 								<div class="card-row card-row-valign-top">
 									<div class="card-col-field">
-										<img src="<%=imagen%>" style="border-radius: 4px 0 0 4px;width: 150px;">
+										<img onclick="javascript:posicionObjeto('<%=lat%>','<%=lng%>')" src="<%=imagen%>" style="border-radius: 4px 0 0 4px;width: 150px;">
 									</div>
 									<div class="card-col-content card-col-gutters">
 										<h4><%=titulo%></h4>
@@ -141,7 +114,69 @@ String languageId = LanguageUtil.getLanguageId(request);
 			<%}%>			
 		</ol>
 	</div> <!-- .events-content -->
+	</div>
 </section>
+
+<!-- Script para el detalle de lo seleccionado en el Timeline -->
+<script>
+$( document ).ready(function() { 
+
+	// TIMELINE: Obtener el html del seleccionado al entrar
+	var a = $(".events-content .selected").html();
+	$("#miSelected").html(a);	
+   
+	// TIMELINE: Si pulsamos una fecha, obtenemos el html del seleccionado
+	$(".events a").click(function() {		
+		var b = $(this).attr("data-date");		
+		var c = $(".events-content ol [data-date='" + b + "']").html();		
+		$("#miSelected").html(c);
+		
+	});	
+});
+</script>
 <% } %>
 
+<!-- 2) MAPA DE ALERTAS Y DETALLE DE LOS ITEMS POR DIA -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+
+<div class="col-md-8">
+	<div id="mapid" style="height: 450px;"></div>
+</div>
+
+<div class="col-md-4">
+	<div id="miSelected"></div>
+</div>
+<div style="clear: both"></div>
+
+<!-- Script para el Mapa -->
+<script>
+	var currentLangCode = '<%=pageContext.getRequest().getLocale().getLanguage()%>';
+	var data = <%=pageContext.getRequest().getAttribute("popUps")%>;
+	
+	var mymap = L.map('mapid').setView([43.306163, -1.972854], 13);
+
+	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+		maxZoom: 18
+	}).addTo(mymap);
+
+	L.control.scale().addTo(mymap);
+
+	for (var i = 0; i < data.length; i++) {
+	
+		var popupHTML = '<div style="text-align:center"><b>' + data[i].name  +'</b><br/><img class="popup-img" style="max-width:75px !important;" src="' + data[i].image + '"/>';		
+		if( currentLangCode == 'es'){
+			popupHTML = popupHTML + '<br/><b>' + data[i].date_es  +'</b></div>';
+		}else{
+			popupHTML = popupHTML + '<br/><b>' + data[i].date_eu  +'</b></div>';
+		}
+		
+	 	L.marker([Number(data[i].lat), Number(data[i].lng)]).addTo(mymap).bindPopup(popupHTML).on('click', function(e) {this.openPopup();});
+	}
+	
+	function posicionObjeto(lat, lng) {		
+		mymap.panTo(new L.LatLng(Number(lat), Number(lng)));
+ 	}	
+</script>
 <div style="clear: both"></div>
