@@ -2,10 +2,8 @@
 
 <%
 String navigation = ParamUtil.getString(request, "navigation", "manager");
-
 PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("navigation", navigation);
-
 %>
 
 <aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon" >

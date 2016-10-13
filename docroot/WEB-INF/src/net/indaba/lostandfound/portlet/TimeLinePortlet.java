@@ -2,6 +2,7 @@ package net.indaba.lostandfound.portlet;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,10 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -30,6 +35,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import net.indaba.lostandfound.model.Item;
 import net.indaba.lostandfound.model.LFImage;
+import net.indaba.lostandfound.model.TimeLinePopUp;
 import net.indaba.lostandfound.service.ItemLocalServiceUtil;
 import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
 import net.thegreshams.firebase4j.error.FirebaseException;
@@ -59,6 +65,7 @@ public class TimeLinePortlet extends MVCPortlet {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		HashMap<Date, ArrayList<HashMap<String, Object>>> resultado = new HashMap<Date, ArrayList<HashMap<String, Object>>>();
+		List<TimeLinePopUp> listaPopUps = new ArrayList<TimeLinePopUp>();
 				
 		// *********************
 		// 1) Sites de LIFERAY
@@ -103,11 +110,13 @@ public class TimeLinePortlet extends MVCPortlet {
 						for(Item item : items){
 							
 							HashMap<String, Object> miItem = new HashMap<String, Object>();
-							
+														
 							// Creamos una fecha con formato simple
 							SimpleDateFormat dt1 = new SimpleDateFormat("dd/MM/yyyy");
 							String fechaFormat = dt1.format(item.getCreateDate());
-							
+							SimpleDateFormat dt2 = new SimpleDateFormat("yyyy/MM/dd");
+							String fechaFormatEus = dt2.format(item.getCreateDate());
+														
 							// Quitamos la hora y minutos de la fecha original
 							SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 							Date b = new Date();
@@ -117,10 +126,18 @@ public class TimeLinePortlet extends MVCPortlet {
 								
 							}
 							
-							miItem.put("lat", String.valueOf(item.getLat()));
-							miItem.put("lng", String.valueOf(item.getLng()));
-							// miItem.put("date", String.valueOf(item.getCreateDate()));
-							miItem.put("date", fechaFormat);
+							// PopUp - Mapa Street
+							TimeLinePopUp miPopUp = new TimeLinePopUp();
+							miPopUp.setDate_es(fechaFormat);
+							miPopUp.setDate_eu(fechaFormatEus);
+							miPopUp.setName(item.getName());
+							miPopUp.setImage(this.obtenerImagenItem(item.getItemId()));
+							miPopUp.setLat(String.valueOf(item.getLat()));
+							miPopUp.setLng(String.valueOf(item.getLng()));
+							
+							listaPopUps.add(miPopUp);
+							
+							// HashMaps - Timeline
 							miItem.put("image", this.obtenerImagenItem(item.getItemId()));							
 							miItem.put("name", item.getName());
 							miItem.put("desc", item.getDescription());
@@ -135,8 +152,15 @@ public class TimeLinePortlet extends MVCPortlet {
 					}					
 				}
 			}
-		}	
+		}		
 		
+		// Lista de PopUps
+		Type listType = new TypeToken<List<TimeLinePopUp>>() {}.getType();
+		Gson gson = new Gson();
+		String json = gson.toJson(listaPopUps, listType);
+		
+		renderRequest.setAttribute("popUps", json);
+				
 		// En vez de ordenar el hashmap, ordenamos las keys
 		ArrayList<Date> miArray = new ArrayList<Date>();		
 		for (Date date : resultado.keySet()) {
