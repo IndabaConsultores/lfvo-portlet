@@ -15,10 +15,6 @@ import javax.portlet.RenderResponse;
 
 import org.apache.commons.io.IOUtils;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -31,7 +27,9 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.util.portlet.PortletProps;
 
+import java.io.UnsupportedEncodingException;
 import net.thegreshams.firebase4j.error.FirebaseException;
+import net.thegreshams.firebase4j.error.JacksonUtilityException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
 import net.thegreshams.firebase4j.service.Firebase;
 
@@ -44,36 +42,16 @@ public class AppManagerPortlet extends MVCPortlet{
 	HashMap<String, HashMap<String, Object>> officesInfo = new HashMap<String, HashMap<String, Object>>();
 	
 	@Override
-	public void init() throws PortletException {
-		
-		if(FirebaseApp.getApps().size()<1){
-			FirebaseOptions options = new FirebaseOptions.Builder()
-				    .setDatabaseUrl("https://lfvo-test.firebaseio.com/")
-				    .setServiceAccount(AppManagerPortlet.class.getClassLoader().getResourceAsStream("firebase-service-account.json"))
-				    .build();
-			FirebaseApp.initializeApp(options);
-		}
-				
-		super.init();
-	}
-	
-	
-	@Override
 	public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		long officeId = themeDisplay.getScopeGroupId();
-		DatabaseReference ref=null;
-		ref = FirebaseDatabase
-			    .getInstance()			    
-			    .getReference("/offices/" + officeId);		
 		
 		if( officesInfo.get(String.valueOf(officeId)) == null){
-			
 			try {
-				Firebase firebase = new Firebase(ref.toString());
-				FirebaseResponse response = firebase.get();
+				Firebase firebase = new Firebase(PortletProps.get("firebase.url"));
+				FirebaseResponse response = firebase.get("/offices/" + officeId);
 				HashMap<String, Object> office = (HashMap<String, Object>)response.getBody();
 				
 				officesInfo.put(String.valueOf(officeId), office);				
@@ -200,12 +178,18 @@ public class AppManagerPortlet extends MVCPortlet{
 			infoUpdates.put("location", location);
 		}
 
-		DatabaseReference ref = FirebaseDatabase
-				.getInstance()
-				.getReference("/offices/" + officeId);
-		ref.updateChildren(infoUpdates);
+		try {
+			Firebase firebase = new Firebase(PortletProps.get("firebase.url"));
+			FirebaseResponse response = firebase.patch("/offices/" + officeId, infoUpdates);
+			if (response.getCode() == 200) {
+				officesInfo.put(String.valueOf(officeId), infoUpdates);
+			} else {
+				SessionErrors.add(actionRequest, "firebase-update-error");
+			}
+		} catch (FirebaseException | JacksonUtilityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 
-		officesInfo.put(String.valueOf(officeId), infoUpdates);
 	}
 
 	public void buildApp(ActionRequest actionRequest,

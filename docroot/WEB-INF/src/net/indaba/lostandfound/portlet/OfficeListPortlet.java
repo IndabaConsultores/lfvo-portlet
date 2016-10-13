@@ -15,10 +15,6 @@ import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -42,20 +38,6 @@ import net.thegreshams.firebase4j.service.Firebase;
  */
 public class OfficeListPortlet extends MVCPortlet {
  
-	@Override
-	public void init() throws PortletException {
-		
-		if(FirebaseApp.getApps().size()<1){
-			FirebaseOptions options = new FirebaseOptions.Builder()
-				    .setDatabaseUrl(PortletProps.get("firebase.url"))
-				    .setServiceAccount(AppManagerPortlet.class.getClassLoader().getResourceAsStream("firebase-service-account.json"))
-				    .build();
-			FirebaseApp.initializeApp(options);
-		}
-				
-		super.init();
-	}
-		
 	public void doView(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
@@ -84,9 +66,8 @@ public class OfficeListPortlet extends MVCPortlet {
 		// *********************
 		HashMap<String, Object> officesMap = new HashMap<String, Object>();
 		try {
-			DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/offices/");	
-			Firebase firebase = new Firebase(ref.toString());
-			FirebaseResponse response = firebase.get();
+			Firebase firebase = new Firebase(PortletProps.get("firebase.url"));
+			FirebaseResponse response = firebase.get("/offices");
 			officesMap = (HashMap<String, Object>)response.getBody();	
 		
 		} catch (FirebaseException e2) {
