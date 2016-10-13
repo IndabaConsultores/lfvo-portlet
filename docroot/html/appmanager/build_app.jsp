@@ -63,7 +63,8 @@
 		width: 276px;
 	}
 	.img-preview img {
-		object-fit: contain;
+		object-fit: cover;
+		width: 100%;
 	}
 </style>
 
@@ -92,9 +93,6 @@
 		else if(file.size > 1000000) {
 			alert("The file is too big");
 		}
-		else if(file.type != 'image/png' ) {
-			alert("The file does not match png");
-		}
 		else {
 			console.log("File looks great!");
 			
@@ -102,11 +100,11 @@
 			image.onload = function() {
 				if (image.width<width || image.height<height) {
 					$(':submit').prop('disabled', true);
-					console.log('Image size too small');
+					alert('Image size too small; minimum size is ' + width + 'x' + height);
 				} else {
 					$(':submit').prop('disabled', false);
 				}
-				$(previewDivId).html('<div class="card"><img class="img-preview" src="' + image.src + '"</div>');
+			$(previewDivId).html('<img class="img-preview" src="' + image.src + '">');
 			}
 			image.src = _URL.createObjectURL(file);
 		}
