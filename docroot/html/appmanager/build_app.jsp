@@ -49,25 +49,6 @@
 
 </aui:form>
 
-<style type="text/css">
-	.img-preview {
-		max-height: 276px;
-		max-width: 276px;
-	}
-	.icon {
-		height: 120px;
-		width: 120px;
-	}
-	.splash {
-		height: 276px;
-		width: 276px;
-	}
-	.img-preview img {
-		object-fit: cover;
-		width: 100%;
-	}
-</style>
-
 <script type="text/javascript">
 	var _URL = window.URL || window.webkitURL;
 
