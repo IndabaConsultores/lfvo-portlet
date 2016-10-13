@@ -114,21 +114,6 @@ public class ItemManagerPortlet extends MVCPortlet {
 		
 	}
 	
-	public void doDataDiagnosis(ActionRequest actionRequest, ActionResponse actionResponse)
-			throws IOException, PortletException, PortalException {
-		_log.debug("doDataDiagnosis ");
-		FirebaseSynchronizer firebaseUtil = FirebaseSynchronizer.getInstance();
-		//TODO diagnosis
-	}
-	
-	public void doDataSync(ActionRequest actionRequest, ActionResponse actionResponse)
-			throws IOException, PortletException, PortalException {
-		_log.debug("doDataDiagnosis ");
-		FirebaseSynchronizer firebaseUtil = FirebaseSynchronizer.getInstance();
-		//TODO valor de la interfaz
-		firebaseUtil.resync(System.currentTimeMillis());
-	}
-	
 	public void addItemImage(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws IOException, PortletException, PortalException {
 		long itemId = ParamUtil.getLong(actionRequest, "itemId");
@@ -175,7 +160,6 @@ public class ItemManagerPortlet extends MVCPortlet {
 	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
 		_log.debug("servingResource.");
 		super.serveResource(resourceRequest, resourceResponse);
-		
 	}
 
 	Log _log = LogFactoryUtil.getLog(this.getClass());
