@@ -107,7 +107,7 @@ public class ItemModelImpl extends BaseModelImpl<Item> implements ItemModel {
 		TABLE_COLUMNS_MAP.put("lng", Types.DOUBLE);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table lfvo_Item (uuid_ VARCHAR(75) null,itemId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate DATE null,modifiedDate DATE null,publishDate DATE null,objectId VARCHAR(75) null,name VARCHAR(75) null,type_ VARCHAR(75) null,description VARCHAR(75) null,lat DOUBLE,lng DOUBLE)";
+	public static final String TABLE_SQL_CREATE = "create table lfvo_Item (uuid_ VARCHAR(75) null,itemId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,createDate DATE null,modifiedDate DATE null,publishDate DATE null,objectId VARCHAR(75) null,name VARCHAR(75) null,type_ VARCHAR(75) null,description STRING null,lat DOUBLE,lng DOUBLE)";
 	public static final String TABLE_SQL_DROP = "drop table lfvo_Item";
 	public static final String ORDER_BY_JPQL = " ORDER BY item.createDate ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY lfvo_Item.createDate ASC";

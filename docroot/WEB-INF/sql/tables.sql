@@ -10,7 +10,7 @@ create table lfvo_Item (
 	objectId VARCHAR(75) null,
 	name VARCHAR(75) null,
 	type_ VARCHAR(75) null,
-	description VARCHAR(75) null,
+	description STRING null,
 	lat DOUBLE,
 	lng DOUBLE
 );
