@@ -146,6 +146,8 @@ public class TimeLinePortlet extends MVCPortlet {
 							miItem.put("image", this.obtenerImagenItem(item.getItemId()));							
 							miItem.put("name", item.getName());
 							miItem.put("desc", item.getDescription());
+							miItem.put("lat", item.getLat());
+							miItem.put("lng", item.getLng());
 							
 							if (resultado.get(b) == null) {
 								resultado.put(b, new ArrayList<HashMap<String, Object>>());
