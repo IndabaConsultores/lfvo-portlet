@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.portlet.PortletException;
+import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -66,23 +67,35 @@ public class TimeLinePortlet extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		HashMap<Date, ArrayList<HashMap<String, Object>>> resultado = new HashMap<Date, ArrayList<HashMap<String, Object>>>();
 		List<TimeLinePopUp> listaPopUps = new ArrayList<TimeLinePopUp>();
-				
+			
+		PortletPreferences prefs = renderRequest.getPreferences();
+	    String showInMain = prefs.getValue("showInMain", "true");
+	    String showItems = prefs.getValue("showItems", "true");
+	    String showAlerts = prefs.getValue("showAlerts", "true");
+	    
 		// *********************
 		// 1) Sites de LIFERAY
 		// *********************
 		List<Group> offices = new ArrayList<Group>();		
-		String mainSiteGroupId = com.liferay.util.portlet.PortletProps.get("lfvo.main.site.group.id");		
-		if(mainSiteGroupId != null && !"".equals(mainSiteGroupId)){
-			try {		
-				offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), Long.parseLong(mainSiteGroupId), true);				
+		
+		// Si el portlet se muestra en la pagina ppal, recorremos todas las oficianas a partir de un sitio padre leido desde properties
+		if(showInMain.equals("true")){		
+			String mainSiteGroupId = com.liferay.util.portlet.PortletProps.get("lfvo.main.site.group.id");			
+			if(mainSiteGroupId != null && !"".equals(mainSiteGroupId)){
+				try {		
+					offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), Long.parseLong(mainSiteGroupId), true);				
 				
-			} catch (NumberFormatException e) {			
-				e.printStackTrace();
-				offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), 0, true);				
+				} catch (NumberFormatException e) {			
+					e.printStackTrace();
+					offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), 0, true);				
 				
-			}			
+				}			
+			} else {
+				offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), 0, true);			
+			}
+		// Si el portlet no se muestra en la pagina ppal, cogemos la oficina del sitio
 		} else {
-			offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), 0, true);			
+			offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), 0, true);
 		}
 		
 		// *********************
@@ -101,13 +114,32 @@ public class TimeLinePortlet extends MVCPortlet {
 		
 		if( officesMap != null){		
 			for(Group office : offices){				
-				
+
 				HashMap<String, Object> officeBD = (HashMap<String, Object>) officesMap.get(String.valueOf(office.getGroupId())); // Site Firebase <> Site Liferay
 				if(officeBD!=null){
 
 					try {				
 						List<Item> items = ItemLocalServiceUtil.getItems(office.getGroupId(), -1, -1);
-						for(Item item : items){
+						for(Item item : items){							
+							
+							// Si sólo mostramos ITEMS y no ALERTS...
+							if(showItems.equals("true") & showAlerts.equals("false")){
+								if(!"".equals(item.getType()) & !item.getType().equals("office")){ // Si tiene tipo, pero no es 'office' descartamos									
+									continue;
+								}
+							}
+							
+							// Si sólo mostramos ALERTS y no ITEMS...
+							if(showItems.equals("false") & showAlerts.equals("true")){
+								if("".equals(item.getType()) || item.getType().equals("office")){ //Si es vacio o es 'office' descartamos									
+									continue;
+								}
+							}					
+							
+							// Si no mostramos nada...
+							if(showItems.equals("false") & showAlerts.equals("false")){								
+								continue;								
+							}							
 							
 							HashMap<String, Object> miItem = new HashMap<String, Object>();
 														
