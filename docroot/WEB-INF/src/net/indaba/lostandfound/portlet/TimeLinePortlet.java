@@ -183,6 +183,7 @@ public class TimeLinePortlet extends MVCPortlet {
 							miItem.put("desc", item.getDescription());
 							miItem.put("lat", item.getLat());
 							miItem.put("lng", item.getLng());
+							miItem.put("type", item.getType());
 							
 							if (resultado.get(b) == null) {
 								resultado.put(b, new ArrayList<HashMap<String, Object>>());
