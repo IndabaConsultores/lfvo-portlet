@@ -95,7 +95,7 @@ public class TimeLinePortlet extends MVCPortlet {
 			}
 		// Si el portlet no se muestra en la pagina ppal, cogemos la oficina del sitio
 		} else {
-			offices = GroupLocalServiceUtil.getGroups(themeDisplay.getCompanyId(), 0, true);
+			offices.add(themeDisplay.getScopeGroup());
 		}
 		
 		// *********************

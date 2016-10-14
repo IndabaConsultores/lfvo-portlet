@@ -113,6 +113,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 		_log.debug("addOrUpdateItem");
 
 		if (item.isNew()) {
+			_log.debug("is a new item");
 			item.setItemId(CounterLocalServiceUtil.increment());
 			item.setCreateDate(new Date());
 			item = super.addItem(item);
@@ -120,6 +121,7 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 					serviceContext.getScopeGroupId(),
 					Item.class.getName(), item.getPrimaryKey(), null);
 		} else {
+			_log.debug("updating item");
 			item = super.updateItem(item);
 		}
 
