@@ -25,6 +25,7 @@ import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -32,17 +33,20 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.support.tomcat.loader.PortalClassLoader;
 
 import aQute.bnd.annotation.ProviderType;
 import net.indaba.lostandfound.firebase.FirebaseService;
 import net.indaba.lostandfound.firebase.FirebaseSynchronizer;
 import net.indaba.lostandfound.model.Item;
+import net.indaba.lostandfound.service.ClpSerializer;
 import net.indaba.lostandfound.service.LFImageLocalServiceUtil;
 import net.indaba.lostandfound.service.base.ItemLocalServiceBaseImpl;
 
@@ -96,7 +100,8 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	
 	public List<Item> getOfficeItems(long groupId, int start, int end)
 			throws PortalException {
-		DynamicQuery query = DynamicQueryFactoryUtil.forClass(Item.class);
+		ClassLoader classLoader = (ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
+		DynamicQuery query = DynamicQueryFactoryUtil.forClass(Item.class,classLoader);
 		query.add(PropertyFactoryUtil.forName("type").ne("lost"));
 		query.add(PropertyFactoryUtil.forName("type").ne("found"));
 		query.add(PropertyFactoryUtil.forName("groupId").eq(groupId));

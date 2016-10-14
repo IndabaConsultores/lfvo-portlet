@@ -71,6 +71,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		Item item = null;
 		if(itemId==0){
 			item = ItemLocalServiceUtil.createItem(0);
+			item.setCreateDate(new Date());
 		} else {
 			item = ItemLocalServiceUtil.getItem(itemId);
 		}
@@ -80,6 +81,7 @@ public class ItemManagerPortlet extends MVCPortlet {
 		item.setGroupId(serviceContext.getScopeGroupId());
 		item.setUserId(serviceContext.getUserId());
 		item.setPublishDate(new Date());
+		item.setType("office");
 		
 		ItemServiceUtil.addOrUpdateItem(item, serviceContext);
 
