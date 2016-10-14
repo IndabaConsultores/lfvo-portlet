@@ -221,18 +221,23 @@ public class TimeLinePortlet extends MVCPortlet {
 		
 		String image = "";
 		
-		List<LFImage> lfImages = LFImageLocalServiceUtil.findByItemId(itemId);
-		for(LFImage lfImage : lfImages){
-			StringWriter writer = new StringWriter();
-			writer.append("data:image/gif;base64,");
-			try {
-				IOUtils.copy(lfImage.getImage().getBinaryStream(), writer);
-				image = writer.toString();
-			} catch (IOException | SQLException e) {
+		List<LFImage> lfImages = LFImageLocalServiceUtil.findByItemId(itemId);		
+		if(lfImages.isEmpty()){
+			image = "/o/lfvo-portlet/images/notFound.png";
+			
+		}else {		
+			for(LFImage lfImage : lfImages){
+				StringWriter writer = new StringWriter();
+				writer.append("data:image/gif;base64,");
+				try {
+					IOUtils.copy(lfImage.getImage().getBinaryStream(), writer);
+					image = writer.toString();
+				} catch (IOException | SQLException e) {
 				
-			}			
-			break;
-		}	
+				}			
+				break;
+			}
+		}
 		
 		return image;
 	}

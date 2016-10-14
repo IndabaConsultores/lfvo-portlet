@@ -60,7 +60,7 @@ String image = "";
   			<% } %>
 		</ul>
 		
-		<input class="btn btn-info btn-sm" type="submit" value="Submit">			
+		<input class="btn btn-default btn-sm" type="submit" value="<liferay-ui:message key="officeList.buscar"/>">			
 	</form>
 </div>
 
