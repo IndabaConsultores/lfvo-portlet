@@ -14,13 +14,13 @@ ArrayList<Date> keys = (ArrayList<Date>)request.getAttribute("orderedKeys");
 String languageId = LanguageUtil.getLanguageId(request); 
 %>
 
-<!-- 1) TIMELINE DE ALERTAS -->
-<% if(keys != null && !keys.isEmpty()){ %>
-
 <link rel="stylesheet" href="/o/lfvo-portlet/css/reset.css"> <!-- CSS reset -->
 <link rel="stylesheet" href="/o/lfvo-portlet/css/style.css"> <!-- Resource style -->
 <script src="/o/lfvo-portlet/js/modernizr.js"></script> <!-- Modernizr -->
 <script src="/o/lfvo-portlet/js/timeline.js"></script>
+
+<!-- 1.A) TIMELINE DE ALERTAS NO VACIO -->
+<% if(keys != null && !keys.isEmpty()){ %>
 
 <section class="cd-horizontal-timeline">
 	<div class="horizontaltimeline">
@@ -117,6 +117,43 @@ String languageId = LanguageUtil.getLanguageId(request);
 	</div>
 </section>
 
+<% } else { %>
+
+<!-- 1.B) TIMELINE DE ALERTAS VACIO -->
+<section class="cd-horizontal-timeline">
+	<div class="horizontaltimeline">
+		<div class="events-wrapper">
+			<div class="events">
+				<ol>
+					<div style="display: none;">
+						<li><a href="#0" data-date="16/01/2014" class="selected"></a></li>
+					</div>		
+				</ol>
+				<span class="filling-line" aria-hidden="true"></span>
+			</div> <!-- .events -->
+		</div> <!-- .events-wrapper -->
+			
+		<ul class="cd-timeline-navigation">
+			<li><a href="#0" class="prev inactive">Prev</a></li>
+			<li><a href="#0" class="next">Next</a></li>
+		</ul> <!-- .cd-timeline-navigation -->
+	</div> <!-- .timeline -->
+	
+	<div style="display: none;">
+		<div class="events-content">
+			<ol>
+				<li class="selected" data-date="16/01/2014">
+					<div class="alert alert-info">
+						<p><liferay-ui:message key="timeline.vacio"/></p>
+					</div>
+				</li>		
+			</ol>
+		</div> <!-- .events-content -->
+	</div>
+</section>
+
+<% } %>
+
 <!-- Script para el detalle de lo seleccionado en el Timeline -->
 <script>
 $( document ).ready(function() { 
@@ -134,7 +171,6 @@ $( document ).ready(function() {
 	});	
 });
 </script>
-<% } %>
 
 <!-- 2) MAPA DE ALERTAS Y DETALLE DE LOS ITEMS POR DIA -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
