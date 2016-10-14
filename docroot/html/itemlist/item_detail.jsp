@@ -7,63 +7,109 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
+double lat;
+double lng;
 Item item = null;
 if(itemId==0){
 	item = ItemLocalServiceUtil.createItem(0);
+	lat = 0;
+	lng = 0;
 }
 else{
 	item = ItemLocalServiceUtil.getItem(itemId);
+	lat = item.getLat();
+	lng = item.getLng();
 }
 String image = "";
+
+String languageId = LanguageUtil.getLanguageId(request);
+String tabs = "";
+if(languageId.equals("es_ES")){
+	tabs = "Artículo,Descripción";
+}else{
+	tabs = "Artikulu,Deskribapena";
+}
 %>
 
-<!-- NOMBRE -->
-<h1><%=item.getName()%></h1>
-
-<!-- CATEGORIAS -->
-<div class="cats">
-	<%
-	AssetEntry ast = AssetEntryLocalServiceUtil.fetchEntry("net.indaba.lostandfound.model.Item", item.getPrimaryKey());
-	List<AssetCategory> listaCatsDos = ast.getCategories();
-	for(AssetCategory cat : listaCatsDos){%>				
-		<span class="badge badge-primary"><%=cat.getName() %></span>		
-	<%}%>
-</div>
-
-<!-- IMAGENES -->
-<div class="panel panel-default">
-	<div class="panel-heading"><liferay-ui:message key="itemDetail.imagenes"/></div>
+<div class="panel panel-default">	
 	<div class="panel-body">
-		<div class="col-md-12">			
-			<%
-			List<LFImage> lfImages = LFImageLocalServiceUtil.findByItemId(item.getItemId());
-			if( lfImages.isEmpty()) {
-				image = "/o/lfvo-portlet/images/notFound.png";
-			%>	
-				<div class="col-md-3">		
-					<div class="card">
-						<div class="aspect-ratio">				
-							<img src=<%=image%>><img src=<%=image%>>
-						</div>		
-					</div>
-				</div>		
+		<div class="col-md-12">	
 		
-			<%} else {
-				for(LFImage lfImage : lfImages){
-					StringWriter writer = new StringWriter();
-					writer.append("data:image/gif;base64,");
-					IOUtils.copy(lfImage.getImage().getBinaryStream(), writer);								
-					image = writer.toString();
-			%>				
-					<div class="col-md-3">		
+			<!-- 1) INFORMACION -->		
+			<div class="col-md-5">
+					
+				<liferay-ui:tabs names="<%=tabs%>" refresh="false" tabsValues="<%=tabs%>">
+    				<liferay-ui:section>
+			     		 			
+       		 			<%
+							List<LFImage> lfImages = LFImageLocalServiceUtil.findByItemId(item.getItemId());
+							if( lfImages.isEmpty()) {
+								image = "/o/lfvo-portlet/images/notFound.png";
+						%>					
 						<div class="card">
 							<div class="aspect-ratio">				
 								<img src=<%=image%>><img src=<%=image%>>
 							</div>		
+						</div>				
+		
+						<%} else {
+							for(LFImage lfImage : lfImages){
+								StringWriter writer = new StringWriter();
+								writer.append("data:image/gif;base64,");
+								IOUtils.copy(lfImage.getImage().getBinaryStream(), writer);								
+								image = writer.toString();
+						%>						
+								<div class="card">
+									<div class="aspect-ratio">				
+										<img src=<%=image%>><img src=<%=image%>>
+									</div>		
+								</div>					
+						<%		break;
+							}
+						}
+						%>
+    				</liferay-ui:section>
+    				
+    				<liferay-ui:section>
+    				
+    					<div class="card ">		 
+							<div class="card-row-padded"> 
+								<h2><%=item.getName()%></h2>
+								<div class="divider"></div>
+								<p><%=item.getDescription()%></p>    
+							</div> 
 						</div>
-					</div>
-				<%}
-			}%>	
+						
+    				</liferay-ui:section>    
+				</liferay-ui:tabs>				
+			</div>
+				
+			<!-- 2) MAPA -->
+			<div class="col-md-7">				
+				<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+				<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+				
+				<div id="mapid" style="height: 450px;"></div>
+				<div style="clear: both"></div>
+				
+				<script>
+					var currentLangCode = '<%=pageContext.getRequest().getLocale().getLanguage()%>';
+					
+					var lat = '<%=lat%>';
+					var lng = '<%=lng%>';
+					
+					var mymap = L.map('mapid').setView([Number(lat),Number(lng)], 13);
+
+					L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+						attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+						maxZoom: 18
+					}).addTo(mymap);
+
+					L.control.scale().addTo(mymap);		
+	 				L.marker([Number(lat), Number(lng)]).addTo(mymap);
+				</script>
+				<div style="clear: both"></div>			
+			</div>			
 		</div>
 	</div>
 </div>
