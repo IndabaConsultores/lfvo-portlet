@@ -122,14 +122,14 @@ public class TimeLinePortlet extends MVCPortlet {
 						List<Item> items = ItemLocalServiceUtil.getItems(office.getGroupId(), -1, -1);
 						for(Item item : items){							
 							
-							// Si sólo mostramos ITEMS y no ALERTS...
+							// Si sï¿½lo mostramos ITEMS y no ALERTS...
 							if(showItems.equals("true") & showAlerts.equals("false")){
 								if(!"".equals(item.getType()) & !item.getType().equals("office")){ // Si tiene tipo, pero no es 'office' descartamos									
 									continue;
 								}
 							}
 							
-							// Si sólo mostramos ALERTS y no ITEMS...
+							// Si sï¿½lo mostramos ALERTS y no ITEMS...
 							if(showItems.equals("false") & showAlerts.equals("true")){
 								if("".equals(item.getType()) || item.getType().equals("office")){ //Si es vacio o es 'office' descartamos									
 									continue;
@@ -147,11 +147,14 @@ public class TimeLinePortlet extends MVCPortlet {
 							Date createDate = item.getCreateDate();
 							String fechaFormat="";
 							String fechaFormatEus ="";
+							SimpleDateFormat dt1 = new SimpleDateFormat("dd/MM/yyyy");
+							SimpleDateFormat dt2 = new SimpleDateFormat("yyyy/MM/dd");
 							if(createDate!=null){
-								SimpleDateFormat dt1 = new SimpleDateFormat("dd/MM/yyyy");
 								fechaFormat = dt1.format(item.getCreateDate());
-								SimpleDateFormat dt2 = new SimpleDateFormat("yyyy/MM/dd");
 								fechaFormatEus = dt2.format(item.getCreateDate());
+							}else{
+								fechaFormat = dt1.format(item.getModifiedDate());
+								fechaFormatEus = dt2.format(item.getModifiedDate());
 							}
 														
 							// Quitamos la hora y minutos de la fecha original
