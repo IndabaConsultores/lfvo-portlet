@@ -113,8 +113,11 @@ public class OfficeListPortlet extends MVCPortlet {
 					int objetos = 0;
 					try {				
 						List<Item> items = ItemLocalServiceUtil.getItems(office.getGroupId(), -1, -1);
-						objetos = items.size();
-
+						for(Item miItem : items){						
+							if( "".equals(miItem.getType()) || "office".equals(miItem.getType()) ){
+								objetos = objetos + 1;
+							}
+						}
 					} catch (PortalException e) {				
 						e.printStackTrace();
 					}										

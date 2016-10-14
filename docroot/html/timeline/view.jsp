@@ -92,6 +92,8 @@ String languageId = LanguageUtil.getLanguageId(request);
 						
 						String lat = miElement.get("lat").toString();
 						String lng = miElement.get("lng").toString();
+						
+						String type = miElement.get("type").toString();
 				%>
 
 						<div class="alerta-timeline">
@@ -99,6 +101,13 @@ String languageId = LanguageUtil.getLanguageId(request);
 								<div class="card-row card-row-valign-top">
 									<div class="card-col-field">
 										<img onclick="javascript:posicionObjeto('<%=lat%>','<%=lng%>')" src="<%=imagen%>" style="border-radius: 4px 0 0 4px;width: 150px;">
+										<%if( "".equals(type) || "office".equals(type) ){ %>										
+											<span class="sticker sticker-bottom sticker-info">O</span>
+										<%} else if ("lost".equals(type)) { %>
+											<span class="sticker sticker-bottom sticker-danger">L</span>
+										<%} else if ("found".equals(type)) {%>
+											<span class="sticker sticker-bottom sticker-success">F</span>
+										<%} %>										
 									</div>
 									<div class="card-col-content card-col-gutters">
 										<h4><%=titulo%></h4>

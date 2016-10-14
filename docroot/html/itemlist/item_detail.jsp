@@ -23,12 +23,6 @@ else{
 String image = "";
 
 String languageId = LanguageUtil.getLanguageId(request);
-String tabs = "";
-if(languageId.equals("es_ES")){
-	tabs = "Artículo,Descripción";
-}else{
-	tabs = "Artikulu,Deskribapena";
-}
 %>
 
 <div class="panel panel-default">	
@@ -37,8 +31,7 @@ if(languageId.equals("es_ES")){
 		
 			<!-- 1) INFORMACION -->		
 			<div class="col-md-5">
-					
-				<liferay-ui:tabs names="<%=tabs%>" refresh="false" tabsValues="<%=tabs%>">
+					<liferay-ui:tabs names="pest1,pest2" refresh="false" tabsValues="pest1,pest2">
     				<liferay-ui:section>
 			     		 			
        		 			<%
