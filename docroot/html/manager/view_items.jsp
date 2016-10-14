@@ -38,6 +38,4 @@ List<Item> items = (List<Item>)renderRequest.getAttribute("items");
 	</portlet:renderURL>
 	<aui:button href="<%= addItemURL.toString() %>" value="add"></aui:button>
 </aui:button-row>
-<liferay-frontend:add-menu>
-<liferay-frontend:add-menu-item url="hfjk" title="gkhg"/>
-</liferay-frontend:add-menu>
+

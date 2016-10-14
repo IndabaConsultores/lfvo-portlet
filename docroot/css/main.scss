@@ -21,6 +21,25 @@
     object-fit: cover;
 }
 
+/* APP BUILDER STYLES */
+.img-preview {
+	max-height: 276px;
+	max-width: 276px;
+
+	img {
+		object-fit: cover;
+		width: 100%;
+	}
+}
+.icon {
+	height: 120px;
+	width: 120px;
+}
+.splash {
+	height: 276px;
+	width: 276px;
+}
+
 /* ITEM DETAIL STYLES */
 .cats {
     margin-bottom: 30px;

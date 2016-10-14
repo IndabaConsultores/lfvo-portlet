@@ -19,7 +19,9 @@ else{
 <aui:form method="post" name="fm" action="<%=editItemURL%>" 
 	enctype="multipart/form-data">
 	<aui:input name="itemId" value="<%=item.getItemId()%>" type="hidden"></aui:input>
-	<aui:input name="name" value="<%=item.getName()%>"></aui:input>
+	<aui:input name="name" value="<%=item.getName()%>">
+		<aui:validator name="required"/>
+	</aui:input>
 	<aui:input type="textarea" name="description" value="<%=item.getDescription()%>"></aui:input>
 		
 	<liferay-ui:asset-categories-error />
@@ -149,3 +151,4 @@ if(item.getItemId()!=0){
 		formName="fm3"></liferay-ui:discussion>
 
 <%}%>
+
