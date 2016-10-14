@@ -23,7 +23,7 @@
 			site_administration.content
 		</control-panel-entry-category>
 		<control-panel-entry-weight>3.6</control-panel-entry-weight>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/main.css</header-portlet-css>		
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -61,6 +61,8 @@
 		<icon>/icon.png</icon>
 		<configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
 		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/reset.css</header-portlet-css>
+		<header-portlet-css>/css/style.css</header-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>

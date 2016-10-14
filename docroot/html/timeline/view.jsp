@@ -14,8 +14,6 @@ ArrayList<Date> keys = (ArrayList<Date>)request.getAttribute("orderedKeys");
 String languageId = LanguageUtil.getLanguageId(request); 
 %>
 
-<link rel="stylesheet" href="/o/lfvo-portlet/css/reset.css"> <!-- CSS reset -->
-<link rel="stylesheet" href="/o/lfvo-portlet/css/style.css"> <!-- Resource style -->
 <script src="/o/lfvo-portlet/js/modernizr.js"></script> <!-- Modernizr -->
 <script src="/o/lfvo-portlet/js/timeline.js"></script>
 
@@ -182,9 +180,14 @@ $( document ).ready(function() {
 </script>
 
 <!-- 2) MAPA DE ALERTAS Y DETALLE DE LOS ITEMS POR DIA -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
-
+<link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
+<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+ 
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js'></script>
+<script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
+<script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js'></script>
+ 
 <div class="col-md-8">
 	<div id="mapid" style="height: 450px;"></div>
 </div>
@@ -207,7 +210,7 @@ $( document ).ready(function() {
 	}).addTo(mymap);
 
 	L.control.scale().addTo(mymap);
-
+	var markers = L.markerClusterGroup();	
 	for (var i = 0; i < data.length; i++) {
 	
 		var popupHTML = '<div style="text-align:center"><b>' + data[i].name  +'</b><br/><img class="popup-img" style="max-width:75px !important;" src="' + data[i].image + '"/>';		
@@ -216,9 +219,12 @@ $( document ).ready(function() {
 		}else{
 			popupHTML = popupHTML + '<br/><b>' + data[i].date_eu  +'</b></div>';
 		}
-		
-	 	L.marker([Number(data[i].lat), Number(data[i].lng)]).addTo(mymap).bindPopup(popupHTML).on('click', function(e) {this.openPopup();});
+	 	
+	 	var marker = L.marker([Number(data[i].lat), Number(data[i].lng)]).bindPopup(popupHTML).on('click', function(e) {this.openPopup();});
+	 	markers.addLayer(marker);	 	
 	}
+	
+	mymap.addLayer(markers);
 	
 	function posicionObjeto(lat, lng) {		
 		mymap.panTo(new L.LatLng(Number(lat), Number(lng)));
