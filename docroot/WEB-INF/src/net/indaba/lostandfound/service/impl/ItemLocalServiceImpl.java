@@ -26,6 +26,9 @@ import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -89,6 +92,15 @@ public class ItemLocalServiceImpl extends ItemLocalServiceBaseImpl {
 	public List<Item> getItems(long groupId, int start, int end)
 			throws PortalException {
 		return itemPersistence.findByGroupId(groupId, start, end);
+	}
+	
+	public List<Item> getOfficeItems(long groupId, int start, int end)
+			throws PortalException {
+		DynamicQuery query = DynamicQueryFactoryUtil.forClass(Item.class);
+		query.add(PropertyFactoryUtil.forName("type").ne("lost"));
+		query.add(PropertyFactoryUtil.forName("type").ne("found"));
+		query.add(PropertyFactoryUtil.forName("groupId").eq(groupId));
+		return itemPersistence.findWithDynamicQuery(query, start, end);
 	}
 
 	public Item addOrUpdateItem(Item item, ServiceContext serviceContext)

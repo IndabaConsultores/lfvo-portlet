@@ -61,7 +61,7 @@ public class ItemListPortlet extends MVCPortlet{
 			renderRequest.setAttribute("selectedCatIds", catIds);			
 			
 			// Cogemos todos los items
-			items = ItemLocalServiceUtil.getItems(themeDisplay.getScopeGroupId(), -1, -1);			
+			items = ItemLocalServiceUtil.getOfficeItems(themeDisplay.getScopeGroupId(), -1, -1);			
 			
 			// Si la seleccion de categorias no es vacio...
 			if(!"".equals(catIds)){

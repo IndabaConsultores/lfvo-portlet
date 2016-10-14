@@ -281,6 +281,10 @@ public interface ItemLocalService extends BaseLocalService, InvokableLocalServic
 	*/
 	public java.lang.String getOSGiServiceIdentifier();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Item> getOfficeItems(long groupId, int start, int end)
+		throws PortalException;
+
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)

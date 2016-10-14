@@ -166,13 +166,17 @@ public class ItemLocalServiceClp implements ItemLocalService {
 
 		_methodParameterTypes26 = new String[] {  };
 
-		_methodName27 = "getPersistedModel";
+		_methodName27 = "getOfficeItems";
 
-		_methodParameterTypes27 = new String[] { "java.io.Serializable" };
+		_methodParameterTypes27 = new String[] { "long", "int", "int" };
 
-		_methodName29 = "updateItem";
+		_methodName28 = "getPersistedModel";
 
-		_methodParameterTypes29 = new String[] {
+		_methodParameterTypes28 = new String[] { "java.io.Serializable" };
+
+		_methodName30 = "updateItem";
+
+		_methodParameterTypes30 = new String[] {
 				"net.indaba.lostandfound.model.Item"
 			};
 	}
@@ -923,14 +927,44 @@ public class ItemLocalServiceClp implements ItemLocalService {
 	}
 
 	@Override
-	public com.liferay.portal.kernel.model.PersistedModel getPersistedModel(
-		java.io.Serializable primaryKeyObj)
+	public java.util.List<net.indaba.lostandfound.model.Item> getOfficeItems(
+		long groupId, int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableLocalService.invokeMethod(_methodName27,
 					_methodParameterTypes27,
+					new Object[] { groupId, start, end });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<net.indaba.lostandfound.model.Item>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.model.PersistedModel getPersistedModel(
+		java.io.Serializable primaryKeyObj)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName28,
+					_methodParameterTypes28,
 					new Object[] { ClpSerializer.translateInput(primaryKeyObj) });
 		}
 		catch (Throwable t) {
@@ -965,8 +999,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName29,
-					_methodParameterTypes29,
+			returnObj = _invokableLocalService.invokeMethod(_methodName30,
+					_methodParameterTypes30,
 					new Object[] { ClpSerializer.translateInput(item) });
 		}
 		catch (Throwable t) {
@@ -1041,6 +1075,8 @@ public class ItemLocalServiceClp implements ItemLocalService {
 	private String[] _methodParameterTypes26;
 	private String _methodName27;
 	private String[] _methodParameterTypes27;
-	private String _methodName29;
-	private String[] _methodParameterTypes29;
+	private String _methodName28;
+	private String[] _methodParameterTypes28;
+	private String _methodName30;
+	private String[] _methodParameterTypes30;
 }

@@ -318,6 +318,12 @@ public class ItemLocalServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static java.util.List<net.indaba.lostandfound.model.Item> getOfficeItems(
+		long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getOfficeItems(groupId, start, end);
+	}
+
 	public static com.liferay.portal.kernel.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj)
 		throws com.liferay.portal.kernel.exception.PortalException {

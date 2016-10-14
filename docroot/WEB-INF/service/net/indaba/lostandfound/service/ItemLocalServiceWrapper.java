@@ -335,6 +335,13 @@ public class ItemLocalServiceWrapper implements ItemLocalService,
 	}
 
 	@Override
+	public java.util.List<net.indaba.lostandfound.model.Item> getOfficeItems(
+		long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _itemLocalService.getOfficeItems(groupId, start, end);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj)
 		throws com.liferay.portal.kernel.exception.PortalException {
